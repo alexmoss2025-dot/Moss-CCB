@@ -12,6 +12,7 @@
       color: #fff;
       text-align: center;
       padding: 64px 24px 56px;
+      margin-top: 52px; /* Account for fixed nav bar */
     }
     .hero-logo {
       margin-bottom: 12px;
@@ -154,6 +155,20 @@
       border-radius: 4px;
       line-height: 1;
     }
+    .external-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: #0078d4;
+      color: #fff;
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 4px;
+      line-height: 1;
+    }
 
     /* ── Footer ── */
     .site-footer {
@@ -175,6 +190,24 @@
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
+
+  <!-- Top Navigation Bar -->
+  <nav class="moss-topnav">
+    <div class="moss-nav-container">
+      <a href="index.html" class="moss-nav-brand"><img src="Moss_logo.png" alt="Moss Energy"></a>
+      <button class="moss-nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('.moss-nav-links').classList.toggle('open')">☰</button>
+      <div class="moss-nav-links">
+        <a href="index.html" class="active">Home</a>
+        <a href="01_Change_Request_Form_V4.html">Change Request Form</a>
+        <a href="07_Change_Request_Register.html">Change Register</a>
+        <a href="08_CCB_Metrics_Dashboard.html">Metrics Dashboard</a>
+        <a href="12_PIR_Template.html">PIR Template</a>
+        <a href="17_Section_Responsibility_Swimlane_Flowchart.html">Swimlane Flowchart</a>
+        <a href="CCB_Stakeholder_Responsibility_Mapping.html">Stakeholder Mapping</a>
+        <a href="https://mosscm.sharepoint.com/sites/CCB" target="_blank">SharePoint Site ↗</a>
+      </div>
+    </div>
+  </nav>
 
   <!-- Hero -->
   <header class="hero">
@@ -252,6 +285,17 @@
         <div class="card-title">Intake Form Workflow</div>
         <div class="card-desc">PDF workflow guide for the change request intake process. Outlines the end-to-end steps for submitting, reviewing, and routing new change requests.</div>
         <span class="card-link">Open PDF →</span>
+      </a>
+
+      <a class="card" href="https://mosscm.sharepoint.com/sites/CCB" target="_blank">
+        <div class="card-icon">🔗</div>
+        <div class="card-badge-row">
+          <div class="card-num">Collaboration</div>
+          <span class="external-badge">SharePoint</span>
+        </div>
+        <div class="card-title">CCB SharePoint Site</div>
+        <div class="card-desc">Access the full CCB document library and collaboration workspace on SharePoint. View shared files, meeting notes, and team resources.</div>
+        <span class="card-link">Visit SharePoint →</span>
       </a>
 
     </div>

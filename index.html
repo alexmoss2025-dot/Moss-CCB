@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Moss Energy — Change Management Documentation</title>
+  <link rel="stylesheet" href="site.css" />
+  <style>
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #0d3b1e 0%, #1a5f2a 40%, #27723a 100%);
+      color: #fff;
+      text-align: center;
+      padding: 64px 24px 56px;
+    }
+    .hero-logo {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .hero-logo span { color: #6fda7f; }
+    .hero-tagline {
+      font-size: 1.15rem;
+      font-weight: 300;
+      opacity: .88;
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+    .hero-divider {
+      width: 60px;
+      height: 3px;
+      background: #6fda7f;
+      margin: 20px auto 0;
+      border-radius: 2px;
+    }
+
+    /* ── Cards grid ── */
+    .cards-section {
+      max-width: 1100px;
+      margin: -36px auto 0;
+      padding: 0 24px 60px;
+      position: relative;
+      z-index: 1;
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 24px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.07);
+      padding: 28px 26px 24px;
+      display: flex;
+      flex-direction: column;
+      transition: transform .2s, box-shadow .2s;
+      border: 1px solid #e4ebe5;
+      text-decoration: none;
+      color: inherit;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 32px rgba(0,0,0,.12);
+      border-color: #6fda7f;
+    }
+    .card-icon {
+      font-size: 2.2rem;
+      margin-bottom: 14px;
+    }
+    .card-num {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #1a5f2a;
+      margin-bottom: 6px;
+    }
+    .card-title {
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: #1b3a22;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .card-desc {
+      font-size: .9rem;
+      color: #556b5a;
+      line-height: 1.55;
+      flex: 1;
+    }
+    .card-link {
+      margin-top: 16px;
+      font-size: .85rem;
+      font-weight: 600;
+      color: #1a5f2a;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .card:hover .card-link { color: #27723a; }
+
+    /* ── Footer ── */
+    .site-footer {
+      background: #0d3b1e;
+      color: rgba(255,255,255,.65);
+      text-align: center;
+      padding: 28px 24px;
+      font-size: .82rem;
+      line-height: 1.6;
+    }
+    .site-footer strong { color: #6fda7f; font-weight: 600; }
+
+    @media (max-width: 680px) {
+      .hero { padding: 48px 18px 40px; }
+      .hero-logo { font-size: 2.2rem; }
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-logo"><span>&#9679;</span> Moss</div>
+    <p class="hero-tagline">Change Management Documentation Portal — Moss Energy Change Control Board</p>
+    <div class="hero-divider"></div>
+  </header>
+
+  <!-- Document Cards -->
+  <section class="cards-section">
+    <div class="cards-grid">
+
+      <a class="card" href="01_Change_Request_Form_V4.html">
+        <div class="card-icon">📝</div>
+        <div class="card-num">Document 01</div>
+        <div class="card-title">Change Request Form</div>
+        <div class="card-desc">Submit and track formal change requests. Includes risk assessment, category classification, impact analysis, and approval workflows.</div>
+        <span class="card-link">Open document →</span>
+      </a>
+
+      <a class="card" href="07_Change_Request_Register.html">
+        <div class="card-icon">📋</div>
+        <div class="card-num">Document 07</div>
+        <div class="card-title">Change Request Register</div>
+        <div class="card-desc">Master log of all submitted change requests with status tracking, filtering, and sortable columns for complete change history.</div>
+        <span class="card-link">Open document →</span>
+      </a>
+
+      <a class="card" href="08_CCB_Metrics_Dashboard.html">
+        <div class="card-icon">📊</div>
+        <div class="card-num">Document 08</div>
+        <div class="card-title">CCB Metrics Dashboard</div>
+        <div class="card-desc">Performance metrics, category breakdowns, status summaries, and risk analysis charts for the Change Control Board.</div>
+        <span class="card-link">Open document →</span>
+      </a>
+
+      <a class="card" href="12_PIR_Template.html">
+        <div class="card-icon">🔍</div>
+        <div class="card-num">Document 12</div>
+        <div class="card-title">Post-Implementation Review</div>
+        <div class="card-desc">Evaluate change outcomes after implementation. Covers objectives assessment, issues encountered, lessons learned, and improvement recommendations.</div>
+        <span class="card-link">Open document →</span>
+      </a>
+
+      <a class="card" href="17_Section_Responsibility_Swimlane_Flowchart.html">
+        <div class="card-icon">🔀</div>
+        <div class="card-num">Document 17</div>
+        <div class="card-title">Swimlane Flowchart</div>
+        <div class="card-desc">Visual process flow showing section responsibilities, email notifications, gates, and phases across the full change management lifecycle.</div>
+        <span class="card-link">Open document →</span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <strong>Moss Energy</strong> — Change Control Board Documentation<br/>
+    &copy; 2026 Moss Energy. All rights reserved.
+  </footer>
+
+</body>
+</html>

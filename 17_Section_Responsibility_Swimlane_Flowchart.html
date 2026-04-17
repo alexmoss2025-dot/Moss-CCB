@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Section Responsibility &amp; Email Notification Swimlane Flowchart — Moss Energy v2.1</title>
+<style>
+:root {
+  --primary: #003366;
+  --primary-light: #004d99;
+  --primary-dark: #002244;
+  --section-color: #1a73e8;
+  --section-bg: #e8f0fe;
+  --email-color: #7b1fa2;
+  --email-bg: #f3e5f5;
+  --gate-color: #c62828;
+  --gate-bg: #ffebee;
+  --decision-color: #e65100;
+  --decision-bg: #fff3e0;
+  --success: #2e7d32;
+  --success-bg: #e8f5e9;
+  --system-color: #546e7a;
+  --system-bg: #eceff1;
+  --review-color: #00838f;
+  --review-bg: #e0f7fa;
+  --bg: #f4f6f9;
+  --card-bg: #ffffff;
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --border: #dce1e8;
+  --shadow: 0 2px 8px rgba(0,51,102,.12);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background:var(--bg); color:var(--text); }
+
+/* Header */
+.header { background:linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color:#fff; padding:20px 32px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 3px 12px rgba(0,0,0,.2); position:sticky; top:0; z-index:200; }
+.header-left { display:flex; align-items:center; gap:14px; }
+.logo-icon { width:42px; height:42px; background:#fff; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:800; color:var(--primary); font-size:15px; }
+.header h1 { font-size:20px; font-weight:700; }
+.header .subtitle { font-size:12px; opacity:.8; margin-top:2px; }
+.header-right { display:flex; gap:10px; }
+.btn { padding:7px 16px; border:none; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:5px; transition:all .2s; }
+.btn-outline { background:transparent; border:1.5px solid rgba(255,255,255,.5); color:#fff; }
+.btn-outline:hover { background:rgba(255,255,255,.15); border-color:#fff; }
+
+/* Version banner */
+.version-banner { background:var(--review-color); color:#fff; text-align:center; padding:6px 16px; font-size:11px; font-weight:600; }
+
+/* Legend */
+.legend-bar { background:var(--card-bg); border-bottom:1px solid var(--border); padding:12px 32px; display:flex; flex-wrap:wrap; gap:18px; align-items:center; box-shadow:0 1px 4px rgba(0,0,0,.05); position:sticky; top:82px; z-index:190; }
+.legend-title { font-weight:700; font-size:12px; color:var(--primary); text-transform:uppercase; letter-spacing:.5px; }
+.legend-item { display:flex; align-items:center; gap:5px; font-size:11px; }
+.legend-swatch { width:14px; height:14px; border-radius:3px; border:2px solid; }
+.legend-swatch.section { background:var(--section-bg); border-color:var(--section-color); }
+.legend-swatch.email { background:var(--email-bg); border-color:var(--email-color); }
+.legend-swatch.gate { background:var(--gate-bg); border-color:var(--gate-color); }
+.legend-swatch.decision { background:var(--decision-bg); border-color:var(--decision-color); }
+.legend-swatch.system { background:var(--system-bg); border-color:var(--system-color); }
+.legend-swatch.success { background:var(--success-bg); border-color:var(--success); }
+.legend-swatch.review { background:var(--review-bg); border-color:var(--review-color); }
+
+/* Flowchart */
+.flowchart-wrapper { padding:24px 16px; overflow-x:auto; overflow-y:auto; }
+.flowchart { display:flex; flex-direction:column; min-width:2300px; border:1px solid var(--border); border-radius:10px; overflow:hidden; background:var(--card-bg); box-shadow:var(--shadow); }
+
+/* Phase Header Row */
+.phase-row { display:flex; }
+.phase-row .lane-label { background:var(--primary-dark); color:#fff; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; display:flex; align-items:center; justify-content:center; }
+.phase-row .phases { flex:1; display:flex; }
+.phase-cell { flex:1; text-align:center; padding:10px 6px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.8px; color:#fff; border-left:1px solid rgba(255,255,255,.2); }
+.phase-cell:first-child { border-left:none; }
+.p1 { background:#1565c0; }
+.p2 { background:#1976d2; }
+.p3 { background:var(--review-color); }
+.p4 { background:#c62828; }
+.p5 { background:#2e7d32; }
+.p6 { background:#e65100; }
+.p7 { background:#37474f; }
+
+/* Swimlane */
+.swimlane { display:flex; border-top:1px solid var(--border); min-height:120px; }
+.lane-label { width:170px; min-width:170px; background:var(--primary); color:#fff; padding:12px 10px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; font-size:12px; font-weight:700; position:sticky; left:0; z-index:50; }
+.lane-label .lane-icon { font-size:26px; margin-bottom:4px; }
+.lane-label .lane-sub { font-size:9px; font-weight:400; opacity:.7; margin-top:2px; }
+.swimlane:nth-child(even) .lane-label { background:var(--primary-light); }
+.lane-content { flex:1; display:flex; min-height:120px; }
+.lane-phase { flex:1; padding:10px 8px; display:flex; flex-wrap:wrap; align-items:flex-start; align-content:center; gap:8px; border-left:1px solid var(--border); position:relative; }
+.swimlane:nth-child(even) .lane-phase { background:#fafbfd; }
+
+/* Nodes */
+.node { padding:8px 12px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; position:relative; transition:all .2s; border:2px solid; max-width:220px; line-height:1.4; display:flex; align-items:center; gap:6px; }
+.node:hover { transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,.15); z-index:10; }
+.node .node-icon { font-size:16px; flex-shrink:0; }
+
+.node-section { background:var(--section-bg); border-color:var(--section-color); color:var(--section-color); }
+.node-email { background:var(--email-bg); border-color:var(--email-color); color:var(--email-color); font-size:10px; }
+.node-gate { background:var(--gate-bg); border-color:var(--gate-color); color:var(--gate-color); font-weight:800; }
+.node-decision { background:var(--decision-bg); border-color:var(--decision-color); color:var(--decision-color); }
+.node-system { background:var(--system-bg); border-color:var(--system-color); color:var(--system-color); }
+.node-success { background:var(--success-bg); border-color:var(--success); color:var(--success); }
+.node-review { background:var(--review-bg); border-color:var(--review-color); color:var(--review-color); }
+
+/* Arrows */
+.arrow { color:#aaa; font-size:18px; display:flex; align-items:center; font-weight:700; align-self:center; }
+
+/* Tooltip */
+.tooltip { display:none; position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); background:#1a1a2e; color:#fff; padding:10px 14px; border-radius:6px; font-size:11px; line-height:1.5; z-index:100; box-shadow:0 4px 16px rgba(0,0,0,.3); pointer-events:none; max-width:320px; white-space:normal; }
+.tooltip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:6px solid transparent; border-top-color:#1a1a2e; }
+.node:hover .tooltip { display:block; }
+
+/* New badge */
+.new-badge { display:inline-block; background:var(--review-color); color:#fff; font-size:8px; font-weight:800; padding:1px 5px; border-radius:3px; margin-left:4px; vertical-align:middle; }
+
+/* Modal */
+.modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,20,40,.6); z-index:500; justify-content:center; align-items:center; }
+.modal-overlay.active { display:flex; }
+.modal { background:#fff; border-radius:12px; width:600px; max-width:92vw; max-height:85vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.3); }
+.modal-header { background:var(--primary); color:#fff; padding:18px 24px; border-radius:12px 12px 0 0; display:flex; justify-content:space-between; align-items:center; }
+.modal-header h3 { font-size:16px; display:flex; align-items:center; gap:8px; }
+.modal-close { background:none; border:none; color:#fff; font-size:22px; cursor:pointer; opacity:.8; }
+.modal-close:hover { opacity:1; }
+.modal-body { padding:24px; }
+.modal-body .detail-row { display:flex; margin-bottom:10px; }
+.modal-body .detail-label { font-weight:700; font-size:12px; color:var(--primary); width:130px; flex-shrink:0; }
+.modal-body .detail-value { font-size:12px; color:var(--text); line-height:1.5; }
+.modal-body .badge { display:inline-block; padding:3px 10px; border-radius:12px; font-size:10px; font-weight:700; color:#fff; margin-right:4px; }
+.badge-blue { background:var(--section-color); }
+.badge-purple { background:var(--email-color); }
+.badge-red { background:var(--gate-color); }
+.badge-amber { background:var(--decision-color); }
+.badge-green { background:var(--success); }
+.badge-gray { background:var(--system-color); }
+.badge-teal { background:var(--review-color); }
+
+/* Print */
+@media print {
+  .header, .legend-bar { position:static; }
+  .btn, .version-banner { display:none; }
+  .flowchart-wrapper { padding:0; overflow:visible; }
+  .flowchart { min-width:100%; }
+  .node:hover { transform:none; box-shadow:none; }
+}
+</style>
+<link rel="stylesheet" href="site.css" />
+</head>
+<body >
+<nav class="moss-topnav">
+  <span class="nav-brand">● Moss</span>
+  <a href="index.html">← Back to Home</a>
+  <span class="nav-sep">|</span>
+  <span style="color:rgba(255,255,255,.7);font-size:.84rem;">Swimlane Flowchart</span>
+</nav>
+<!-- Version Banner --><div class="version-banner">🆕 Version 2.1 — Pre-CCB approvals removed · Approvals now occur during CCB Meeting · 7 Phases · 7 Gates · 34 Notifications</div><!-- Header --><div class="header">
+<div class="header-left">
+<div class="logo-icon">ME</div>
+<div>
+<h1>Section Responsibility &amp; Email Notification Swimlane Flowchart</h1>
+<div class="subtitle">Change Control Board — CR Form Workflow Matrix (9 Sections · 7 Phases · 7 Approval Gates · 34 Email Notifications) — v2.1</div>
+</div>
+</div>
+<div class="header-right">
+<button class="btn btn-outline" onclick="document.getElementById('helpModal').classList.add('active')">❓ Help</button>
+<button class="btn btn-outline" onclick="window.print()">🖨️ Print</button>
+</div>
+</div><!-- Legend --><div class="legend-bar">
+<span class="legend-title">Legend:</span>
+<span class="legend-item"><span class="legend-swatch section"></span> Form Section</span>
+<span class="legend-item"><span class="legend-swatch email"></span> Email Notification</span>
+<span class="legend-item"><span class="legend-swatch gate"></span> Approval Gate</span>
+<span class="legend-item"><span class="legend-swatch decision"></span> Decision Point</span>
+<span class="legend-item"><span class="legend-swatch review"></span> Completeness Review</span>
+<span class="legend-item"><span class="legend-swatch system"></span> System/Automated</span>
+<span class="legend-item"><span class="legend-swatch success"></span> Completion</span>
+<span class="legend-item" style="margin-left:12px;">🔒 = Gate   📧 = Email   🔍 = Review   → = Flow</span>
+</div><!-- Flowchart --><div class="flowchart-wrapper">
+<div class="flowchart">
+<!-- Phase Headers -->
+<div class="phase-row">
+<div class="lane-label" style="font-size:10px;">ROLES / PHASES →</div>
+<div class="phases">
+<div class="phase-cell p1">Initial Submission</div>
+<div class="phase-cell p2">Technical Details<br/><span style="font-size:9px;opacity:.8">Sec 3-7</span></div>
+<div class="phase-cell p3">Completeness Review<br/><span style="font-size:8px;opacity:.8">→ CCB Scheduling</span></div>
+<div class="phase-cell p4">CCB Meeting<br/><span style="font-size:8px;opacity:.8">Approvals + Decision</span></div>
+<div class="phase-cell p5">Implementation</div>
+<div class="phase-cell p6">Post-Implementation</div>
+<div class="phase-cell p7">Final Closure</div>
+</div>
+</div>
+<!-- ═══════════ Swimlane 1: Change Owner ═══════════ -->
+<div class="swimlane">
+<div class="lane-label">
+<span class="lane-icon">👤</span>
+    Change Owner
+    <span class="lane-sub">Initiates &amp; closes CR</span>
+</div>
+<div class="lane-content">
+<!-- P1 -->
+<div class="lane-phase">
+<div class="node node-section" onclick="showModal('s1')">
+<span class="node-icon">📝</span> Section 1: Change Identification
+        <span class="tooltip">Change Owner completes Section 1</span>
+</div>
+<span class="arrow">→</span>
+<div class="node node-section" onclick="showModal('s2')">
+<span class="node-icon">📝</span> Section 2: Change Category
+        <span class="tooltip">Change Owner selects category &amp; environment</span>
+</div>
+</div>
+<!-- P2 --><div class="lane-phase"></div>
+<!-- P3 --><div class="lane-phase"></div>
+<!-- P4 --><div class="lane-phase"></div>
+<!-- P5 --><div class="lane-phase"></div>
+<!-- P6 -->
+<div class="lane-phase">
+<div class="node node-section" onclick="showModal('s8')">
+<span class="node-icon">📝</span> Section 8: PIR Plan
+        <span class="tooltip">Change Owner completes Post-Implementation Review Plan</span>
+</div>
+</div>
+<!-- P7 --><div class="lane-phase"></div>
+</div>
+</div>
+<!-- ═══════════ Swimlane 2: Technical Lead ═══════════ -->
+<div class="swimlane">
+<div class="lane-label">
+<span class="lane-icon">🔧</span>
+    Technical Lead
+    <span class="lane-sub">Sections 3–7 <span class="new-badge">UPDATED</span></span>
+</div>
+<div class="lane-content">
+<!-- P1 --><div class="lane-phase"></div>
+<!-- P2 -->
+<div class="lane-phase">
+<div class="node node-section" onclick="showModal('s3')">
+<span class="node-icon">📝</span> Sec 3: Technical Specs
+        <span class="tooltip">Technical Lead documents technical specifications</span>
+</div>
+<span class="arrow">→</span>
+<div class="node node-section" onclick="showModal('s4')">
+<span class="node-icon">📝</span> Sec 4: Risk Assessment
+        <span class="tooltip">Risk analysis with auto-calculated risk level</span>
+</div>
+<span class="arrow">→</span>
+<div class="node node-section" onclick="showModal('s5')">
+<span class="node-icon">📝</span> Sec 5: Impl. Schedule
+        <span class="tooltip">Implementation schedule with milestones</span>
+</div>
+<span class="arrow">→</span>
+<div class="node node-section" onclick="showModal('s6')">
+<span class="node-icon">📝</span> Sec 6: Rollback Plan
+        <span class="tooltip">Rollback and recovery procedures</span>
+</div>
+<span class="arrow">→</span>
+<div class="node node-section" onclick="showModal('s7')" style="border-color:var(--review-color);">
+<span class="node-icon">✅</span> Sec 7: QA &amp; Testing
+        <span class="tooltip">NEW: Technical Lead now completes QA testing evidence (was Approval Groups)</span>
+</div>
+</div>
+<!-- P3 --><div class="lane-phase"></div>
+<!-- P4 --><div class="lane-phase"></div>
+<!-- P5 --><div class="lane-phase"></div>
+<!-- P6 --><div class="lane-phase"></div>
+<!-- P7 --><div class="lane-phase"></div>
+</div>
+</div>
+<!-- ═══════════ Swimlane 3: Product Owner + CCB Lead ═══════════ -->
+<div class="swimlane">
+<div class="lane-label" style="background:var(--review-color);">
+<span class="lane-icon">🔍</span>
+    Product Owner<br/>+ CCB Lead
+    <span class="lane-sub">Completeness Review</span>
+</div>
+<div class="lane-content">
+<!-- P1 --><div class="lane-phase"></div>
+<!-- P2 --><div class="lane-phase"></div>
+<!-- P3 -->
+<div class="lane-phase" style="background:var(--review-bg);">
+<div class="node node-review" onclick="showModal('completenessReview')">
+<span class="node-icon">🔍</span> Review Sec 1-7
+        <span class="tooltip">PO + CCB Lead jointly review all sections for completeness; determines CCB meeting eligibility</span>
+</div>
+<span class="arrow">→</span>
+<div class="node node-review" onclick="showModal('completenessChecklist')">
+<span class="node-icon">📋</span> 18-Point Checklist
+        <span class="tooltip">Validation checklist across all 7 sections</span>
+</div>
+<span class="arrow">→</span>
+<div class="node node-gate" onclick="showModal('gate2_5')" style="border-color:var(--review-color); color:var(--review-color); background:var(--review-bg);">
+<span class="node-icon">🔒</span> Gate 2.5: Completeness
+        <span class="tooltip">Completeness verification gate — pass triggers CCB meeting scheduling</span>
+</div>
+</div>
+<!-- P4 --><div class="lane-phase"></div>
+<!-- P5 --><div class="lane-phase"></div>
+<!-- P6 --><div class="lane-phase"></div>
+<!-- P7 --><div class="lane-phase"></div>
+</div>
+</div>
+<!-- ═══════════ Swimlane 4: Approval Groups ═══════════ -->
+<div class="swimlane">
+<div class="lane-label">
+<span class="lane-icon">✅</span>
+    Approval Groups
+    <span class="lane-sub">Security · Infra · Business · Compliance</span>
+</div>
+<div class="lane-content">
+<!-- P1 --><div class="lane-phase"></div>
+<!-- P2 --><div class="lane-phase"></div>
+<!-- P3 --><div class="lane-phase"></div>
+<!-- P4 -->
+<div class="lane-phase">
+<div class="node node-decision" onclick="showModal('approvalReview')">
+<span class="node-icon">📋</span> Approve During CCB Meeting
+        <span class="tooltip">Approval groups review and sign off during the CCB meeting session</span>
+</div>
+</div>
+<!-- P5 --><div class="lane-phase"></div>
+<!-- P6 --><div class="lane-phase"></div>
+<!-- P7 --><div class="lane-phase"></div>
+</div>
+</div>
+<!-- ═══════════ Swimlane 5: CCB Facilitator ═══════════ -->
+<div class="swimlane">
+<div class="lane-label">
+<span class="lane-icon">🎯</span>
+    CCB Facilitator
+    <span class="lane-sub">Validates &amp; facilitates</span>
+</div>
+<div class="lane-content">
+<!-- P1 -->
+<div class="lane-phase">
+<div class="node node-gate" onclick="showModal('gate1')">
+<span class="node-icon">🔒</span> Gate 1: Validate Sec 1–2
+        <span class="tooltip">CCB Facilitator validates Sections 1–2 are complete</span>
+</div>
+</div>
+<!-- P2 --><div class="lane-phase"></div>
+<!-- P3 --><div class="lane-phase"></div>
+<!-- P4 -->
+<div class="lane-phase">
+<div class="node node-decision" onclick="showModal('facilitate')">
+<span class="node-icon">🎯</span> Facilitate CCB Meeting
+        <span class="tooltip">Facilitator runs CCB meeting, manages approvals and voting</span>
+</div>
+</div>
+<!-- P5 --><div class="lane-phase"></div>
+<!-- P6 -->
+<div class="lane-phase">
+<div class="node node-gate" onclick="showModal('gate5')">
+<span class="node-icon">🔒</span> Gate 5: Approve PIR
+        <span class="tooltip">CCB Facilitator approves the Post-Implementation Review</span>
+</div>
+</div>
+<!-- P7 --><div class="lane-phase"></div>
+</div>
+</div>
+<!-- ═══════════ Swimlane 6: CCB Voting Members ═══════════ -->
+<div class="swimlane">
+<div class="lane-label">
+<span class="lane-icon">🗳️</span>
+    CCB Voting Members
+    <span class="lane-sub">Decision authority</span>
+</div>
+<div class="lane-content">
+<!-- P1 --><div class="lane-phase"></div>
+<!-- P2 -->
+<div class="lane-phase">
+<div class="node node-gate" onclick="showModal('gate2')">
+<span class="node-icon">🔒</span> Gate 2: Exec Approval (if Critical)
+        <span class="tooltip">Executive approval required only for Critical risk level</span>
+</div>
+</div>
+<!-- P3 --><div class="lane-phase"></div>
+<!-- P4 -->
+<div class="lane-phase">
+<div class="node node-decision" onclick="showModal('ccbDecision')">
+<span class="node-icon">⚖️</span> CCB Decision
+        <span class="tooltip">CCB collects approvals and votes: Approve / Defer / Reject</span>
+</div>
+<div class="node node-gate" onclick="showModal('gate3')">
+<span class="node-icon">🔒</span> Gate 3: CCB Verdict
+        <span class="tooltip">All approvals collected + CCB decision recorded</span>
+</div>
+</div>
+<!-- P5 -->
+<div class="lane-phase">
+<div class="node node-gate" onclick="showModal('gate4')">
+<span class="node-icon">🔒</span> Gate 4: Impl. Verified
+        <span class="tooltip">Implementation verified successfully</span>
+</div>
+</div>
+<!-- P6 --><div class="lane-phase"></div>
+<!-- P7 -->
+<div class="lane-phase">
+<div class="node node-gate" onclick="showModal('gate6')">
+<span class="node-icon">🔒</span> Gate 6: All Signatures
+        <span class="tooltip">All signatures collected, CR archived</span>
+</div>
+</div>
+</div>
+</div>
+<!-- ═══════════ Swimlane 7: System/Automated ═══════════ -->
+<div class="swimlane">
+<div class="lane-label">
+<span class="lane-icon">⚙️</span>
+    System / Automated
+    <span class="lane-sub">Emails &amp; auto-actions</span>
+</div>
+<div class="lane-content">
+<!-- P1 -->
+<div class="lane-phase" style="flex-wrap:wrap; align-content:flex-start; padding-top:8px;">
+<div class="node node-email" onclick="showModal('e_submit_confirm')">
+<span class="node-icon">📧</span> E-01: Submission Confirm
+        <span class="tooltip">To: Change Owner — Confirms CR submitted</span>
+</div>
+<div class="node node-email" onclick="showModal('e_new_cr')">
+<span class="node-icon">📧</span> E-02: New CR Alert
+        <span class="tooltip">To: CCB Facilitator — New CR requires validation</span>
+</div>
+</div>
+<!-- P2 -->
+<div class="lane-phase" style="flex-wrap:wrap; align-content:flex-start; padding-top:8px;">
+<div class="node node-email" onclick="showModal('e_tech_progress')">
+<span class="node-icon">📧</span> E-03–07: Section Alerts
+        <span class="tooltip">Progress notifications for each section (3-7) completion</span>
+</div>
+<div class="node node-email" onclick="showModal('e_sla_reminder')">
+<span class="node-icon">📧</span> E-08: SLA Reminder
+        <span class="tooltip">To: Tech Lead — Reminder if sections incomplete by Day 3</span>
+</div>
+</div>
+<!-- P3 -->
+<div class="lane-phase" style="flex-wrap:wrap; align-content:flex-start; padding-top:8px; background:rgba(0,131,143,0.05);">
+<div class="node node-email" onclick="showModal('e_review_start')" style="border-color:var(--review-color); color:var(--review-color); background:var(--review-bg);">
+<span class="node-icon">📧</span> E-09: Review Started
+        <span class="tooltip">To: PO, CCB Lead — Completeness review initiated</span>
+</div>
+<div class="node node-email" onclick="showModal('e_review_rework')" style="border-color:var(--review-color); color:var(--review-color); background:var(--review-bg);">
+<span class="node-icon">📧</span> E-10: Rework Req
+        <span class="tooltip">To: Tech Lead — Rework items identified</span>
+</div>
+<div class="node node-email" onclick="showModal('e_review_pass')" style="border-color:var(--review-color); color:var(--review-color); background:var(--review-bg);">
+<span class="node-icon">📧</span> E-11–12: Pass + Schedule
+        <span class="tooltip">To: All — Review approved, CCB meeting scheduled</span>
+</div>
+</div>
+<!-- P4 -->
+<div class="lane-phase" style="flex-wrap:wrap; align-content:flex-start; padding-top:8px;">
+<div class="node node-email" onclick="showModal('e_agenda')">
+<span class="node-icon">📧</span> E-13: Agenda (T-48h)
+        <span class="tooltip">To: All CCB Members — Meeting agenda + CR package</span>
+</div>
+<div class="node node-email" onclick="showModal('e_reminder_24')">
+<span class="node-icon">📧</span> E-14: Reminder (T-24h)
+        <span class="tooltip">Meeting reminder to all members</span>
+</div>
+<div class="node node-email" onclick="showModal('e_decision_notif')">
+<span class="node-icon">📧</span> E-15–19: Decision
+        <span class="tooltip">Approval + decision notifications to all stakeholders</span>
+</div>
+</div>
+<!-- P5 -->
+<div class="lane-phase" style="flex-wrap:wrap; align-content:flex-start; padding-top:8px;">
+<div class="node node-email" onclick="showModal('e_impl_start')">
+<span class="node-icon">📧</span> E-20: Impl Start
+        <span class="tooltip">To: All Stakeholders — Implementation started</span>
+</div>
+<div class="node node-email" onclick="showModal('e_impl_progress')">
+<span class="node-icon">📧</span> E-21–24: Progress
+        <span class="tooltip">Milestone updates + implementation complete</span>
+</div>
+</div>
+<!-- P6 -->
+<div class="lane-phase" style="flex-wrap:wrap; align-content:flex-start; padding-top:8px;">
+<div class="node node-email" onclick="showModal('e_pir_due')">
+<span class="node-icon">📧</span> E-25–28: PIR Emails
+        <span class="tooltip">PIR reminder, submission, review, acceptance</span>
+</div>
+</div>
+<!-- P7 -->
+<div class="lane-phase" style="flex-wrap:wrap; align-content:flex-start; padding-top:8px;">
+<div class="node node-section" onclick="showModal('s9')">
+<span class="node-icon">📝</span> Sec 9: Signatures
+        <span class="tooltip">Automated collection of all signatures</span>
+</div>
+<div class="node node-email" onclick="showModal('e_closure')">
+<span class="node-icon">📧</span> E-29–31: Closure
+        <span class="tooltip">Archive, summary, stakeholder notice</span>
+</div>
+<div class="node node-email" onclick="showModal('e_escalation')">
+<span class="node-icon">📧</span> E-32–34: Escalation
+        <span class="tooltip">SLA breach, quorum issues, emergency override</span>
+</div>
+<div class="node node-success" onclick="showModal('archived')">
+<span class="node-icon">✅</span> CR Archived
+        <span class="tooltip">Change Request archived in system</span>
+</div>
+</div>
+</div>
+</div>
+</div><!-- end flowchart -->
+</div><!-- end wrapper --><!-- Detail Modal --><div class="modal-overlay" id="detailModal">
+<div class="modal">
+<div class="modal-header" id="modalHeader">
+<h3 id="modalTitle">Details</h3>
+<button class="modal-close" onclick="closeModal()">×</button>
+</div>
+<div class="modal-body" id="modalBody"></div>
+</div>
+</div><!-- Help Modal --><div class="modal-overlay" id="helpModal">
+<div class="modal">
+<div class="modal-header" style="background:var(--review-color)">
+<h3>❓ How to Use This Flowchart — v2.1</h3>
+<button class="modal-close" onclick="document.getElementById('helpModal').classList.remove('active')">×</button>
+</div>
+<div class="modal-body">
+<h4 style="color:var(--primary); margin-bottom:8px;">🆕 What Changed in v2.1</h4>
+<ul style="font-size:12px; padding-left:20px; line-height:2; margin-bottom:12px;">
+<li><strong>Pre-CCB Approvals removed</strong> — no separate approval collection phase</li>
+<li><strong>Approvals during CCB Meeting</strong> — all approval groups sign off during the CCB meeting</li>
+<li><strong>Completeness Review → CCB Scheduling</strong> — passing review triggers direct CCB scheduling</li>
+<li><strong>7 phases</strong> (was 8), <strong>7 gates</strong> (was 8), <strong>34 notifications</strong> (was 43)</li>
+<li><strong>Faster cycle time</strong> — ~5 days faster for Normal changes</li>
+</ul>
+<h4 style="color:var(--primary); margin-bottom:8px;">Reading the Flowchart</h4>
+<p style="font-size:12px; margin-bottom:12px;">This swimlane diagram shows the complete CR workflow across <strong>7 phases</strong> (columns) and <strong>7 roles</strong> (rows). Flow goes left → right.</p>
+<h4 style="color:var(--primary); margin-bottom:8px;">Color Coding</h4>
+<table style="width:100%; font-size:12px; border-collapse:collapse; margin-bottom:12px;">
+<tr><td style="padding:4px;"><span class="badge badge-blue">Blue</span></td><td style="padding:4px;">Form Sections (1–9)</td></tr>
+<tr><td style="padding:4px;"><span class="badge badge-purple">Purple</span></td><td style="padding:4px;">Email Notifications (34 total)</td></tr>
+<tr><td style="padding:4px;"><span class="badge badge-red">Red</span></td><td style="padding:4px;">Approval Gates (7 checkpoints)</td></tr>
+<tr><td style="padding:4px;"><span class="badge badge-amber">Amber</span></td><td style="padding:4px;">Decision Points</td></tr>
+<tr><td style="padding:4px;"><span class="badge badge-teal">Teal</span></td><td style="padding:4px;">Completeness Review</td></tr>
+<tr><td style="padding:4px;"><span class="badge badge-green">Green</span></td><td style="padding:4px;">Completion milestones</td></tr>
+<tr><td style="padding:4px;"><span class="badge badge-gray">Gray</span></td><td style="padding:4px;">System/Automated actions</td></tr>
+</table>
+<h4 style="color:var(--primary); margin-bottom:8px;">Swimlane Roles (7 Rows)</h4>
+<ul style="font-size:12px; padding-left:20px; line-height:2;">
+<li>👤 <strong>Change Owner</strong> — Initiates CR (Sec 1–2) and closes (Sec 8)</li>
+<li>🔧 <strong>Technical Lead</strong> — Technical details + QA (Sec 3–7) <span class="new-badge">UPDATED</span></li>
+<li>🔍 <strong>Product Owner + CCB Lead</strong> — Completeness Review <span class="new-badge">NEW</span></li>
+<li>✅ <strong>Approval Groups</strong> — Security, Infrastructure, Business, Compliance (approve during CCB meeting)</li>
+<li>🎯 <strong>CCB Facilitator</strong> — Validates, facilitates, approves PIR</li>
+<li>🗳️ <strong>CCB Voting Members</strong> — Decision authority at gates</li>
+<li>⚙️ <strong>System/Automated</strong> — Emails, signatures, archiving</li>
+</ul>
+<h4 style="color:var(--primary); margin-bottom:8px; margin-top:12px;">Interactivity</h4>
+<ul style="font-size:12px; padding-left:20px; line-height:2;">
+<li><strong>Hover</strong> over any item for a quick tooltip</li>
+<li><strong>Click</strong> any item to open a detailed information panel</li>
+<li>Scroll horizontally to see all 7 phases</li>
+</ul>
+</div>
+</div>
+</div><script>
+const modalData = {
+  // Sections
+  s1: {
+    title: '📝 Section 1: Change Identification',
+    color: '#1a73e8',
+    rows: [
+      ['Responsible', 'Change Owner'],
+      ['Phase', 'Phase 1 — Initial Submission'],
+      ['Dependencies', 'None (starting point)'],
+      ['Fields', 'CR Title, Description, Business Justification, Requestor Details, Priority, Urgency'],
+      ['Next Step', 'Section 2: Change Category'],
+      ['Notes', 'Must be completed before any other sections can be accessed']
+    ]
+  },
+  s2: {
+    title: '📝 Section 2: Change Category',
+    color: '#1a73e8',
+    rows: [
+      ['Responsible', 'Change Owner'],
+      ['Phase', 'Phase 1 — Initial Submission'],
+      ['Dependencies', 'Section 1 completed'],
+      ['Fields', 'Change Category, Environment(s), Impact Scope'],
+      ['Next Step', 'Gate 1 → Technical Lead assigned'],
+      ['Notes', 'Category determines workflow path and approval requirements']
+    ]
+  },
+  s3: {
+    title: '📝 Section 3: Technical Specifications',
+    color: '#1a73e8',
+    rows: [
+      ['Responsible', 'Technical Lead'],
+      ['Phase', 'Phase 2 — Technical Details'],
+      ['Dependencies', 'Gate 1 passed (Sec 1–2 validated)'],
+      ['Fields', 'Technical Description, Systems Affected, Configuration Changes, Database Changes'],
+      ['Next Step', 'Section 4: Risk Assessment'],
+      ['Notes', 'Technical Lead assigned by CCB Facilitator after Gate 1']
+    ]
+  },
+  s4: {
+    title: '📝 Section 4: Risk Assessment',
+    color: '#1a73e8',
+    rows: [
+      ['Responsible', 'Technical Lead'],
+      ['Phase', 'Phase 2 — Technical Details'],
+      ['Dependencies', 'Section 3 completed'],
+      ['Fields', 'Business Impact, Rollback Complexity, Overall Risk Level, Mitigation Strategies'],
+      ['Next Step', 'Section 5: Implementation Schedule'],
+      ['Notes', 'Risk level auto-calculated. If Critical → triggers Gate 2 (Executive Approval)']
+    ]
+  },
+  s5: {
+    title: '📝 Section 5: Implementation Schedule',
+    color: '#1a73e8',
+    rows: [
+      ['Responsible', 'Technical Lead'],
+      ['Phase', 'Phase 2 — Technical Details'],
+      ['Dependencies', 'Section 4 completed'],
+      ['Fields', 'Planned Start/End Date, Implementation Window, Milestones, Resources'],
+      ['Next Step', 'Section 6: Rollback Plan'],
+      ['Notes', 'Dates must align with approved maintenance windows']
+    ]
+  },
+  s6: {
+    title: '📝 Section 6: Rollback & Recovery Plan',
+    color: '#1a73e8',
+    rows: [
+      ['Responsible', 'Technical Lead'],
+      ['Phase', 'Phase 2 — Technical Details'],
+      ['Dependencies', 'Section 5 completed'],
+      ['Fields', 'Rollback Procedure, Backup & Recovery, Rollback Decision Criteria'],
+      ['Next Step', 'Section 7: QA Approval & Testing Evidence'],
+      ['Notes', 'Rollback plan ready before QA testing begins']
+    ]
+  },
+  s7: {
+    title: '📝 Section 7: QA Approval & Testing Evidence',
+    color: '#00838f',
+    rows: [
+      ['Responsible', 'Technical Lead (Changed from Approval Groups in v2.0)'],
+      ['Phase', 'Phase 2 — Technical Details'],
+      ['Dependencies', 'Section 6 completed'],
+      ['Fields', 'Test Results, QA Sign-off, Evidence Artifacts, Test Coverage Reports'],
+      ['Next Step', 'Completeness Review (Phase 3)'],
+      ['v2.0 Change', '⚡ Previously completed by Approval Groups in Phase 5 (post-CCB). Now completed by Technical Lead in Phase 2 (pre-review), ensuring QA evidence is available before board presentation.']
+    ]
+  },
+  s8: {
+    title: '📝 Section 8: Post-Implementation Review Plan',
+    color: '#1a73e8',
+    rows: [
+      ['Responsible', 'Change Owner'],
+      ['Phase', 'Phase 6 — Post-Implementation Review'],
+      ['Dependencies', 'Gate 4 passed (Implementation verified)'],
+      ['Fields', 'PIR Timeline, Success Criteria, Lessons Learned, Issues Encountered'],
+      ['Next Step', 'Gate 5: CCB Facilitator approves PIR'],
+      ['Notes', 'Mandatory for Normal/Major changes. Due within 14 business days']
+    ]
+  },
+  s9: {
+    title: '📝 Section 9: Approvals & Signatures',
+    color: '#546e7a',
+    rows: [
+      ['Responsible', 'System/Automated'],
+      ['Phase', 'Phase 7 — Final Closure'],
+      ['Dependencies', 'Gate 5 passed (PIR Approved)'],
+      ['Fields', 'All approval timestamps, Digital signatures, Audit trail'],
+      ['Next Step', 'Gate 6: All Signatures → CR Archived'],
+      ['Notes', 'System collects and validates all required signatures']
+    ]
+  },
+  // Completeness Review (NEW)
+  completenessReview: {
+    title: '🔍 Completeness Review — Joint Review (NEW in v2.0)',
+    color: '#00838f',
+    rows: [
+      ['Responsible', 'Product Owner + CCB Lead (joint review)'],
+      ['Phase', 'Phase 3 — Completeness Review'],
+      ['Dependencies', 'Gate 2 passed (all Sec 3-7 complete)'],
+      ['Scope', 'Review all 7 sections for accuracy, completeness, and board-readiness'],
+      ['SLA', '2 business days'],
+      ['Outcomes', 'Pass → schedule for CCB meeting | Rework → return to Tech Lead with feedback'],
+      ['v2.0 Note', 'This is a NEW quality gate that replaces ad-hoc pre-meeting checks']
+    ]
+  },
+  completenessChecklist: {
+    title: '📋 18-Point Completeness Checklist (NEW in v2.0)',
+    color: '#00838f',
+    rows: [
+      ['Sec 1-2', '4 items: Identification complete, category correct, priority justified, scope defined'],
+      ['Sec 3', '2 items: Tech specs complete, diagrams attached'],
+      ['Sec 4', '2 items: Risk matrix populated, mitigations identified'],
+      ['Sec 5', '2 items: Schedule realistic, resources confirmed'],
+      ['Sec 6', '3 items: Rollback plan testable, RTO/RPO defined, triggers clear'],
+      ['Sec 7', '3 items: Test evidence attached, QA signed off, coverage adequate'],
+      ['Cross-Section', '2 items: Consistency check, no conflicts between sections']
+    ]
+  },
+  // Approval Groups
+  approvalReview: {
+    title: '📋 Approval Groups — In-Meeting Approvals (v2.1)',
+    color: '#c62828',
+    rows: [
+      ['Phase', 'Phase 4 — CCB Meeting & Decision'],
+      ['Participants', 'IT Security, Infrastructure, Business Owner, Compliance'],
+      ['Activity', 'Approval groups review and provide sign-offs during the CCB meeting session'],
+      ['v2.1 Change', 'Approvals now collected during the CCB meeting instead of a separate pre-meeting stage'],
+      ['Requirements', 'Each group must approve during the meeting. Delegates must be arranged if unable to attend.'],
+      ['Next Step', 'CCB vote on overall decision']
+    ]
+  },
+  // Gates
+  gate1: {
+    title: '🔒 Gate 1: Validate Sections 1–2',
+    color: '#c62828',
+    rows: [
+      ['Phase', 'Phase 1 — Initial Submission'],
+      ['Gatekeeper', 'CCB Facilitator'],
+      ['Criteria', 'Sections 1 and 2 complete and properly filled'],
+      ['Pass Action', 'Technical Lead assigned, routed to Phase 2'],
+      ['Fail Action', 'Returned to Change Owner for correction']
+    ]
+  },
+  gate2: {
+    title: '🔒 Gate 2: Executive Approval (Critical Risk)',
+    color: '#c62828',
+    rows: [
+      ['Phase', 'Phase 2 — Technical Details'],
+      ['Gatekeeper', 'Executive Sponsor / CCB Chair'],
+      ['Trigger', 'Only if Risk Assessment = Critical'],
+      ['Pass Action', 'Proceed — technical work continues'],
+      ['Fail Action', 'CR rejected or sent back for risk mitigation']
+    ]
+  },
+  gate2_5: {
+    title: '🔒 Gate 2.5: Completeness Verification (NEW in v2.0)',
+    color: '#00838f',
+    rows: [
+      ['Phase', 'Phase 3 — Completeness Review'],
+      ['Gatekeeper', 'Product Owner + CCB Lead (joint)'],
+      ['Criteria', 'All 18 checklist items passed, Sec 1-7 verified complete and accurate'],
+      ['Pass Action', 'CR scheduled for next CCB meeting (Phase 4)'],
+      ['Fail Action', 'Returned to Technical Lead with specific rework items'],
+      ['v2.1 Note', 'Passing this gate triggers CCB meeting scheduling; approvals collected during the meeting']
+    ]
+  },
+  gate3: {
+    title: '🔒 Gate 3: CCB Verdict (Approvals + Decision)',
+    color: '#c62828',
+    rows: [
+      ['Phase', 'Phase 4 — CCB Meeting & Decision'],
+      ['Gatekeeper', 'CCB Voting Members + Approval Groups'],
+      ['Criteria', 'All approvals collected during meeting + CCB vote recorded'],
+      ['Pass Action', 'CR proceeds to Phase 5 — Implementation'],
+      ['Fail Action', 'Rejected → CR closed; Deferred → re-enter next CCB cycle']
+    ]
+  },
+  gate4: {
+    title: '🔒 Gate 4: Implementation Verified',
+    color: '#c62828',
+    rows: [
+      ['Phase', 'Phase 5 — Implementation'],
+      ['Gatekeeper', 'Technical Lead + System'],
+      ['Criteria', 'All changes deployed and verified'],
+      ['Pass Action', 'Proceed to Phase 6 — Post-Implementation Review'],
+      ['Fail Action', 'Rollback triggered per Section 6 plan']
+    ]
+  },
+  gate5: {
+    title: '🔒 Gate 5: CCB Facilitator Approves PIR',
+    color: '#c62828',
+    rows: [
+      ['Phase', 'Phase 6 — Post-Implementation Review'],
+      ['Gatekeeper', 'CCB Facilitator'],
+      ['Criteria', 'PIR Plan (Sec 8) complete and satisfactory'],
+      ['Pass Action', 'Proceed to Phase 7 — Final Closure'],
+      ['Fail Action', 'PIR returned to Change Owner']
+    ]
+  },
+  gate6: {
+    title: '🔒 Gate 6: All Signatures Collected',
+    color: '#c62828',
+    rows: [
+      ['Phase', 'Phase 7 — Final Closure'],
+      ['Gatekeeper', 'System (automated validation)'],
+      ['Criteria', 'All required signatures present in Section 9'],
+      ['Pass Action', 'CR archived, closure confirmation sent'],
+      ['Fail Action', 'Missing signatures flagged, reminders sent']
+    ]
+  },
+
+  // Decision Points
+  facilitate: {
+    title: '🎯 Facilitate CCB Meeting',
+    color: '#e65100',
+    rows: [
+      ['Responsible', 'CCB Facilitator'],
+      ['Phase', 'Phase 4 — CCB Meeting & Decision'],
+      ['Activities', 'Present agenda, walk through CR details, manage discussion, call for votes'],
+      ['Inputs', 'All Sections 1–7 (completeness-verified) — approvals collected during meeting'],
+      ['Outputs', 'CCB decision (Approve/Defer/Reject), meeting minutes']
+    ]
+  },
+  ccbDecision: {
+    title: '⚖️ CCB Decision Point (with In-Meeting Approvals)',
+    color: '#e65100',
+    rows: [
+      ['Phase', 'Phase 4 — CCB Meeting & Decision'],
+      ['Decision Maker', 'CCB Voting Members + Approval Groups'],
+      ['Options', '✅ Approved → Phase 5 | ⏸️ Deferred → Re-enter | ❌ Rejected → Closed'],
+      ['Voting', 'Majority vote required'],
+      ['Notifications', 'All stakeholders notified within 24h']
+    ]
+  },
+  // Completion
+  archived: {
+    title: '✅ Change Request Archived',
+    color: '#2e7d32',
+    rows: [
+      ['Phase', 'Phase 7 — Final Closure'],
+      ['Action', 'CR permanently archived with full audit trail'],
+      ['Includes', 'All 9 sections, approval history, completeness review record, email logs, meeting minutes, PIR'],
+      ['Notifications', 'Closure confirmation to all stakeholders'],
+      ['Notes', 'End of CR lifecycle']
+    ]
+  },
+  // Emails
+  e_submit_confirm: {
+    title: '📧 E-01: Submission Confirmation',
+    color: '#7b1fa2',
+    rows: [
+      ['Trigger', 'Change Owner submits Sections 1–2'],
+      ['Recipients', 'Change Owner'],
+      ['Subject', '[Moss Energy CCB] CR-XXXX Submitted Successfully'],
+      ['Phase', 'Phase 1'],
+      ['Timing', 'Immediate']
+    ]
+  },
+  e_new_cr: {
+    title: '📧 E-02: New CR Alert',
+    color: '#7b1fa2',
+    rows: [
+      ['Trigger', 'New CR submitted'],
+      ['Recipients', 'CCB Facilitator'],
+      ['Subject', '[Moss Energy CCB] New CR-XXXX Requires Validation'],
+      ['Phase', 'Phase 1'],
+      ['Timing', 'Immediate']
+    ]
+  },
+  e_tech_progress: {
+    title: '📧 E-03 to E-07: Section Completion Alerts',
+    color: '#7b1fa2',
+    rows: [
+      ['Trigger', 'Technical Lead completes each section (3, 4, 5, 6, 7)'],
+      ['Recipients', 'Change Owner, CCB Facilitator'],
+      ['Content', 'Progress notification per section: completion status, remaining sections, next steps'],
+      ['Phase', 'Phase 2 — Technical Details'],
+      ['Count', '5 emails (one per section)'],
+      ['v2.0 Change', 'Now includes E-07 for Section 7 (QA) — previously not in this phase']
+    ]
+  },
+  e_sla_reminder: {
+    title: '📧 E-08: SLA Reminder',
+    color: '#7b1fa2',
+    rows: [
+      ['Trigger', 'Sections 3-7 incomplete by Day 3'],
+      ['Recipients', 'Technical Lead, CCB Facilitator'],
+      ['Subject', '[Reminder] CR-XXXX Technical Sections Due in 2 Days'],
+      ['Phase', 'Phase 2'],
+      ['Timing', 'Day 3 of SLA window']
+    ]
+  },
+  e_review_start: {
+    title: '📧 E-09: Completeness Review Started (NEW)',
+    color: '#00838f',
+    rows: [
+      ['Trigger', 'All Sec 3-7 complete, review initiated'],
+      ['Recipients', 'Product Owner, CCB Lead, Change Owner, Technical Lead'],
+      ['Subject', '[Moss Energy CCB] CR-XXXX Completeness Review Started'],
+      ['Phase', 'Phase 3 — Completeness Review'],
+      ['v2.0', 'NEW email notification']
+    ]
+  },
+  e_review_rework: {
+    title: '📧 E-10: Rework Required (NEW)',
+    color: '#00838f',
+    rows: [
+      ['Trigger', 'Completeness Review identifies deficiencies'],
+      ['Recipients', 'Technical Lead, Change Owner'],
+      ['Subject', '[Moss Energy CCB] CR-XXXX Rework Required'],
+      ['Content', 'Specific feedback items per section needing revision'],
+      ['Phase', 'Phase 3'],
+      ['v2.0', 'NEW email notification']
+    ]
+  },
+  e_review_pass: {
+    title: '📧 E-11 to E-12: Review Approved + Summary (NEW)',
+    color: '#00838f',
+    rows: [
+      ['E-11 Trigger', 'Completeness Review passed'],
+      ['E-11 Recipients', 'All Stakeholders'],
+      ['E-12 Trigger', 'Review summary generated'],
+      ['E-12 Recipients', 'CCB Facilitator, Archive'],
+      ['Phase', 'Phase 3'],
+      ['v2.0', 'NEW email notifications']
+    ]
+  },
+
+  e_agenda: {
+    title: '📧 E-13: CCB Meeting Agenda',
+    color: '#7b1fa2',
+    rows: [
+      ['Trigger', 'T-48h before CCB meeting'],
+      ['Recipients', 'All CCB Members, Change Owners on agenda'],
+      ['Content', 'Full agenda with CRs, supporting documents, pre-read materials'],
+      ['Phase', 'Phase 4']
+    ]
+  },
+  e_reminder_24: {
+    title: '📧 E-14: Meeting Reminder',
+    color: '#7b1fa2',
+    rows: [
+      ['Content', 'Meeting reminder with materials — approvals will be collected during meeting'],
+      ['Recipients', 'All CCB Members'],
+      ['Phase', 'Phase 4']
+    ]
+  },
+  e_decision_notif: {
+    title: '📧 E-15 to E-19: CCB Decision + Approval Notifications',
+    color: '#7b1fa2',
+    rows: [
+      ['E-15', 'Approved notification (with all approvals)'],
+      ['E-16', 'Approved with Conditions'],
+      ['E-17', 'Deferred notification'],
+      ['E-18', 'Rejected notification'],
+      ['E-19', 'Decision summary + meeting minutes distributed'],
+      ['Phase', 'Phase 4']
+    ]
+  },
+  e_impl_start: {
+    title: '📧 E-20: Implementation Started',
+    color: '#7b1fa2',
+    rows: [
+      ['Trigger', 'Implementation window begins'],
+      ['Recipients', 'All Stakeholders'],
+      ['Content', 'Implementation started, expected completion, emergency contacts'],
+      ['Phase', 'Phase 5']
+    ]
+  },
+  e_impl_progress: {
+    title: '📧 E-21 to E-24: Implementation Progress + Complete',
+    color: '#7b1fa2',
+    rows: [
+      ['E-21–23', 'Milestone progress updates (25%, 50%, 75%)'],
+      ['E-24', 'Implementation successfully completed'],
+      ['Recipients', 'All Stakeholders'],
+      ['Phase', 'Phase 5']
+    ]
+  },
+  e_pir_due: {
+    title: '📧 E-25 to E-28: PIR Notifications',
+    color: '#7b1fa2',
+    rows: [
+      ['E-25', 'PIR Due Reminder to Change Owner'],
+      ['E-26', 'PIR Submitted confirmation'],
+      ['E-27', 'PIR review by CCB Facilitator'],
+      ['E-28', 'PIR Accepted — proceed to closure'],
+      ['Phase', 'Phase 6']
+    ]
+  },
+  e_closure: {
+    title: '📧 E-29 to E-31: Closure Notifications',
+    color: '#7b1fa2',
+    rows: [
+      ['E-29', 'CR archived — permanent record created'],
+      ['E-30', 'Final summary report distributed'],
+      ['E-31', 'Stakeholder closure notice'],
+      ['Phase', 'Phase 7']
+    ]
+  },
+  e_escalation: {
+    title: '📧 E-32 to E-34: Escalation Notifications',
+    color: '#7b1fa2',
+    rows: [
+      ['E-32', 'SLA Breach Escalation — auto-escalation after SLA exceeded'],
+      ['E-33', 'Meeting Quorum Issue — escalated to CCB Chair'],
+      ['E-34', 'Emergency Change Override — fast-track with post-facto review'],
+      ['Trigger', 'Any gate SLA breach or deadlock condition'],
+      ['Phase', 'Parallel — can trigger at any stage']
+    ]
+  }
+};
+
+function showModal(key) {
+  const data = modalData[key];
+  if (!data) return;
+  const header = document.getElementById('modalHeader');
+  header.style.background = data.color;
+  document.getElementById('modalTitle').textContent = data.title;
+
+  let html = '';
+  data.rows.forEach(([label, value]) => {
+    html += '<div class="detail-row"><div class="detail-label">' + label + '</div><div class="detail-value">' + value + '</div></div>';
+  });
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('detailModal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('detailModal').classList.remove('active');
+}
+
+// Close modals on overlay click or Escape
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('active');
+  });
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+  }
+});
+</script></main></div><script>
+(function(){
+  document.querySelectorAll('.ccb-nav-links a').forEach(function(link){
+    link.addEventListener('click', function(){ document.body.classList.remove('ccb-nav-open'); });
+  });
+})();
+</script></body>
+</html>
+</file>
+
+

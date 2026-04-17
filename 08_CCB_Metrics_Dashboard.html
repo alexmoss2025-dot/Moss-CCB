@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CCB Metrics Dashboard | Moss Energy</title>
+<!-- Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+        /* ============================================
+           Moss Energy CCB - Metrics Dashboard
+           Version 1.0 | March 2026
+           ============================================ */
+        
+        :root {
+            --moss-primary: #003366;
+            --moss-secondary: #004d99;
+            --moss-accent: #0066cc;
+            --moss-light: #e6f0fa;
+            --moss-dark: #001a33;
+            --success: #28a745;
+            --success-light: #d4edda;
+            --warning: #ffc107;
+            --warning-light: #fff3cd;
+            --danger: #dc3545;
+            --danger-light: #f8d7da;
+            --info: #17a2b8;
+            --info-light: #d1ecf1;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-500: #adb5bd;
+            --gray-700: #495057;
+            --gray-900: #212529;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--gray-100);
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--moss-primary) 0%, var(--moss-secondary) 100%);
+            color: white;
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .logo-section p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .header-info {
+            text-align: right;
+            font-size: 13px;
+        }
+
+        .last-updated {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px 30px;
+        }
+
+        /* Filters Section */
+        .filters-section {
+            background: white;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-group label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gray-700);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 8px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            font-size: 13px;
+            min-width: 140px;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--moss-accent);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.15);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--moss-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--moss-secondary);
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+
+        .kpi-card.green::before { background: var(--success); }
+        .kpi-card.yellow::before { background: var(--warning); }
+        .kpi-card.red::before { background: var(--danger); }
+        .kpi-card.blue::before { background: var(--moss-accent); }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .kpi-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--gray-500);
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .kpi-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .kpi-indicator.green { background: var(--success); }
+        .kpi-indicator.yellow { background: var(--warning); }
+        .kpi-indicator.red { background: var(--danger); }
+
+        .kpi-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--moss-primary);
+            margin-bottom: 5px;
+        }
+
+        .kpi-trend {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .trend-up { color: var(--success); }
+        .trend-down { color: var(--danger); }
+        .trend-neutral { color: var(--gray-500); }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--moss-primary);
+        }
+
+        .chart-subtitle {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 280px;
+        }
+
+        /* Summary Tables */
+        .tables-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .summary-table-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .summary-table-card h3 {
+            font-size: 16px;
+            color: var(--moss-primary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .summary-table th {
+            text-align: left;
+            padding: 10px 12px;
+            background: var(--moss-light);
+            color: var(--moss-primary);
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .summary-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .summary-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .summary-table tr:hover {
+            background: var(--gray-100);
+        }
+
+        .metric-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--gray-200);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .metric-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .metric-bar-fill.success { background: var(--success); }
+        .metric-bar-fill.warning { background: var(--warning); }
+        .metric-bar-fill.danger { background: var(--danger); }
+        .metric-bar-fill.info { background: var(--info); }
+        .metric-bar-fill.primary { background: var(--moss-primary); }
+
+        /* Status Badges */
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-success { background: var(--success-light); color: #155724; }
+        .badge-warning { background: var(--warning-light); color: #856404; }
+        .badge-danger { background: var(--danger-light); color: #721c24; }
+        .badge-info { background: var(--info-light); color: #0c5460; }
+
+        /* Help Section */
+        .help-section {
+            background: var(--moss-light);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .help-section h3 {
+            color: var(--moss-primary);
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .help-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .help-item h4 {
+            font-size: 13px;
+            color: var(--moss-secondary);
+            margin-bottom: 5px;
+        }
+
+        .help-item p {
+            font-size: 12px;
+            color: var(--gray-700);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray-500);
+            font-size: 12px;
+            margin-top: 20px;
+        }
+
+        /* Print Styles */
+        @media print {
+            .header {
+                background: var(--moss-primary) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .filters-section {
+                display: none !important;
+            }
+
+            .kpi-card,
+            .chart-card,
+            .summary-table-card {
+                box-shadow: none;
+                border: 1px solid var(--gray-300);
+                break-inside: avoid;
+            }
+
+            .kpi-card::before,
+            .kpi-indicator,
+            .metric-bar-fill,
+            .badge {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            body {
+                font-size: 11px;
+            }
+
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .charts-grid,
+            .tables-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .header-info {
+                text-align: center;
+            }
+
+            .kpi-grid,
+            .charts-grid,
+            .tables-section {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-section {
+                flex-direction: column;
+            }
+
+            .filter-group {
+                width: 100%;
+            }
+
+            .filter-group select,
+            .filter-group input {
+                width: 100%;
+            }
+        }
+    </style>
+<link rel="stylesheet" href="site.css" />
+</head>
+<body >
+<nav class="moss-topnav">
+  <span class="nav-brand">● Moss</span>
+  <a href="index.html">← Back to Home</a>
+  <span class="nav-sep">|</span>
+  <span style="color:rgba(255,255,255,.7);font-size:.84rem;">CCB Metrics Dashboard</span>
+</nav>
+<!-- Header --><header class="header">
+<div class="header-content">
+<div class="logo-section">
+<h1>⚡ Moss Energy</h1>
+<p>Change Control Board - Metrics Dashboard</p>
+</div>
+<div class="header-info">
+<div>Version 1.0 | March 2026</div>
+<div>CCB Document: 08</div>
+<div class="last-updated">
+<span class="status-dot"></span>
+<span>Last updated: <span id="update-time">Loading...</span></span>
+</div>
+</div>
+</div>
+</header><!-- Main Container --><main class="container">
+<!-- Filters Section -->
+<section class="filters-section">
+<div class="filter-group">
+<label for="date-range">Date Range</label>
+<select id="date-range" onchange="updateDashboard()">
+<option value="current-month">Current Month</option>
+<option value="last-30">Last 30 Days</option>
+<option value="last-90">Last 90 Days</option>
+<option value="ytd">Year to Date</option>
+<option value="all">All Time</option>
+</select>
+</div>
+<div class="filter-group">
+<label for="environment-filter">Environment</label>
+<select id="environment-filter" onchange="updateDashboard()">
+<option value="all">All Environments</option>
+<option value="Production">Production</option>
+<option value="UAT">UAT</option>
+<option value="Development">Development</option>
+</select>
+</div>
+<div class="filter-group">
+<label for="start-date">Start Date</label>
+<input id="start-date" onchange="updateDashboard()" type="date"/>
+</div>
+<div class="filter-group">
+<label for="end-date">End Date</label>
+<input id="end-date" onchange="updateDashboard()" type="date"/>
+</div>
+<button class="btn btn-primary" onclick="refreshDashboard()">🔄 Refresh</button>
+<button class="btn btn-secondary" onclick="window.print()">🖨️ Print Report</button>
+</section>
+<!-- KPI Cards -->
+<section class="kpi-grid">
+<div class="kpi-card green" id="kpi-total">
+<div class="kpi-header">
+<span class="kpi-label">Total Changes This Month</span>
+<span class="kpi-indicator green"></span>
+</div>
+<div class="kpi-value" id="kpi-total-value">0</div>
+<div class="kpi-trend trend-up">
+<span>↑</span>
+<span id="kpi-total-trend">+0% vs last month</span>
+</div>
+</div>
+<div class="kpi-card green" id="kpi-success">
+<div class="kpi-header">
+<span class="kpi-label">Success Rate</span>
+<span class="kpi-indicator green" id="success-indicator"></span>
+</div>
+<div class="kpi-value" id="kpi-success-value">0%</div>
+<div class="kpi-trend trend-up">
+<span>↑</span>
+<span id="kpi-success-trend">Target: 95%</span>
+</div>
+</div>
+<div class="kpi-card blue" id="kpi-approval">
+<div class="kpi-header">
+<span class="kpi-label">Avg Time-to-Approval</span>
+<span class="kpi-indicator green" id="approval-indicator"></span>
+</div>
+<div class="kpi-value" id="kpi-approval-value">0</div>
+<div class="kpi-trend trend-neutral">
+<span>→</span>
+<span id="kpi-approval-trend">Target: ≤3 days</span>
+</div>
+</div>
+<div class="kpi-card yellow" id="kpi-pending">
+<div class="kpi-header">
+<span class="kpi-label">Changes Pending Approval</span>
+<span class="kpi-indicator yellow" id="pending-indicator"></span>
+</div>
+<div class="kpi-value" id="kpi-pending-value">0</div>
+<div class="kpi-trend trend-neutral">
+<span>→</span>
+<span id="kpi-pending-trend">Requires attention</span>
+</div>
+</div>
+</section>
+<!-- Charts Grid -->
+<section class="charts-grid">
+<div class="chart-card">
+<div class="chart-header">
+<div>
+<div class="chart-title">Changes by Category</div>
+<div class="chart-subtitle">Distribution of change types</div>
+</div>
+</div>
+<div class="chart-container">
+<canvas id="categoryChart"></canvas>
+</div>
+</div>
+<div class="chart-card">
+<div class="chart-header">
+<div>
+<div class="chart-title">Changes by Environment</div>
+<div class="chart-subtitle">Target environment breakdown</div>
+</div>
+</div>
+<div class="chart-container">
+<canvas id="environmentChart"></canvas>
+</div>
+</div>
+<div class="chart-card">
+<div class="chart-header">
+<div>
+<div class="chart-title">Monthly Change Volume Trend</div>
+<div class="chart-subtitle">6-month rolling view</div>
+</div>
+</div>
+<div class="chart-container">
+<canvas id="trendChart"></canvas>
+</div>
+</div>
+<div class="chart-card">
+<div class="chart-header">
+<div>
+<div class="chart-title">Risk Level Distribution</div>
+<div class="chart-subtitle">Current risk profile</div>
+</div>
+</div>
+<div class="chart-container">
+<canvas id="riskChart"></canvas>
+</div>
+</div>
+</section>
+<!-- Summary Tables -->
+<section class="tables-section">
+<div class="summary-table-card">
+<h3>📊 Performance Metrics</h3>
+<table class="summary-table">
+<thead>
+<tr>
+<th>Metric</th>
+<th>Current</th>
+<th>Target</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="metrics-table-body">
+<!-- Populated by JavaScript -->
+</tbody>
+</table>
+</div>
+<div class="summary-table-card">
+<h3>📈 Category Performance</h3>
+<table class="summary-table">
+<thead>
+<tr>
+<th>Category</th>
+<th>Count</th>
+<th>% of Total</th>
+<th>Distribution</th>
+</tr>
+</thead>
+<tbody id="category-table-body">
+<!-- Populated by JavaScript -->
+</tbody>
+</table>
+</div>
+</section>
+<!-- Additional Metrics Tables -->
+<section class="tables-section">
+<div class="summary-table-card">
+<h3>🎯 Status Summary</h3>
+<table class="summary-table">
+<thead>
+<tr>
+<th>Status</th>
+<th>Count</th>
+<th>% of Total</th>
+<th>Progress</th>
+</tr>
+</thead>
+<tbody id="status-table-body">
+<!-- Populated by JavaScript -->
+</tbody>
+</table>
+</div>
+<div class="summary-table-card">
+<h3>⚠️ Risk Analysis</h3>
+<table class="summary-table">
+<thead>
+<tr>
+<th>Risk Level</th>
+<th>Count</th>
+<th>Avg Days to Approve</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="risk-table-body">
+<!-- Populated by JavaScript -->
+</tbody>
+</table>
+</div>
+</section>
+<!-- Help Section -->
+<section class="help-section">
+<h3>📘 Dashboard Guide</h3>
+<div class="help-grid">
+<div class="help-item">
+<h4>KPI Indicators</h4>
+<p><strong>🟢 Green:</strong> Meeting or exceeding target<br/>
+<strong>🟡 Yellow:</strong> Approaching threshold<br/>
+<strong>🔴 Red:</strong> Below target, action required</p>
+</div>
+<div class="help-item">
+<h4>Performance Targets</h4>
+<p><strong>Success Rate:</strong> ≥95%<br/>
+<strong>Time-to-Approval:</strong> ≤3 business days<br/>
+<strong>PIR Completion:</strong> Within 5 days post-implementation</p>
+</div>
+<div class="help-item">
+<h4>Using Filters</h4>
+<p>• Select date range to focus on specific periods<br/>
+                       • Filter by environment for targeted analysis<br/>
+                       • Custom date range for detailed reporting</p>
+</div>
+<div class="help-item">
+<h4>Data Refresh</h4>
+<p>• Dashboard auto-refreshes every 5 minutes<br/>
+                       • Click "Refresh" for immediate update<br/>
+                       • Print-friendly layout for reports</p>
+</div>
+</div>
+</section>
+</main><!-- Footer --><footer class="footer">
+<p>Moss Energy Change Control Board | Metrics Dashboard v1.0 | March 2026</p>
+<p>For questions, contact the CCB Administrator | Document Reference: CCB-08</p>
+</footer><script>
+        /* ============================================
+           CCB Metrics Dashboard - JavaScript
+           Version 1.0 | March 2026
+           ============================================ */
+
+        // Sample data for demonstration
+        const dashboardData = {
+            changeRequests: [
+                { id: 'CR-2026-001', category: 'Standard', environment: 'Production', risk: 'Low', status: 'PIR Complete', submitted: '2026-02-01', approved: '2026-02-02', implemented: '2026-02-05' },
+                { id: 'CR-2026-002', category: 'Normal', environment: 'UAT, Production', risk: 'Medium', status: 'Implemented', submitted: '2026-02-05', approved: '2026-02-10', implemented: '2026-02-15' },
+                { id: 'CR-2026-003', category: 'Normal', environment: 'Production', risk: 'High', status: 'Approved', submitted: '2026-02-08', approved: '2026-02-14', implemented: null },
+                { id: 'CR-2026-004', category: 'Emergency', environment: 'All', risk: 'Critical', status: 'Implemented', submitted: '2026-02-12', approved: '2026-02-12', implemented: '2026-02-12' },
+                { id: 'CR-2026-005', category: 'Standard', environment: 'Development', risk: 'Low', status: 'PIR Complete', submitted: '2026-02-14', approved: '2026-02-15', implemented: '2026-02-16' },
+                { id: 'CR-2026-006', category: 'Major', environment: 'UAT, Production', risk: 'High', status: 'Under Review', submitted: '2026-02-18', approved: null, implemented: null },
+                { id: 'CR-2026-007', category: 'Normal', environment: 'Production', risk: 'Medium', status: 'Submitted', submitted: '2026-02-19', approved: null, implemented: null },
+                { id: 'CR-2026-008', category: 'Standard', environment: 'Production', risk: 'Low', status: 'Approved', submitted: '2026-02-20', approved: '2026-02-21', implemented: null },
+                { id: 'CR-2026-009', category: 'Major', environment: 'UAT', risk: 'Medium', status: 'Rejected', submitted: '2026-02-22', approved: null, implemented: null },
+                { id: 'CR-2026-010', category: 'Normal', environment: 'All', risk: 'Low', status: 'Submitted', submitted: '2026-02-24', approved: null, implemented: null }
+            ],
+            monthlyTrend: [
+                { month: 'Sep 2025', total: 18, success: 16, failed: 2 },
+                { month: 'Oct 2025', total: 22, success: 21, failed: 1 },
+                { month: 'Nov 2025', total: 19, success: 18, failed: 1 },
+                { month: 'Dec 2025', total: 15, success: 14, failed: 1 },
+                { month: 'Jan 2026', total: 24, success: 23, failed: 1 },
+                { month: 'Feb 2026', total: 10, success: 8, failed: 1 }
+            ]
+        };
+
+        // Chart instances
+        let categoryChart, environmentChart, trendChart, riskChart;
+
+        // Initialize dashboard on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDates();
+            updateKPIs();
+            createCharts();
+            populateTables();
+            updateLastUpdated();
+            
+            // Auto-refresh every 5 minutes
+            setInterval(refreshDashboard, 300000);
+        });
+
+        // Initialize date inputs
+        function initializeDates() {
+            const today = new Date();
+            const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            
+            document.getElementById('start-date').valueAsDate = firstOfMonth;
+            document.getElementById('end-date').valueAsDate = today;
+        }
+
+        // Update KPI cards
+        function updateKPIs() {
+            const data = dashboardData.changeRequests;
+            const total = data.length;
+            
+            // Total changes this month
+            document.getElementById('kpi-total-value').textContent = total;
+            const prevMonthTotal = dashboardData.monthlyTrend[4].total; // Jan 2026
+            const changePercent = Math.round(((total - prevMonthTotal) / prevMonthTotal) * 100);
+            document.getElementById('kpi-total-trend').textContent = 
+                `${changePercent >= 0 ? '+' : ''}${changePercent}% vs last month`;
+            
+            // Success rate
+            const successful = data.filter(cr => ['Implemented', 'PIR Complete'].includes(cr.status)).length;
+            const completed = data.filter(cr => !['Submitted', 'Under Review'].includes(cr.status)).length;
+            const successRate = completed > 0 ? Math.round((successful / completed) * 100) : 0;
+            document.getElementById('kpi-success-value').textContent = successRate + '%';
+            
+            // Update success indicator
+            const successIndicator = document.getElementById('success-indicator');
+            const kpiSuccessCard = document.getElementById('kpi-success');
+            if (successRate >= 95) {
+                successIndicator.className = 'kpi-indicator green';
+                kpiSuccessCard.className = 'kpi-card green';
+            } else if (successRate >= 85) {
+                successIndicator.className = 'kpi-indicator yellow';
+                kpiSuccessCard.className = 'kpi-card yellow';
+            } else {
+                successIndicator.className = 'kpi-indicator red';
+                kpiSuccessCard.className = 'kpi-card red';
+            }
+            
+            // Average time to approval
+            const approvedChanges = data.filter(cr => cr.approved);
+            let totalDays = 0;
+            approvedChanges.forEach(cr => {
+                const submitted = new Date(cr.submitted);
+                const approved = new Date(cr.approved);
+                totalDays += Math.ceil((approved - submitted) / (1000 * 60 * 60 * 24));
+            });
+            const avgDays = approvedChanges.length > 0 ? (totalDays / approvedChanges.length).toFixed(1) : 0;
+            document.getElementById('kpi-approval-value').textContent = avgDays + ' days';
+            
+            // Update approval indicator
+            const approvalIndicator = document.getElementById('approval-indicator');
+            const kpiApprovalCard = document.getElementById('kpi-approval');
+            if (avgDays <= 3) {
+                approvalIndicator.className = 'kpi-indicator green';
+            } else if (avgDays <= 5) {
+                approvalIndicator.className = 'kpi-indicator yellow';
+            } else {
+                approvalIndicator.className = 'kpi-indicator red';
+            }
+            
+            // Pending approval
+            const pending = data.filter(cr => ['Submitted', 'Under Review'].includes(cr.status)).length;
+            document.getElementById('kpi-pending-value').textContent = pending;
+            
+            // Update pending indicator
+            const pendingIndicator = document.getElementById('pending-indicator');
+            const kpiPendingCard = document.getElementById('kpi-pending');
+            if (pending <= 3) {
+                pendingIndicator.className = 'kpi-indicator green';
+                kpiPendingCard.className = 'kpi-card green';
+            } else if (pending <= 5) {
+                pendingIndicator.className = 'kpi-indicator yellow';
+                kpiPendingCard.className = 'kpi-card yellow';
+            } else {
+                pendingIndicator.className = 'kpi-indicator red';
+                kpiPendingCard.className = 'kpi-card red';
+            }
+        }
+
+        // Create all charts
+        function createCharts() {
+            createCategoryChart();
+            createEnvironmentChart();
+            createTrendChart();
+            createRiskChart();
+        }
+
+        // Category pie chart
+        function createCategoryChart() {
+            const ctx = document.getElementById('categoryChart').getContext('2d');
+            const data = dashboardData.changeRequests;
+            
+            const categories = {};
+            data.forEach(cr => {
+                categories[cr.category] = (categories[cr.category] || 0) + 1;
+            });
+            
+            categoryChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(categories),
+                    datasets: [{
+                        data: Object.values(categories),
+                        backgroundColor: ['#28a745', '#0066cc', '#ffc107', '#dc3545'],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Environment bar chart
+        function createEnvironmentChart() {
+            const ctx = document.getElementById('environmentChart').getContext('2d');
+            const data = dashboardData.changeRequests;
+            
+            const environments = { 'Production': 0, 'UAT': 0, 'Development': 0, 'All': 0 };
+            data.forEach(cr => {
+                if (cr.environment.includes('All')) {
+                    environments['All']++;
+                } else {
+                    if (cr.environment.includes('Production')) environments['Production']++;
+                    if (cr.environment.includes('UAT')) environments['UAT']++;
+                    if (cr.environment.includes('Development')) environments['Development']++;
+                }
+            });
+            
+            environmentChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(environments),
+                    datasets: [{
+                        label: 'Number of Changes',
+                        data: Object.values(environments),
+                        backgroundColor: ['#003366', '#004d99', '#0066cc', '#3399ff'],
+                        borderRadius: 6,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Monthly trend line chart
+        function createTrendChart() {
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            const trend = dashboardData.monthlyTrend;
+            
+            trendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: trend.map(t => t.month),
+                    datasets: [
+                        {
+                            label: 'Total Changes',
+                            data: trend.map(t => t.total),
+                            borderColor: '#003366',
+                            backgroundColor: 'rgba(0, 51, 102, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 5,
+                            pointBackgroundColor: '#003366'
+                        },
+                        {
+                            label: 'Successful',
+                            data: trend.map(t => t.success),
+                            borderColor: '#28a745',
+                            backgroundColor: 'transparent',
+                            borderDash: [5, 5],
+                            tension: 0.3,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#28a745'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 5
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Risk level donut chart
+        function createRiskChart() {
+            const ctx = document.getElementById('riskChart').getContext('2d');
+            const data = dashboardData.changeRequests;
+            
+            const risks = { 'Low': 0, 'Medium': 0, 'High': 0, 'Critical': 0 };
+            data.forEach(cr => {
+                risks[cr.risk]++;
+            });
+            
+            riskChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(risks),
+                    datasets: [{
+                        data: Object.values(risks),
+                        backgroundColor: ['#28a745', '#ffc107', '#fd7e14', '#dc3545'],
+                        borderWidth: 2,
+                        borderColor: '#fff',
+                        cutout: '60%'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Populate summary tables
+        function populateTables() {
+            populateMetricsTable();
+            populateCategoryTable();
+            populateStatusTable();
+            populateRiskTable();
+        }
+
+        // Metrics table
+        function populateMetricsTable() {
+            const data = dashboardData.changeRequests;
+            const total = data.length;
+            const successful = data.filter(cr => ['Implemented', 'PIR Complete'].includes(cr.status)).length;
+            const completed = data.filter(cr => !['Submitted', 'Under Review'].includes(cr.status)).length;
+            const successRate = completed > 0 ? Math.round((successful / completed) * 100) : 0;
+            
+            const approvedChanges = data.filter(cr => cr.approved);
+            let totalDays = 0;
+            approvedChanges.forEach(cr => {
+                const submitted = new Date(cr.submitted);
+                const approved = new Date(cr.approved);
+                totalDays += Math.ceil((approved - submitted) / (1000 * 60 * 60 * 24));
+            });
+            const avgDays = approvedChanges.length > 0 ? (totalDays / approvedChanges.length).toFixed(1) : 0;
+            
+            const pirComplete = data.filter(cr => cr.status === 'PIR Complete').length;
+            const implemented = data.filter(cr => ['Implemented', 'PIR Complete'].includes(cr.status)).length;
+            const pirRate = implemented > 0 ? Math.round((pirComplete / implemented) * 100) : 0;
+            
+            const metrics = [
+                { name: 'Success Rate', current: successRate + '%', target: '≥95%', status: successRate >= 95 ? 'success' : (successRate >= 85 ? 'warning' : 'danger') },
+                { name: 'Avg Time-to-Approval', current: avgDays + ' days', target: '≤3 days', status: avgDays <= 3 ? 'success' : (avgDays <= 5 ? 'warning' : 'danger') },
+                { name: 'PIR Completion Rate', current: pirRate + '%', target: '100%', status: pirRate >= 90 ? 'success' : (pirRate >= 70 ? 'warning' : 'danger') },
+                { name: 'Emergency Changes', current: data.filter(cr => cr.category === 'Emergency').length, target: '<3/month', status: data.filter(cr => cr.category === 'Emergency').length < 3 ? 'success' : 'warning' }
+            ];
+            
+            const tbody = document.getElementById('metrics-table-body');
+            tbody.innerHTML = metrics.map(m => `
+                <tr>
+                    <td>${m.name}</td>
+                    <td><strong>${m.current}</strong></td>
+                    <td>${m.target}</td>
+                    <td><span class="badge badge-${m.status}">${m.status === 'success' ? 'On Target' : (m.status === 'warning' ? 'Watch' : 'Action')}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        // Category table
+        function populateCategoryTable() {
+            const data = dashboardData.changeRequests;
+            const total = data.length;
+            
+            const categories = {};
+            data.forEach(cr => {
+                categories[cr.category] = (categories[cr.category] || 0) + 1;
+            });
+            
+            const colors = { 'Standard': 'success', 'Normal': 'primary', 'Major': 'warning', 'Emergency': 'danger' };
+            
+            const tbody = document.getElementById('category-table-body');
+            tbody.innerHTML = Object.entries(categories).map(([cat, count]) => {
+                const pct = Math.round((count / total) * 100);
+                return `
+                    <tr>
+                        <td><strong>${cat}</strong></td>
+                        <td>${count}</td>
+                        <td>${pct}%</td>
+                        <td>
+                            <div class="metric-bar">
+                                <div class="metric-bar-fill ${colors[cat]}" style="width: ${pct}%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Status table
+        function populateStatusTable() {
+            const data = dashboardData.changeRequests;
+            const total = data.length;
+            
+            const statuses = {};
+            data.forEach(cr => {
+                statuses[cr.status] = (statuses[cr.status] || 0) + 1;
+            });
+            
+            const statusOrder = ['Submitted', 'Under Review', 'Approved', 'Rejected', 'Implemented', 'PIR Complete'];
+            const colors = { 
+                'Submitted': 'info', 
+                'Under Review': 'primary', 
+                'Approved': 'success', 
+                'Rejected': 'danger', 
+                'Implemented': 'info', 
+                'PIR Complete': 'success' 
+            };
+            
+            const tbody = document.getElementById('status-table-body');
+            tbody.innerHTML = statusOrder.filter(s => statuses[s]).map(status => {
+                const count = statuses[status];
+                const pct = Math.round((count / total) * 100);
+                return `
+                    <tr>
+                        <td><strong>${status}</strong></td>
+                        <td>${count}</td>
+                        <td>${pct}%</td>
+                        <td>
+                            <div class="metric-bar">
+                                <div class="metric-bar-fill ${colors[status]}" style="width: ${pct}%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Risk table
+        function populateRiskTable() {
+            const data = dashboardData.changeRequests;
+            
+            const riskStats = {};
+            data.forEach(cr => {
+                if (!riskStats[cr.risk]) {
+                    riskStats[cr.risk] = { count: 0, totalDays: 0, approvedCount: 0 };
+                }
+                riskStats[cr.risk].count++;
+                if (cr.approved) {
+                    const submitted = new Date(cr.submitted);
+                    const approved = new Date(cr.approved);
+                    riskStats[cr.risk].totalDays += Math.ceil((approved - submitted) / (1000 * 60 * 60 * 24));
+                    riskStats[cr.risk].approvedCount++;
+                }
+            });
+            
+            const riskOrder = ['Low', 'Medium', 'High', 'Critical'];
+            const statusMapping = { 'Low': 'success', 'Medium': 'warning', 'High': 'warning', 'Critical': 'danger' };
+            
+            const tbody = document.getElementById('risk-table-body');
+            tbody.innerHTML = riskOrder.filter(r => riskStats[r]).map(risk => {
+                const stats = riskStats[risk];
+                const avgDays = stats.approvedCount > 0 ? (stats.totalDays / stats.approvedCount).toFixed(1) : 'N/A';
+                return `
+                    <tr>
+                        <td><strong>${risk}</strong></td>
+                        <td>${stats.count}</td>
+                        <td>${avgDays} ${avgDays !== 'N/A' ? 'days' : ''}</td>
+                        <td><span class="badge badge-${statusMapping[risk]}">${risk}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Update last updated timestamp
+        function updateLastUpdated() {
+            const now = new Date();
+            document.getElementById('update-time').textContent = now.toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Update dashboard (called by filters)
+        function updateDashboard() {
+            updateKPIs();
+            populateTables();
+            updateLastUpdated();
+        }
+
+        // Refresh dashboard
+        function refreshDashboard() {
+            // Destroy existing charts
+            if (categoryChart) categoryChart.destroy();
+            if (environmentChart) environmentChart.destroy();
+            if (trendChart) trendChart.destroy();
+            if (riskChart) riskChart.destroy();
+            
+            // Recreate everything
+            updateKPIs();
+            createCharts();
+            populateTables();
+            updateLastUpdated();
+        }
+    </script></main></div><script>
+(function(){
+  document.querySelectorAll('.ccb-nav-links a').forEach(function(link){
+    link.addEventListener('click', function(){ document.body.classList.remove('ccb-nav-open'); });
+  });
+})();
+</script></body>
+</html>
+
+</file>
+
+

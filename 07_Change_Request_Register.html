@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Change Request Register | Moss Energy CCB</title>
+<style>
+        /* ============================================
+           Moss Energy CCB - Change Request Register
+           Version 1.0 | March 2026
+           ============================================ */
+        
+        :root {
+            --moss-primary: #003366;
+            --moss-secondary: #004d99;
+            --moss-accent: #0066cc;
+            --moss-light: #e6f0fa;
+            --moss-dark: #001a33;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-500: #adb5bd;
+            --gray-700: #495057;
+            --gray-900: #212529;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--gray-100);
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--moss-primary) 0%, var(--moss-secondary) 100%);
+            color: white;
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .logo-section p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .header-info {
+            text-align: right;
+            font-size: 13px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px 30px;
+        }
+
+        /* Summary Statistics */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--moss-primary);
+        }
+
+        .stat-card h3 {
+            font-size: 13px;
+            text-transform: uppercase;
+            color: var(--gray-500);
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--moss-primary);
+            margin-bottom: 10px;
+        }
+
+        .stat-breakdown {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .stat-item {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 15px;
+            background: var(--gray-100);
+        }
+
+        .stat-item.standard { background: #d4edda; color: #155724; }
+        .stat-item.normal { background: #cce5ff; color: #004085; }
+        .stat-item.major { background: #fff3cd; color: #856404; }
+        .stat-item.emergency { background: #f8d7da; color: #721c24; }
+        
+        .stat-item.low { background: #d4edda; color: #155724; }
+        .stat-item.medium { background: #fff3cd; color: #856404; }
+        .stat-item.high { background: #ffe5d0; color: #c73e1d; }
+        .stat-item.critical { background: #f8d7da; color: #721c24; }
+
+        /* Controls Section */
+        .controls-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .controls-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .control-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-700);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .control-group input,
+        .control-group select {
+            padding: 10px 14px;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            font-size: 14px;
+            min-width: 160px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .control-group input:focus,
+        .control-group select:focus {
+            outline: none;
+            border-color: var(--moss-accent);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.15);
+        }
+
+        .search-input {
+            min-width: 280px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: var(--moss-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--moss-secondary);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-300);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .action-buttons {
+            margin-left: auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Table Section */
+        .table-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-header h2 {
+            font-size: 18px;
+            color: var(--moss-primary);
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background: var(--moss-light);
+        }
+
+        th {
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--moss-primary);
+            border-bottom: 2px solid var(--moss-primary);
+            cursor: pointer;
+            white-space: nowrap;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        th:hover {
+            background: #d4e5f7;
+        }
+
+        th .sort-icon {
+            margin-left: 5px;
+            opacity: 0.5;
+        }
+
+        th.sorted .sort-icon {
+            opacity: 1;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--gray-200);
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background: var(--gray-100);
+        }
+
+        /* Status Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-submitted { background: #e2e3e5; color: #383d41; }
+        .badge-under-review { background: #cce5ff; color: #004085; }
+        .badge-approved { background: #d4edda; color: #155724; }
+        .badge-rejected { background: #f8d7da; color: #721c24; }
+        .badge-implemented { background: #d1ecf1; color: #0c5460; }
+        .badge-pir-complete { background: #c3e6cb; color: #155724; }
+
+        .badge-low { background: #d4edda; color: #155724; }
+        .badge-medium { background: #fff3cd; color: #856404; }
+        .badge-high { background: #ffe5d0; color: #c73e1d; }
+        .badge-critical { background: #f8d7da; color: #721c24; }
+
+        .badge-standard { background: #d4edda; color: #155724; }
+        .badge-normal { background: #cce5ff; color: #004085; }
+        .badge-major { background: #fff3cd; color: #856404; }
+        .badge-emergency { background: #f8d7da; color: #721c24; }
+
+        /* PIR Status */
+        .pir-pending { color: var(--warning); }
+        .pir-scheduled { color: var(--info); }
+        .pir-complete { color: var(--success); }
+        .pir-na { color: var(--gray-500); }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+            color: var(--moss-primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray-500);
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--gray-900);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 10px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Help Section */
+        .help-section {
+            background: var(--moss-light);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .help-section h3 {
+            color: var(--moss-primary);
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .help-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .help-item h4 {
+            font-size: 13px;
+            color: var(--moss-secondary);
+            margin-bottom: 5px;
+        }
+
+        .help-item p {
+            font-size: 12px;
+            color: var(--gray-700);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray-500);
+            font-size: 12px;
+            margin-top: 20px;
+        }
+
+        /* Print Styles */
+        @media print {
+            .header {
+                background: var(--moss-primary) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .controls-section,
+            .action-buttons,
+            .modal-overlay,
+            .help-section {
+                display: none !important;
+            }
+
+            .stat-card,
+            .table-section {
+                box-shadow: none;
+                border: 1px solid var(--gray-300);
+            }
+
+            th {
+                background: var(--moss-light) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .badge {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            body {
+                font-size: 11px;
+            }
+
+            table {
+                font-size: 10px;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .header-info {
+                text-align: center;
+            }
+
+            .controls-row {
+                flex-direction: column;
+            }
+
+            .action-buttons {
+                margin-left: 0;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+        }
+    </style>
+<link rel="stylesheet" href="site.css" />
+</head>
+<body >
+<nav class="moss-topnav">
+  <span class="nav-brand">● Moss</span>
+  <a href="index.html">← Back to Home</a>
+  <span class="nav-sep">|</span>
+  <span style="color:rgba(255,255,255,.7);font-size:.84rem;">Change Request Register</span>
+</nav>
+<!-- Header --><header class="header">
+<div class="header-content">
+<div class="logo-section">
+<h1>⚡ Moss Energy</h1>
+<p>Change Control Board - Change Request Register</p>
+</div>
+<div class="header-info">
+<div>Version 1.0 | March 2026</div>
+<div>CCB Document: 07</div>
+</div>
+</div>
+</header><!-- Main Container --><main class="container">
+<!-- Summary Statistics -->
+<section class="stats-grid">
+<div class="stat-card">
+<h3>Total Changes</h3>
+<div class="stat-number" id="total-changes">0</div>
+<div class="stat-breakdown" id="category-breakdown"></div>
+</div>
+<div class="stat-card">
+<h3>Status Distribution</h3>
+<div class="stat-number" id="pending-count">0</div>
+<div style="font-size: 12px; color: var(--gray-500); margin-bottom: 10px;">Pending Actions</div>
+<div class="stat-breakdown" id="status-breakdown"></div>
+</div>
+<div class="stat-card">
+<h3>Risk Distribution</h3>
+<div class="stat-number" id="high-risk-count">0</div>
+<div style="font-size: 12px; color: var(--gray-500); margin-bottom: 10px;">High/Critical Risk</div>
+<div class="stat-breakdown" id="risk-breakdown"></div>
+</div>
+<div class="stat-card">
+<h3>Implementation Rate</h3>
+<div class="stat-number" id="implementation-rate">0%</div>
+<div style="font-size: 12px; color: var(--gray-500); margin-bottom: 10px;">Success Rate</div>
+<div class="stat-breakdown" id="implementation-breakdown"></div>
+</div>
+</section>
+<!-- Controls Section -->
+<section class="controls-section">
+<div class="controls-row">
+<div class="control-group">
+<label for="search">Search</label>
+<input class="search-input" id="search" placeholder="Search by ID, Title, Requestor..." type="text"/>
+</div>
+<div class="control-group">
+<label for="filter-category">Category</label>
+<select id="filter-category">
+<option value="">All Categories</option>
+<option value="Standard">Standard</option>
+<option value="Normal">Normal</option>
+<option value="Major">Major</option>
+<option value="Emergency">Emergency</option>
+</select>
+</div>
+<div class="control-group">
+<label for="filter-environment">Environment</label>
+<select id="filter-environment">
+<option value="">All Environments</option>
+<option value="Production">Production</option>
+<option value="UAT">UAT</option>
+<option value="Development">Development</option>
+<option value="All">All Environments</option>
+</select>
+</div>
+<div class="control-group">
+<label for="filter-risk">Risk Level</label>
+<select id="filter-risk">
+<option value="">All Risk Levels</option>
+<option value="Low">Low</option>
+<option value="Medium">Medium</option>
+<option value="High">High</option>
+<option value="Critical">Critical</option>
+</select>
+</div>
+<div class="control-group">
+<label for="filter-status">Status</label>
+<select id="filter-status">
+<option value="">All Statuses</option>
+<option value="Submitted">Submitted</option>
+<option value="Under Review">Under Review</option>
+<option value="Approved">Approved</option>
+<option value="Rejected">Rejected</option>
+<option value="Implemented">Implemented</option>
+<option value="PIR Complete">PIR Complete</option>
+</select>
+</div>
+<div class="action-buttons">
+<button class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
+<button class="btn btn-success" onclick="openAddModal()">+ Add Change Request</button>
+<button class="btn btn-primary" onclick="exportToCSV()">📥 Export CSV</button>
+</div>
+</div>
+</section>
+<!-- Table Section -->
+<section class="table-section">
+<div class="table-header">
+<h2>Change Request Register</h2>
+<span id="results-count">Showing 0 records</span>
+</div>
+<div class="table-container">
+<table id="change-table">
+<thead>
+<tr>
+<th onclick="sortTable(0)">CR ID <span class="sort-icon">↕</span></th>
+<th onclick="sortTable(1)">Title <span class="sort-icon">↕</span></th>
+<th onclick="sortTable(2)">Requestor <span class="sort-icon">↕</span></th>
+<th onclick="sortTable(3)">Date Submitted <span class="sort-icon">↕</span></th>
+<th onclick="sortTable(4)">Category <span class="sort-icon">↕</span></th>
+<th onclick="sortTable(5)">Environment(s) <span class="sort-icon">↕</span></th>
+<th onclick="sortTable(6)">Risk Level <span class="sort-icon">↕</span></th>
+<th onclick="sortTable(7)">Status <span class="sort-icon">↕</span></th>
+<th onclick="sortTable(8)">Approval Date <span class="sort-icon">↕</span></th>
+<th onclick="sortTable(9)">Implementation Date <span class="sort-icon">↕</span></th>
+<th onclick="sortTable(10)">PIR Status <span class="sort-icon">↕</span></th>
+</tr>
+</thead>
+<tbody id="table-body">
+<!-- Data populated by JavaScript -->
+</tbody>
+</table>
+</div>
+</section>
+<!-- Help Section -->
+<section class="help-section">
+<h3>📘 Quick Reference Guide</h3>
+<div class="help-grid">
+<div class="help-item">
+<h4>Change Categories</h4>
+<p><strong>Standard:</strong> Pre-approved, low-risk changes<br/>
+<strong>Normal:</strong> Regular changes requiring CCB review<br/>
+<strong>Major:</strong> Significant changes with high impact<br/>
+<strong>Emergency:</strong> Urgent changes to restore service</p>
+</div>
+<div class="help-item">
+<h4>Status Workflow</h4>
+<p><strong>Submitted → Under Review → Approved/Rejected → Implemented → PIR Complete</strong><br/>
+                       All changes must complete PIR within 5 business days of implementation.</p>
+</div>
+<div class="help-item">
+<h4>Risk Levels</h4>
+<p><strong>Low:</strong> Minimal impact, easy rollback<br/>
+<strong>Medium:</strong> Moderate impact, some complexity<br/>
+<strong>High:</strong> Significant impact, difficult rollback<br/>
+<strong>Critical:</strong> Major business impact</p>
+</div>
+<div class="help-item">
+<h4>Using This Register</h4>
+<p>• Click column headers to sort<br/>
+                       • Use filters to narrow results<br/>
+                       • Click "+ Add Change Request" to create new entry<br/>
+                       • Export data to CSV for reporting</p>
+</div>
+</div>
+</section>
+</main><!-- Add/Edit Modal --><div class="modal-overlay" id="add-modal">
+<div class="modal">
+<div class="modal-header">
+<h3 id="modal-title">Add New Change Request</h3>
+<button class="modal-close" onclick="closeModal()">×</button>
+</div>
+<div class="modal-body">
+<form class="form-grid" id="change-form">
+<div class="form-group">
+<label for="cr-id">CR ID</label>
+<input id="cr-id" placeholder="Auto-generated" readonly="" type="text"/>
+</div>
+<div class="form-group">
+<label for="cr-requestor">Requestor *</label>
+<input id="cr-requestor" required="" type="text"/>
+</div>
+<div class="form-group full-width">
+<label for="cr-title">Title *</label>
+<input id="cr-title" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="cr-date">Date Submitted</label>
+<input id="cr-date" type="date"/>
+</div>
+<div class="form-group">
+<label for="cr-category">Category *</label>
+<select id="cr-category" required="">
+<option value="">Select Category</option>
+<option value="Standard">Standard</option>
+<option value="Normal">Normal</option>
+<option value="Major">Major</option>
+<option value="Emergency">Emergency</option>
+</select>
+</div>
+<div class="form-group">
+<label for="cr-environment">Environment(s) *</label>
+<select id="cr-environment" required="">
+<option value="">Select Environment</option>
+<option value="Production">Production</option>
+<option value="UAT">UAT</option>
+<option value="Development">Development</option>
+<option value="UAT, Production">UAT, Production</option>
+<option value="All">All Environments</option>
+</select>
+</div>
+<div class="form-group">
+<label for="cr-risk">Risk Level *</label>
+<select id="cr-risk" required="">
+<option value="">Select Risk Level</option>
+<option value="Low">Low</option>
+<option value="Medium">Medium</option>
+<option value="High">High</option>
+<option value="Critical">Critical</option>
+</select>
+</div>
+<div class="form-group">
+<label for="cr-status">Status</label>
+<select id="cr-status">
+<option value="Submitted">Submitted</option>
+<option value="Under Review">Under Review</option>
+<option value="Approved">Approved</option>
+<option value="Rejected">Rejected</option>
+<option value="Implemented">Implemented</option>
+<option value="PIR Complete">PIR Complete</option>
+</select>
+</div>
+<div class="form-group">
+<label for="cr-approval-date">Approval Date</label>
+<input id="cr-approval-date" type="date"/>
+</div>
+<div class="form-group">
+<label for="cr-impl-date">Implementation Date</label>
+<input id="cr-impl-date" type="date"/>
+</div>
+<div class="form-group">
+<label for="cr-pir">PIR Status</label>
+<select id="cr-pir">
+<option value="N/A">N/A</option>
+<option value="Pending">Pending</option>
+<option value="Scheduled">Scheduled</option>
+<option value="Complete">Complete</option>
+</select>
+</div>
+</form>
+</div>
+<div class="modal-footer">
+<button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+<button class="btn btn-primary" onclick="saveChangeRequest()">Save Change Request</button>
+</div>
+</div>
+</div><!-- Footer --><footer class="footer">
+<p>Moss Energy Change Control Board | Change Request Register v1.0 | March 2026</p>
+<p>For questions, contact the CCB Administrator | Document Reference: CCB-07</p>
+</footer><script>
+        /* ============================================
+           Change Request Register - JavaScript
+           Version 1.0 | March 2026
+           ============================================ */
+
+        // Sample data to demonstrate functionality
+        let changeRequests = [
+            {
+                id: 'CR-2026-001',
+                title: 'Database Server Memory Upgrade',
+                requestor: 'John Smith',
+                dateSubmitted: '2026-02-01',
+                category: 'Standard',
+                environment: 'Production',
+                riskLevel: 'Low',
+                status: 'PIR Complete',
+                approvalDate: '2026-02-02',
+                implDate: '2026-02-05',
+                pirStatus: 'Complete'
+            },
+            {
+                id: 'CR-2026-002',
+                title: 'ERP System Patch Update v4.2.1',
+                requestor: 'Sarah Johnson',
+                dateSubmitted: '2026-02-05',
+                category: 'Normal',
+                environment: 'UAT, Production',
+                riskLevel: 'Medium',
+                status: 'Implemented',
+                approvalDate: '2026-02-10',
+                implDate: '2026-02-15',
+                pirStatus: 'Scheduled'
+            },
+            {
+                id: 'CR-2026-003',
+                title: 'Network Firewall Rule Modification',
+                requestor: 'Michael Chen',
+                dateSubmitted: '2026-02-08',
+                category: 'Normal',
+                environment: 'Production',
+                riskLevel: 'High',
+                status: 'Approved',
+                approvalDate: '2026-02-14',
+                implDate: '',
+                pirStatus: 'N/A'
+            },
+            {
+                id: 'CR-2026-004',
+                title: 'Critical Security Patch - CVE-2026-1234',
+                requestor: 'Lisa Wang',
+                dateSubmitted: '2026-02-12',
+                category: 'Emergency',
+                environment: 'All',
+                riskLevel: 'Critical',
+                status: 'Implemented',
+                approvalDate: '2026-02-12',
+                implDate: '2026-02-12',
+                pirStatus: 'Pending'
+            },
+            {
+                id: 'CR-2026-005',
+                title: 'New Monitoring Agent Deployment',
+                requestor: 'Robert Davis',
+                dateSubmitted: '2026-02-14',
+                category: 'Standard',
+                environment: 'Development',
+                riskLevel: 'Low',
+                status: 'PIR Complete',
+                approvalDate: '2026-02-15',
+                implDate: '2026-02-16',
+                pirStatus: 'Complete'
+            },
+            {
+                id: 'CR-2026-006',
+                title: 'CRM Database Schema Migration',
+                requestor: 'Emily Wilson',
+                dateSubmitted: '2026-02-18',
+                category: 'Major',
+                environment: 'UAT, Production',
+                riskLevel: 'High',
+                status: 'Under Review',
+                approvalDate: '',
+                implDate: '',
+                pirStatus: 'N/A'
+            },
+            {
+                id: 'CR-2026-007',
+                title: 'Load Balancer Configuration Update',
+                requestor: 'David Brown',
+                dateSubmitted: '2026-02-19',
+                category: 'Normal',
+                environment: 'Production',
+                riskLevel: 'Medium',
+                status: 'Submitted',
+                approvalDate: '',
+                implDate: '',
+                pirStatus: 'N/A'
+            },
+            {
+                id: 'CR-2026-008',
+                title: 'SSL Certificate Renewal',
+                requestor: 'Jennifer Lee',
+                dateSubmitted: '2026-02-20',
+                category: 'Standard',
+                environment: 'Production',
+                riskLevel: 'Low',
+                status: 'Approved',
+                approvalDate: '2026-02-21',
+                implDate: '',
+                pirStatus: 'N/A'
+            },
+            {
+                id: 'CR-2026-009',
+                title: 'API Gateway Version Upgrade',
+                requestor: 'Chris Martin',
+                dateSubmitted: '2026-02-22',
+                category: 'Major',
+                environment: 'UAT',
+                riskLevel: 'Medium',
+                status: 'Rejected',
+                approvalDate: '',
+                implDate: '',
+                pirStatus: 'N/A'
+            },
+            {
+                id: 'CR-2026-010',
+                title: 'Backup System Enhancement',
+                requestor: 'Amanda Taylor',
+                dateSubmitted: '2026-02-24',
+                category: 'Normal',
+                environment: 'All',
+                riskLevel: 'Low',
+                status: 'Submitted',
+                approvalDate: '',
+                implDate: '',
+                pirStatus: 'N/A'
+            }
+        ];
+
+        // Current sort state
+        let currentSort = { column: 0, ascending: true };
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable();
+            updateStatistics();
+            setupEventListeners();
+            
+            // Set today's date as default for new entries
+            document.getElementById('cr-date').valueAsDate = new Date();
+        });
+
+        // Setup event listeners for filters
+        function setupEventListeners() {
+            document.getElementById('search').addEventListener('input', filterTable);
+            document.getElementById('filter-category').addEventListener('change', filterTable);
+            document.getElementById('filter-environment').addEventListener('change', filterTable);
+            document.getElementById('filter-risk').addEventListener('change', filterTable);
+            document.getElementById('filter-status').addEventListener('change', filterTable);
+        }
+
+        // Render the table with current data
+        function renderTable(data = changeRequests) {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+
+            data.forEach(cr => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${cr.id}</strong></td>
+                    <td>${cr.title}</td>
+                    <td>${cr.requestor}</td>
+                    <td>${formatDate(cr.dateSubmitted)}</td>
+                    <td><span class="badge badge-${cr.category.toLowerCase()}">${cr.category}</span></td>
+                    <td>${cr.environment}</td>
+                    <td><span class="badge badge-${cr.riskLevel.toLowerCase()}">${cr.riskLevel}</span></td>
+                    <td><span class="badge badge-${cr.status.toLowerCase().replace(/\s+/g, '-')}">${cr.status}</span></td>
+                    <td>${formatDate(cr.approvalDate)}</td>
+                    <td>${formatDate(cr.implDate)}</td>
+                    <td class="pir-${cr.pirStatus.toLowerCase().replace('/', '-')}">${cr.pirStatus}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            document.getElementById('results-count').textContent = `Showing ${data.length} records`;
+        }
+
+        // Format date for display
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+
+        // Update statistics cards
+        function updateStatistics() {
+            // Total changes
+            document.getElementById('total-changes').textContent = changeRequests.length;
+
+            // Category breakdown
+            const categories = {};
+            changeRequests.forEach(cr => {
+                categories[cr.category] = (categories[cr.category] || 0) + 1;
+            });
+            document.getElementById('category-breakdown').innerHTML = Object.entries(categories)
+                .map(([cat, count]) => `<span class="stat-item ${cat.toLowerCase()}">${cat}: ${count}</span>`)
+                .join('');
+
+            // Status breakdown and pending count
+            const statuses = {};
+            let pendingCount = 0;
+            changeRequests.forEach(cr => {
+                statuses[cr.status] = (statuses[cr.status] || 0) + 1;
+                if (['Submitted', 'Under Review', 'Approved'].includes(cr.status)) {
+                    pendingCount++;
+                }
+            });
+            document.getElementById('pending-count').textContent = pendingCount;
+            document.getElementById('status-breakdown').innerHTML = Object.entries(statuses)
+                .map(([status, count]) => `<span class="stat-item">${status}: ${count}</span>`)
+                .join('');
+
+            // Risk breakdown
+            const risks = {};
+            let highRiskCount = 0;
+            changeRequests.forEach(cr => {
+                risks[cr.riskLevel] = (risks[cr.riskLevel] || 0) + 1;
+                if (['High', 'Critical'].includes(cr.riskLevel)) {
+                    highRiskCount++;
+                }
+            });
+            document.getElementById('high-risk-count').textContent = highRiskCount;
+            document.getElementById('risk-breakdown').innerHTML = Object.entries(risks)
+                .map(([risk, count]) => `<span class="stat-item ${risk.toLowerCase()}">${risk}: ${count}</span>`)
+                .join('');
+
+            // Implementation rate
+            const implemented = changeRequests.filter(cr => 
+                ['Implemented', 'PIR Complete'].includes(cr.status)
+            ).length;
+            const total = changeRequests.filter(cr => cr.status !== 'Rejected').length;
+            const rate = total > 0 ? Math.round((implemented / total) * 100) : 0;
+            document.getElementById('implementation-rate').textContent = rate + '%';
+            document.getElementById('implementation-breakdown').innerHTML = `
+                <span class="stat-item">Implemented: ${implemented}</span>
+                <span class="stat-item">Rejected: ${changeRequests.filter(cr => cr.status === 'Rejected').length}</span>
+            `;
+        }
+
+        // Filter table based on search and dropdowns
+        function filterTable() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const categoryFilter = document.getElementById('filter-category').value;
+            const environmentFilter = document.getElementById('filter-environment').value;
+            const riskFilter = document.getElementById('filter-risk').value;
+            const statusFilter = document.getElementById('filter-status').value;
+
+            const filtered = changeRequests.filter(cr => {
+                const matchesSearch = !searchTerm || 
+                    cr.id.toLowerCase().includes(searchTerm) ||
+                    cr.title.toLowerCase().includes(searchTerm) ||
+                    cr.requestor.toLowerCase().includes(searchTerm);
+                
+                const matchesCategory = !categoryFilter || cr.category === categoryFilter;
+                const matchesEnvironment = !environmentFilter || cr.environment.includes(environmentFilter);
+                const matchesRisk = !riskFilter || cr.riskLevel === riskFilter;
+                const matchesStatus = !statusFilter || cr.status === statusFilter;
+
+                return matchesSearch && matchesCategory && matchesEnvironment && matchesRisk && matchesStatus;
+            });
+
+            renderTable(filtered);
+        }
+
+        // Clear all filters
+        function clearFilters() {
+            document.getElementById('search').value = '';
+            document.getElementById('filter-category').value = '';
+            document.getElementById('filter-environment').value = '';
+            document.getElementById('filter-risk').value = '';
+            document.getElementById('filter-status').value = '';
+            renderTable();
+        }
+
+        // Sort table by column
+        function sortTable(columnIndex) {
+            const keys = ['id', 'title', 'requestor', 'dateSubmitted', 'category', 'environment', 'riskLevel', 'status', 'approvalDate', 'implDate', 'pirStatus'];
+            const key = keys[columnIndex];
+
+            if (currentSort.column === columnIndex) {
+                currentSort.ascending = !currentSort.ascending;
+            } else {
+                currentSort.column = columnIndex;
+                currentSort.ascending = true;
+            }
+
+            changeRequests.sort((a, b) => {
+                let valA = a[key] || '';
+                let valB = b[key] || '';
+                
+                if (key.includes('date') || key.includes('Date')) {
+                    valA = valA ? new Date(valA).getTime() : 0;
+                    valB = valB ? new Date(valB).getTime() : 0;
+                }
+                
+                if (valA < valB) return currentSort.ascending ? -1 : 1;
+                if (valA > valB) return currentSort.ascending ? 1 : -1;
+                return 0;
+            });
+
+            filterTable();
+
+            // Update sort indicators
+            document.querySelectorAll('th').forEach((th, i) => {
+                th.classList.toggle('sorted', i === columnIndex);
+                const icon = th.querySelector('.sort-icon');
+                if (icon) {
+                    icon.textContent = i === columnIndex ? (currentSort.ascending ? '↑' : '↓') : '↕';
+                }
+            });
+        }
+
+        // Open add modal
+        function openAddModal() {
+            document.getElementById('modal-title').textContent = 'Add New Change Request';
+            document.getElementById('change-form').reset();
+            
+            // Generate new CR ID
+            const maxId = changeRequests.reduce((max, cr) => {
+                const num = parseInt(cr.id.split('-')[2]);
+                return num > max ? num : max;
+            }, 0);
+            document.getElementById('cr-id').value = `CR-2026-${String(maxId + 1).padStart(3, '0')}`;
+            document.getElementById('cr-date').valueAsDate = new Date();
+            
+            document.getElementById('add-modal').classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('add-modal').classList.remove('active');
+        }
+
+        // Save change request
+        function saveChangeRequest() {
+            const form = document.getElementById('change-form');
+            
+            // Validate required fields
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const newCR = {
+                id: document.getElementById('cr-id').value,
+                title: document.getElementById('cr-title').value,
+                requestor: document.getElementById('cr-requestor').value,
+                dateSubmitted: document.getElementById('cr-date').value,
+                category: document.getElementById('cr-category').value,
+                environment: document.getElementById('cr-environment').value,
+                riskLevel: document.getElementById('cr-risk').value,
+                status: document.getElementById('cr-status').value,
+                approvalDate: document.getElementById('cr-approval-date').value,
+                implDate: document.getElementById('cr-impl-date').value,
+                pirStatus: document.getElementById('cr-pir').value
+            };
+
+            changeRequests.unshift(newCR);
+            renderTable();
+            updateStatistics();
+            closeModal();
+        }
+
+        // Export to CSV
+        function exportToCSV() {
+            const headers = ['CR ID', 'Title', 'Requestor', 'Date Submitted', 'Category', 'Environment(s)', 'Risk Level', 'Status', 'Approval Date', 'Implementation Date', 'PIR Status'];
+            const rows = changeRequests.map(cr => [
+                cr.id,
+                `"${cr.title}"`,
+                cr.requestor,
+                cr.dateSubmitted,
+                cr.category,
+                cr.environment,
+                cr.riskLevel,
+                cr.status,
+                cr.approvalDate || '',
+                cr.implDate || '',
+                cr.pirStatus
+            ]);
+
+            const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `Change_Request_Register_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('add-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script></main></div><script>
+(function(){
+  document.querySelectorAll('.ccb-nav-links a').forEach(function(link){
+    link.addEventListener('click', function(){ document.body.classList.remove('ccb-nav-open'); });
+  });
+})();
+</script></body>
+</html>
+
+</file>
+
+

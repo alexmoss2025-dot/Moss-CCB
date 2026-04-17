@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Post-Implementation Review (PIR) - Moss Energy</title>
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Calibri', 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #003366;
+        }
+        
+        h1 {
+            color: #003366;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            color: #003366;
+            font-size: 20px;
+            margin: 30px 0 15px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #003366;
+        }
+        
+        h3 {
+            color: #003366;
+            font-size: 16px;
+            margin: 20px 0 10px 0;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-style: italic;
+            margin-top: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #003366;
+        }
+        
+        input[type="text"],
+        input[type="date"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: 'Calibri', 'Arial', sans-serif;
+            font-size: 14px;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .info-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        
+        .info-table td:first-child {
+            background-color: #003366;
+            color: white;
+            font-weight: bold;
+            width: 30%;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 10px 0;
+        }
+        
+        .checkbox-group label {
+            display: inline-flex;
+            align-items: center;
+            font-weight: normal;
+            gap: 5px;
+        }
+        
+        .checkbox-group input[type="checkbox"],
+        .checkbox-group input[type="radio"] {
+            width: auto;
+            margin-right: 5px;
+        }
+        
+        .objectives-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .objectives-table th,
+        .objectives-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        
+        .objectives-table th {
+            background-color: #003366;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .rating-options {
+            margin: 15px 0;
+        }
+        
+        .rating-options label {
+            display: block;
+            font-weight: normal;
+            margin: 8px 0;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .rating-options label:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .rating-options input[type="radio"] {
+            margin-right: 10px;
+        }
+        
+        .button-group {
+            margin: 30px 0;
+            text-align: center;
+            padding: 20px 0;
+            border-top: 2px solid #003366;
+        }
+        
+        button {
+            background-color: #003366;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        
+        button:hover {
+            background-color: #004488;
+        }
+        
+        .note {
+            background-color: #e8f4f8;
+            border-left: 4px solid #003366;
+            padding: 12px;
+            margin: 15px 0;
+            font-style: italic;
+            font-size: 14px;
+        }
+        
+        .signoff-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .signoff-table th,
+        .signoff-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        
+        .signoff-table th {
+            background-color: #003366;
+            color: white;
+        }
+        
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+            
+            .button-group {
+                display: none;
+            }
+        }
+    </style>
+<link rel="stylesheet" href="site.css" />
+</head>
+<body >
+<nav class="moss-topnav">
+  <span class="nav-brand">● Moss</span>
+  <a href="index.html">← Back to Home</a>
+  <span class="nav-sep">|</span>
+  <span style="color:rgba(255,255,255,.7);font-size:.84rem;">Post-Implementation Review</span>
+</nav>
+<div class="container">
+<!-- Header -->
+<div class="header">
+<h1>Post-Implementation Review (PIR)</h1>
+<div style="margin: 10px 0;">
+<strong>Moss Energy</strong><br/>
+                Version 1.0 | Effective Date: March 27, 2026
+            </div>
+<div class="subtitle">Complete this form within 5 business days of change implementation</div>
+</div>
+<!-- Section 1: Change Information -->
+<h2>1. Change Information</h2>
+<table class="info-table">
+<tr>
+<td>Change Request ID</td>
+<td><input placeholder="CR-XXXX" type="text"/></td>
+</tr>
+<tr>
+<td>Change Title</td>
+<td><input placeholder="Enter change title" type="text"/></td>
+</tr>
+<tr>
+<td>Change Requestor</td>
+<td><input placeholder="Name" type="text"/></td>
+</tr>
+<tr>
+<td>Change Owner</td>
+<td><input placeholder="Name" type="text"/></td>
+</tr>
+<tr>
+<td>Change Category</td>
+<td>
+<div class="checkbox-group">
+<label><input name="category" type="radio"/> Standard</label>
+<label><input name="category" type="radio"/> Normal</label>
+<label><input name="category" type="radio"/> Major</label>
+<label><input name="category" type="radio"/> Emergency</label>
+</div>
+</td>
+</tr>
+<tr>
+<td>Implementation Date</td>
+<td><input type="date"/></td>
+</tr>
+<tr>
+<td>Implementation Team</td>
+<td><input placeholder="Team members" type="text"/></td>
+</tr>
+<tr>
+<td>Environments Affected</td>
+<td>
+<div class="checkbox-group">
+<label><input type="checkbox"/> Sandbox</label>
+<label><input type="checkbox"/> Development</label>
+<label><input type="checkbox"/> Test</label>
+<label><input type="checkbox"/> Production</label>
+<label><input type="checkbox"/> Post-Production</label>
+</div>
+</td>
+</tr>
+<tr>
+<td>Risk Level (Original)</td>
+<td>
+<div class="checkbox-group">
+<label><input name="risk" type="radio"/> Low</label>
+<label><input name="risk" type="radio"/> Medium</label>
+<label><input name="risk" type="radio"/> High</label>
+<label><input name="risk" type="radio"/> Critical</label>
+</div>
+</td>
+</tr>
+<tr>
+<td>PIR Date</td>
+<td><input type="date"/></td>
+</tr>
+</table>
+<!-- Section 2: Implementation Summary -->
+<h2>2. Implementation Summary</h2>
+<h3>2.1 Implementation Timeline</h3>
+<table class="info-table">
+<tr>
+<td>Planned Start Time</td>
+<td><input placeholder="MM/DD/YYYY HH:MM" type="text"/></td>
+</tr>
+<tr>
+<td>Actual Start Time</td>
+<td><input placeholder="MM/DD/YYYY HH:MM" type="text"/></td>
+</tr>
+<tr>
+<td>Planned End Time</td>
+<td><input placeholder="MM/DD/YYYY HH:MM" type="text"/></td>
+</tr>
+<tr>
+<td>Actual End Time</td>
+<td><input placeholder="MM/DD/YYYY HH:MM" type="text"/></td>
+</tr>
+<tr>
+<td>Total Duration</td>
+<td>
+                    Planned: <input style="width: 80px; display: inline-block;" type="number"/> hours |
+                    Actual: <input style="width: 80px; display: inline-block;" type="number"/> hours
+                </td>
+</tr>
+</table>
+<h3>2.2 Resource Utilization</h3>
+<table class="info-table">
+<tr>
+<td>Planned Team Size</td>
+<td><input placeholder="Number of people" type="number"/></td>
+</tr>
+<tr>
+<td>Actual Team Size</td>
+<td><input placeholder="Number of people" type="number"/></td>
+</tr>
+<tr>
+<td>Planned Cost</td>
+<td><input placeholder="$" type="text"/></td>
+</tr>
+<tr>
+<td>Actual Cost</td>
+<td><input placeholder="$" type="text"/></td>
+</tr>
+</table>
+<h3>2.3 Implementation Process</h3>
+<div class="form-group">
+<label>Did the implementation follow the approved plan?</label>
+<div class="checkbox-group">
+<label><input name="followedPlan" type="radio"/> Yes, followed exactly</label>
+<label><input name="followedPlan" type="radio"/> Mostly, with minor deviations</label>
+<label><input name="followedPlan" type="radio"/> No, significant deviations</label>
+</div>
+</div>
+<div class="form-group">
+<label>Describe the implementation process and any deviations from the plan:</label>
+<textarea placeholder="Detailed description of what happened during implementation, including any deviations and why they occurred"></textarea>
+</div>
+<!-- Section 3: Objectives Achievement -->
+<h2>3. Objectives Achievement Assessment</h2>
+<div class="note">
+            Review the original objectives from the Change Request Form and assess achievement for each.
+        </div>
+<table class="objectives-table">
+<thead>
+<tr>
+<th>Original Objective</th>
+<th>Achieved?</th>
+<th>Evidence / Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><textarea style="min-height: 60px;"></textarea></td>
+<td>
+<select>
+<option>Select...</option>
+<option>Yes</option>
+<option>Partially</option>
+<option>No</option>
+</select>
+</td>
+<td><textarea style="min-height: 60px;"></textarea></td>
+</tr>
+<tr>
+<td><textarea style="min-height: 60px;"></textarea></td>
+<td>
+<select>
+<option>Select...</option>
+<option>Yes</option>
+<option>Partially</option>
+<option>No</option>
+</select>
+</td>
+<td><textarea style="min-height: 60px;"></textarea></td>
+</tr>
+<tr>
+<td><textarea style="min-height: 60px;"></textarea></td>
+<td>
+<select>
+<option>Select...</option>
+<option>Yes</option>
+<option>Partially</option>
+<option>No</option>
+</select>
+</td>
+<td><textarea style="min-height: 60px;"></textarea></td>
+</tr>
+</tbody>
+</table>
+<h3>3.1 Benefits Realization</h3>
+<div class="form-group">
+<label>Were the expected benefits realized? (Include metrics where possible)</label>
+<textarea placeholder="Describe what benefits were expected and which were actually realized"></textarea>
+</div>
+<h3>3.2 Unexpected Benefits</h3>
+<div class="form-group">
+<label>Were there any unexpected positive outcomes?</label>
+<textarea placeholder="Describe any benefits that were not originally anticipated"></textarea>
+</div>
+<h3>3.3 Negative Impacts</h3>
+<div class="form-group">
+<label>Were there any unexpected negative impacts?</label>
+<textarea placeholder="Describe any negative outcomes that were not anticipated"></textarea>
+</div>
+<!-- Section 4: Issues and Resolution -->
+<h2>4. Issues Encountered and Resolution</h2>
+<div class="form-group">
+<label>Were there any issues during or after implementation?</label>
+<div class="checkbox-group">
+<label><input name="issues" type="radio"/> No issues</label>
+<label><input name="issues" type="radio"/> Minor issues</label>
+<label><input name="issues" type="radio"/> Moderate issues</label>
+<label><input name="issues" type="radio"/> Major issues</label>
+</div>
+</div>
+<table class="objectives-table">
+<thead>
+<tr>
+<th>Issue Description</th>
+<th>Severity</th>
+<th>Resolution</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><textarea style="min-height: 60px;"></textarea></td>
+<td>
+<select>
+<option>Select...</option>
+<option>Low</option>
+<option>Medium</option>
+<option>High</option>
+</select>
+</td>
+<td><textarea style="min-height: 60px;"></textarea></td>
+<td>
+<select>
+<option>Select...</option>
+<option>Resolved</option>
+<option>Open</option>
+</select>
+</td>
+</tr>
+<tr>
+<td><textarea style="min-height: 60px;"></textarea></td>
+<td>
+<select>
+<option>Select...</option>
+<option>Low</option>
+<option>Medium</option>
+<option>High</option>
+</select>
+</td>
+<td><textarea style="min-height: 60px;"></textarea></td>
+<td>
+<select>
+<option>Select...</option>
+<option>Resolved</option>
+<option>Open</option>
+</select>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="form-group">
+<label>Open Issues (if any) and plan to resolve:</label>
+<textarea></textarea>
+</div>
+<!-- Section 5: What Went Well -->
+<h2>5. What Went Well</h2>
+<div class="form-group">
+<label>What worked particularly well during planning?</label>
+<textarea></textarea>
+</div>
+<div class="form-group">
+<label>What worked particularly well during implementation?</label>
+<textarea></textarea>
+</div>
+<div class="form-group">
+<label>Which risk mitigation strategies were effective?</label>
+<textarea></textarea>
+</div>
+<div class="form-group">
+<label>What collaboration or coordination was effective?</label>
+<textarea></textarea>
+</div>
+<div class="form-group">
+<label>What tools or processes were particularly helpful?</label>
+<textarea></textarea>
+</div>
+<div class="form-group">
+<label>What should be repeated in future changes?</label>
+<textarea></textarea>
+</div>
+<!-- Section 6: What Could Be Improved -->
+<h2>6. What Could Be Improved</h2>
+<div class="form-group">
+<label>What could have been planned better?</label>
+<textarea></textarea>
+</div>
+<div class="form-group">
+<label>What could have been communicated better?</label>
+<textarea></textarea>
+</div>
+<div class="form-group">
+<label>What testing gaps were identified?</label>
+<textarea></textarea>
+</div>
+<div class="form-group">
+<label>What risk factors were missed or underestimated?</label>
+<textarea></textarea>
+</div>
+<div class="form-group">
+<label>What resources or skills were lacking?</label>
+<textarea></textarea>
+</div>
+<div class="form-group">
+<label>What would you do differently next time?</label>
+<textarea></textarea>
+</div>
+<!-- Section 7: Lessons Learned -->
+<h2>7. Lessons Learned</h2>
+<div class="note">
+<strong>Guidelines for good lessons learned:</strong><br/>
+            ✓ Be specific and concrete (not generic)<br/>
+            ✓ Include context and examples<br/>
+            ✓ Make them actionable for future changes<br/>
+            ✓ Include both positive and improvement lessons
+        </div>
+<table class="objectives-table">
+<thead>
+<tr>
+<th>Lesson Learned</th>
+<th>Category</th>
+<th>Applicable To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><textarea style="min-height: 80px;"></textarea></td>
+<td>
+<select>
+<option>Select...</option>
+<option>Process</option>
+<option>Technical</option>
+<option>Communication</option>
+<option>Testing</option>
+<option>Risk Management</option>
+<option>Other</option>
+</select>
+</td>
+<td>
+<select>
+<option>Select...</option>
+<option>Similar changes</option>
+<option>All changes</option>
+<option>Specific category</option>
+</select>
+</td>
+</tr>
+<tr>
+<td><textarea style="min-height: 80px;"></textarea></td>
+<td>
+<select>
+<option>Select...</option>
+<option>Process</option>
+<option>Technical</option>
+<option>Communication</option>
+<option>Testing</option>
+<option>Risk Management</option>
+<option>Other</option>
+</select>
+</td>
+<td>
+<select>
+<option>Select...</option>
+<option>Similar changes</option>
+<option>All changes</option>
+<option>Specific category</option>
+</select>
+</td>
+</tr>
+<tr>
+<td><textarea style="min-height: 80px;"></textarea></td>
+<td>
+<select>
+<option>Select...</option>
+<option>Process</option>
+<option>Technical</option>
+<option>Communication</option>
+<option>Testing</option>
+<option>Risk Management</option>
+<option>Other</option>
+</select>
+</td>
+<td>
+<select>
+<option>Select...</option>
+<option>Similar changes</option>
+<option>All changes</option>
+<option>Specific category</option>
+</select>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Section 8: Recommendations -->
+<h2>8. Recommendations</h2>
+<h3>8.1 Process Improvements</h3>
+<div class="form-group">
+<textarea placeholder="Recommendations for improving the change management process"></textarea>
+</div>
+<h3>8.2 Template/Tool Enhancements</h3>
+<div class="form-group">
+<textarea placeholder="Recommendations for improving templates, forms, or tools"></textarea>
+</div>
+<h3>8.3 Training Needs</h3>
+<div class="form-group">
+<textarea placeholder="Recommendations for training or knowledge sharing"></textarea>
+</div>
+<h3>8.4 Documentation Updates</h3>
+<div class="form-group">
+<textarea placeholder="Recommendations for documentation improvements"></textarea>
+</div>
+<h3>8.5 Standard Change Opportunity</h3>
+<div class="form-group">
+<label>Could this type of change become a Standard (pre-approved) change?</label>
+<div class="checkbox-group">
+<label><input name="standardChange" type="radio"/> Yes</label>
+<label><input name="standardChange" type="radio"/> No</label>
+<label><input name="standardChange" type="radio"/> With modifications</label>
+</div>
+</div>
+<div class="form-group">
+<label>If yes or with modifications, explain:</label>
+<textarea></textarea>
+</div>
+<!-- Section 9: Action Items -->
+<h2>9. Action Items</h2>
+<table class="objectives-table">
+<thead>
+<tr>
+<th>Action Item</th>
+<th>Owner</th>
+<th>Due Date</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><textarea style="min-height: 60px;"></textarea></td>
+<td><input type="text"/></td>
+<td><input type="date"/></td>
+<td>
+<select>
+<option>Select...</option>
+<option>High</option>
+<option>Medium</option>
+<option>Low</option>
+</select>
+</td>
+</tr>
+<tr>
+<td><textarea style="min-height: 60px;"></textarea></td>
+<td><input type="text"/></td>
+<td><input type="date"/></td>
+<td>
+<select>
+<option>Select...</option>
+<option>High</option>
+<option>Medium</option>
+<option>Low</option>
+</select>
+</td>
+</tr>
+<tr>
+<td><textarea style="min-height: 60px;"></textarea></td>
+<td><input type="text"/></td>
+<td><input type="date"/></td>
+<td>
+<select>
+<option>Select...</option>
+<option>High</option>
+<option>Medium</option>
+<option>Low</option>
+</select>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="note">
+            Note: All action items must be added to the Action Items Tracker (09_Action_Items_Tracker)
+        </div>
+<!-- Section 10: Overall Assessment -->
+<h2>10. Overall Assessment</h2>
+<h3>10.1 Success Rating</h3>
+<div class="form-group">
+<label>Overall, how would you rate this change?</label>
+<div class="rating-options">
+<label>
+<input name="rating" type="radio"/>
+<strong>Exceeded Expectations</strong> - Outstanding success, all objectives exceeded, zero issues
+                </label>
+<label>
+<input name="rating" type="radio"/>
+<strong>Met Expectations</strong> - Successful, all objectives met, minor issues resolved
+                </label>
+<label>
+<input name="rating" type="radio"/>
+<strong>Partially Met Expectations</strong> - Partially successful, some objectives met, moderate issues
+                </label>
+<label>
+<input name="rating" type="radio"/>
+<strong>Did Not Meet Expectations</strong> - Unsuccessful, objectives not met, major issues
+                </label>
+<label>
+<input name="rating" type="radio"/>
+<strong>Failed</strong> - Rollback required or critical objectives not achieved
+                </label>
+</div>
+</div>
+<h3>10.2 Stakeholder Satisfaction</h3>
+<table class="info-table">
+<tr>
+<td>End Users</td>
+<td>
+<select style="width: 100%;">
+<option>Select...</option>
+<option>Very Satisfied</option>
+<option>Satisfied</option>
+<option>Neutral</option>
+<option>Dissatisfied</option>
+<option>N/A</option>
+</select>
+</td>
+</tr>
+<tr>
+<td>Business Owner</td>
+<td>
+<select style="width: 100%;">
+<option>Select...</option>
+<option>Very Satisfied</option>
+<option>Satisfied</option>
+<option>Neutral</option>
+<option>Dissatisfied</option>
+<option>N/A</option>
+</select>
+</td>
+</tr>
+<tr>
+<td>Operations Team</td>
+<td>
+<select style="width: 100%;">
+<option>Select...</option>
+<option>Very Satisfied</option>
+<option>Satisfied</option>
+<option>Neutral</option>
+<option>Dissatisfied</option>
+<option>N/A</option>
+</select>
+</td>
+</tr>
+<tr>
+<td>Implementation Team</td>
+<td>
+<select style="width: 100%;">
+<option>Select...</option>
+<option>Very Satisfied</option>
+<option>Satisfied</option>
+<option>Neutral</option>
+<option>Dissatisfied</option>
+<option>N/A</option>
+</select>
+</td>
+</tr>
+</table>
+<h3>10.3 Executive Summary</h3>
+<div class="form-group">
+<label>Provide a brief executive summary (2-3 paragraphs) of the PIR:</label>
+<textarea placeholder="Summary should include: what was changed, whether objectives were met, key successes, key challenges, overall outcome, and top 2-3 lessons learned" style="min-height: 150px;"></textarea>
+</div>
+<!-- Section 11: Sign-offs -->
+<h2>11. Sign-offs</h2>
+<table class="signoff-table">
+<thead>
+<tr>
+<th>Role</th>
+<th>Name</th>
+<th>Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Change Requestor</strong></td>
+<td><input type="text"/></td>
+<td><input type="date"/></td>
+</tr>
+<tr>
+<td><strong>Change Owner</strong></td>
+<td><input type="text"/></td>
+<td><input type="date"/></td>
+</tr>
+<tr>
+<td><strong>Technical Lead</strong></td>
+<td><input type="text"/></td>
+<td><input type="date"/></td>
+</tr>
+</tbody>
+</table>
+<div class="note" style="text-align: center; margin-top: 30px;">
+<strong>Once complete, submit this PIR to the CCB Facilitator and update the Change Request Register.</strong>
+</div>
+<!-- Buttons -->
+<div class="button-group">
+<button onclick="window.print()">Print PIR</button>
+<button onclick="alert('Save functionality would be implemented in production version')">Save Draft</button>
+<button onclick="alert('Submit functionality would be implemented in production version')">Submit PIR</button>
+</div>
+</div><script>
+        // Add any necessary JavaScript here for form validation, auto-save, etc.
+        console.log('PIR Template loaded successfully');
+    </script></main></div><script>
+(function(){
+  document.querySelectorAll('.ccb-nav-links a').forEach(function(link){
+    link.addEventListener('click', function(){ document.body.classList.remove('ccb-nav-open'); });
+  });
+})();
+</script></body>
+</html>
+
+</file>
+
+

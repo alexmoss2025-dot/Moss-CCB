@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCB Stakeholder Responsibility Mapping — Moss Energy</title>
+<link rel="stylesheet" href="site.css" />
+<style>
+  :root {
+    --moss-primary: #1a5f2a;
+    --moss-secondary: #2d8a3e;
+    --moss-light: #e8f5e9;
+    --accent: #1565c0;
+    --accent-light: #e3f2fd;
+    --warning: #ff9800;
+    --danger: #d32f2f;
+    --gray-50: #fafafa;
+    --gray-100: #f5f5f5;
+    --gray-200: #eeeeee;
+    --gray-300: #e0e0e0;
+    --gray-600: #757575;
+    --gray-800: #424242;
+    --gray-900: #212121;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: var(--gray-900); line-height: 1.6; background: var(--gray-100); }
+  .container { max-width: 1100px; margin: 0 auto; background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+
+  /* Header */
+  .doc-header { background: linear-gradient(135deg, var(--moss-primary), #0d3d18); color: #fff; padding: 40px 50px; }
+  .doc-header .org { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; opacity: .85; margin-bottom: 6px; }
+  .doc-header h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+  .doc-header .subtitle { font-size: 15px; opacity: .9; }
+  .doc-meta { display: flex; gap: 30px; margin-top: 18px; font-size: 12px; opacity: .8; flex-wrap: wrap; }
+  .doc-meta span { display: flex; align-items: center; gap: 5px; }
+
+  /* Content */
+  .content { padding: 40px 50px; }
+  h2 { color: var(--moss-primary); font-size: 22px; margin: 36px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--moss-light); }
+  h2:first-child { margin-top: 0; }
+  h3 { color: var(--gray-800); font-size: 17px; margin: 24px 0 10px; }
+  h4 { color: var(--moss-secondary); font-size: 14px; margin: 16px 0 6px; }
+  p, li { font-size: 13.5px; }
+  p { margin-bottom: 10px; }
+  ul, ol { margin: 8px 0 14px 22px; }
+  li { margin-bottom: 4px; }
+
+  /* Executive Summary Box */
+  .exec-summary { background: var(--moss-light); border-left: 4px solid var(--moss-primary); padding: 20px 24px; border-radius: 4px; margin-bottom: 24px; }
+  .exec-summary p { margin-bottom: 8px; }
+
+  /* Info callout */
+  .callout { padding: 14px 18px; border-radius: 4px; margin: 14px 0; font-size: 13px; }
+  .callout-info { background: var(--accent-light); border-left: 4px solid var(--accent); }
+  .callout-warn { background: #fff3e0; border-left: 4px solid var(--warning); }
+
+  /* Role cards */
+  .role-card { border: 1px solid var(--gray-300); border-radius: 6px; margin-bottom: 20px; overflow: hidden; }
+  .role-card-header { background: var(--moss-light); padding: 14px 20px; display: flex; align-items: center; gap: 10px; }
+  .role-card-header .icon { font-size: 22px; }
+  .role-card-header h3 { margin: 0; color: var(--moss-primary); font-size: 16px; }
+  .role-card-header .tag { font-size: 11px; background: var(--moss-primary); color: #fff; padding: 2px 8px; border-radius: 10px; margin-left: auto; }
+  .role-card-body { padding: 16px 20px; }
+  .role-card-body .desc { font-size: 13px; color: var(--gray-600); margin-bottom: 10px; font-style: italic; }
+  .role-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .role-detail-item h4 { margin: 0 0 4px; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--gray-600); }
+  .role-detail-item ul { margin: 0 0 0 16px; font-size: 12.5px; }
+  .role-detail-item ul li { margin-bottom: 2px; }
+  .person-box { background: var(--gray-50); border: 1px dashed var(--gray-300); border-radius: 4px; padding: 10px 14px; margin-top: 10px; }
+  .person-box strong { color: var(--moss-primary); }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 14px 0 20px; }
+  th { background: var(--moss-primary); color: #fff; padding: 10px 12px; text-align: left; font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: .3px; }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  tr:nth-child(even) { background: var(--gray-50); }
+  .raci-r { background: #c8e6c9; color: #1b5e20; font-weight: 700; text-align: center; }
+  .raci-a { background: #bbdefb; color: #0d47a1; font-weight: 700; text-align: center; }
+  .raci-c { background: #fff9c4; color: #f57f17; font-weight: 600; text-align: center; }
+  .raci-i { background: #f5f5f5; color: #616161; text-align: center; }
+  .raci-na { color: #bdbdbd; text-align: center; }
+
+  /* Badge */
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+  .badge-green { background: #c8e6c9; color: #2e7d32; }
+  .badge-blue { background: #bbdefb; color: #1565c0; }
+  .badge-orange { background: #ffe0b2; color: #e65100; }
+  .badge-red { background: #ffcdd2; color: #c62828; }
+  .badge-purple { background: #e1bee7; color: #6a1b9a; }
+
+  /* Footer */
+  .doc-footer { background: var(--gray-100); padding: 20px 50px; font-size: 11px; color: var(--gray-600); border-top: 1px solid var(--gray-300); display: flex; justify-content: space-between; }
+
+  /* Print */
+  @media print {
+    body { background: #fff; }
+    .container { box-shadow: none; max-width: 100%; }
+    .role-card, table { page-break-inside: avoid; }
+    h2 { page-break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+<nav class="moss-topnav">
+  <span class="nav-brand">● Moss</span>
+  <a href="index.html">← Back to Home</a>
+  <span class="nav-sep">|</span>
+  <span style="color:rgba(255,255,255,.7);font-size:.84rem;">CCB Stakeholder Responsibility Mapping</span>
+</nav>
+
+<div class="container">
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<div class="doc-header">
+  <div class="org">Moss Energy — Application Lifecycle Management</div>
+  <h1>Change Control Board: Stakeholder Responsibility Mapping</h1>
+  <div class="subtitle">Comprehensive Role Definitions, RACI Matrix &amp; Recommended Assignments</div>
+  <div class="doc-meta">
+    <span>📅 April 15, 2026</span>
+    <span>📄 Version 1.0</span>
+    <span>📋 Document ID: CCB-SRM-001</span>
+    <span>🔒 Confidential — Internal Use Only</span>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ═══════════════════ 1. EXECUTIVE SUMMARY ═══════════════════ -->
+<h2>1. Executive Summary</h2>
+<div class="exec-summary">
+<p>This document provides a comprehensive mapping of all stakeholder roles, responsibilities, and recommended personnel for the <strong>Moss Energy Change Control Board (CCB)</strong>. It was compiled by analyzing 13 project artifacts including workflow flowcharts, swimlane diagrams, meeting minutes, transcripts, templates, the ITIL 4 Foundation reference, and the CCB UC-Demo presentation.</p>
+<p>The CCB is a centralized governance body established to standardize change management across all Moss Energy technology platforms. The initiative follows the <strong>ADKAR Model</strong> (Awareness → Desire → Knowledge → Ability → Reinforcement) and is guided by <strong>ITIL 4 Change Enablement</strong> best practices. Oracle Fusion has been designated as the <strong>pilot use case</strong>, with planned rollout to all other technology teams upon successful validation.</p>
+<p>This mapping identifies <strong>10 distinct roles</strong> across <strong>7 process stages</strong> and <strong>7 quality gates</strong>, with real personnel recommendations drawn from meeting participants and organizational discussions. The approval structure has been consolidated to <strong>two primary approvers</strong> — the Business Product Owner and the Technical/System Product Owner — streamlining from the original four-approver model.</p>
+</div>
+
+<!-- ═══════════════════ 2. CCB ROLES OVERVIEW ═══════════════════ -->
+<h2>2. CCB Roles Overview</h2>
+<p>The Change Control Board operates with five core roles (as defined in the CCB UC-Demo presentation) plus supplemental roles identified through workflow analysis and meeting discussions.</p>
+
+<table>
+<thead>
+<tr><th>#</th><th>Role</th><th>Category</th><th>Primary Function</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td><strong>Change Owner</strong></td><td><span class="badge badge-green">Core</span></td><td>Initiates and owns the change request end-to-end</td></tr>
+<tr><td>2</td><td><strong>Technical Lead</strong></td><td><span class="badge badge-green">Core</span></td><td>Owns how the change is executed; completes technical documentation</td></tr>
+<tr><td>3</td><td><strong>Business Product Owner</strong></td><td><span class="badge badge-green">Core</span></td><td>Approves <em>what</em> is changing; confirms business acceptance &amp; UAT</td></tr>
+<tr><td>4</td><td><strong>Technical / System Product Owner</strong></td><td><span class="badge badge-green">Core</span></td><td>Approves <em>how</em> the change is implemented in production</td></tr>
+<tr><td>5</td><td><strong>CCB Lead / Facilitator</strong></td><td><span class="badge badge-green">Core</span></td><td>Coordinates the entire CCB process, validates gates, facilitates meetings</td></tr>
+<tr><td>6</td><td><strong>CCB Board / Voting Members</strong></td><td><span class="badge badge-blue">Governance</span></td><td>Cross-functional stakeholders who review and vote on change approvals</td></tr>
+<tr><td>7</td><td><strong>Approval Groups</strong></td><td><span class="badge badge-blue">Governance</span></td><td>IT Security, Infrastructure, Business, Compliance sign-off during CCB meeting</td></tr>
+<tr><td>8</td><td><strong>Executive Sponsors (CTO / CIO)</strong></td><td><span class="badge badge-orange">Escalation</span></td><td>Required approval for Major and Emergency changes</td></tr>
+<tr><td>9</td><td><strong>Implementer / Assigned Analyst</strong></td><td><span class="badge badge-purple">Execution</span></td><td>Performs the actual technical implementation (may differ from Technical Lead)</td></tr>
+<tr><td>10</td><td><strong>Clarity Tool Administrator</strong></td><td><span class="badge badge-purple">Tooling</span></td><td>Maintains the Clarity system, notification workflows, and form configurations</td></tr>
+</tbody>
+</table>
+
+<div class="callout callout-info">
+<strong>Key Principle — Separation of Duties:</strong> A Change Owner who is also a CCB Board Member must <strong>recuse themselves</strong> from voting on their own change request. They may present and justify the change but cannot approve it. (Source: CCB Follow-up Transcript, April 10, 2026 — Victor Velasco)
+</div>
+
+<!-- ═══════════════════ 3. DETAILED ROLE DESCRIPTIONS ═══════════════════ -->
+<h2>3. Detailed Role Descriptions</h2>
+
+<!-- Role 1: Change Owner -->
+<div class="role-card">
+  <div class="role-card-header">
+    <span class="icon">👤</span>
+    <h3>Role 1: Change Owner</h3>
+    <span class="tag">CORE</span>
+  </div>
+  <div class="role-card-body">
+    <p class="desc">The initiator and end-to-end owner of the change request. Typically a Project Manager, initiative lead, or an IT analyst who identifies that a support request requires a change.</p>
+    <div class="role-detail">
+      <div class="role-detail-item">
+        <h4>Key Responsibilities</h4>
+        <ul>
+          <li>Initiate the Change Request in Clarity</li>
+          <li>Complete Section 1 (Change Identification) and Section 2 (Change Category)</li>
+          <li>Provide business justification and link related ServiceNow tickets</li>
+          <li>Coordinate with Technical Lead for technical sections</li>
+          <li>Complete Section 8 (Post-Implementation Review Plan)</li>
+          <li>Close the CR after successful implementation and PIR</li>
+        </ul>
+      </div>
+      <div class="role-detail-item">
+        <h4>Process Stage Involvement</h4>
+        <ul>
+          <li><strong>Stage 1:</strong> Initial Submission (Primary)</li>
+          <li><strong>Stage 5:</strong> Implementation Execution (Co-owner)</li>
+          <li><strong>Stage 6:</strong> Post-Implementation Review (Primary)</li>
+          <li><strong>Stage 7:</strong> Closure &amp; Archive (Primary)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="person-box">
+      <strong>Recommended Personnel:</strong> Varies per change request. The analyst working on the support case who determines a change is needed becomes the Change Owner. For project-driven changes, this would be the assigned PM or initiative lead.
+      <br><em>Example:</em> For Oracle Fusion — the Finance IS analyst assigned to the ticket; For Procore — the requesting engineer (e.g., Rob Waki per discussion).
+    </div>
+  </div>
+</div>
+
+<!-- Role 2: Technical Lead -->
+<div class="role-card">
+  <div class="role-card-header">
+    <span class="icon">🔧</span>
+    <h3>Role 2: Technical Lead</h3>
+    <span class="tag">CORE</span>
+  </div>
+  <div class="role-card-body">
+    <p class="desc">The implementation owner who ensures the technical feasibility, completeness, and stability of the proposed change. Owns the production deployment runbook and rollback procedures.</p>
+    <div class="role-detail">
+      <div class="role-detail-item">
+        <h4>Key Responsibilities</h4>
+        <ul>
+          <li>Complete Section 3 (Technical Specifications)</li>
+          <li>Complete Section 4 (Risk Assessment Summary)</li>
+          <li>Complete Section 5 (Implementation Schedule)</li>
+          <li>Complete Section 6 (Rollback &amp; Recovery Plan)</li>
+          <li>Complete Section 7 (QA &amp; Testing Evidence)</li>
+          <li>Execute or oversee the implementation in production</li>
+          <li>Coordinate with the Implementer/Assigned Analyst</li>
+        </ul>
+      </div>
+      <div class="role-detail-item">
+        <h4>Process Stage Involvement</h4>
+        <ul>
+          <li><strong>Stage 2:</strong> Technical Development (Primary — Sec 3–7)</li>
+          <li><strong>Stage 3:</strong> Rework if completeness review fails</li>
+          <li><strong>Stage 5:</strong> Implementation Execution (Primary)</li>
+          <li><strong>Stage 6:</strong> PIR sign-off</li>
+        </ul>
+      </div>
+    </div>
+    <div class="person-box">
+      <strong>Recommended Personnel (by platform):</strong>
+      <ul style="margin-top:6px;">
+        <li><strong>Oracle Fusion:</strong> Jeff or Sheena (Navneet's Finance IS team members)</li>
+        <li><strong>Procore:</strong> Andrew (reviews changes, coordinates with business, delegates to analysts)</li>
+        <li><strong>Project Fusion (future):</strong> Frank (not yet in production)</li>
+      </ul>
+      <em>Note:</em> Per the April 10 discussion, the Technical Lead is the person who coordinates the change and presents at the CCB meeting. They may delegate actual implementation to a lower-level analyst but retain oversight and accountability.
+    </div>
+  </div>
+</div>
+
+<!-- Role 3: Business Product Owner -->
+<div class="role-card">
+  <div class="role-card-header">
+    <span class="icon">💼</span>
+    <h3>Role 3: Business Product Owner</h3>
+    <span class="tag">CORE</span>
+  </div>
+  <div class="role-card-body">
+    <p class="desc">The module-level business owner who approves <em>what</em> is changing. Confirms that UAT has been completed, testing evidence is satisfactory, and training documentation is up to date.</p>
+    <div class="role-detail">
+      <div class="role-detail-item">
+        <h4>Key Responsibilities</h4>
+        <ul>
+          <li>Review and understand the proposed change</li>
+          <li>Confirm UAT/testing has been performed</li>
+          <li>Verify training documentation is current</li>
+          <li>Provide formal business approval (Section 7 &amp; Section 9)</li>
+          <li>Determine who in the business should be communicated</li>
+          <li>Not required to attend CCB meetings if approval is captured pre-meeting</li>
+        </ul>
+      </div>
+      <div class="role-detail-item">
+        <h4>Process Stage Involvement</h4>
+        <ul>
+          <li><strong>Stage 1:</strong> Identified in CR submission</li>
+          <li><strong>Stage 2:</strong> Validates UAT evidence</li>
+          <li><strong>Stage 4:</strong> Approval captured (pre-meeting or during CCB)</li>
+          <li><strong>Stage 7:</strong> Sign-off on closure</li>
+        </ul>
+      </div>
+    </div>
+    <div class="person-box">
+      <strong>Recommended Personnel (by module):</strong>
+      <table style="margin-top:6px; font-size:12px;">
+        <tr><th>Platform / Module</th><th>Recommended Business Product Owner</th></tr>
+        <tr><td>Oracle Fusion — Inventory / Supply Chain</td><td>Donna (or Ricardo)</td></tr>
+        <tr><td>Oracle Fusion — Accounts Payable / General Ledger</td><td>Charlene</td></tr>
+        <tr><td>Oracle Fusion — Procurement</td><td>Ricardo (or Jared)</td></tr>
+        <tr><td>Procore</td><td>Gary Friend</td></tr>
+        <tr><td>Moss Track</td><td>Racy (per Ravi's mapping)</td></tr>
+        <tr><td>Workday — HR</td><td>Carolina</td></tr>
+        <tr><td>Workday — Payroll</td><td>Dimov</td></tr>
+      </table>
+      <em>Note:</em> Business Product Owner registry by module needs to be formally documented. Ravi has established this for Procore; Navneet/Alex assigned to document the Oracle Fusion list (Action Item from April 3 minutes).
+    </div>
+  </div>
+</div>
+
+<!-- Role 4: Technical/System Product Owner -->
+<div class="role-card">
+  <div class="role-card-header">
+    <span class="icon">⚙️</span>
+    <h3>Role 4: Technical / System Product Owner</h3>
+    <span class="tag">CORE</span>
+  </div>
+  <div class="role-card-body">
+    <p class="desc">The system-level owner who approves <em>how</em> the change is implemented in production. Reviews the implementation runbook, rollback procedures, and assesses upstream/downstream impacts to maintain production stability.</p>
+    <div class="role-detail">
+      <div class="role-detail-item">
+        <h4>Key Responsibilities</h4>
+        <ul>
+          <li>Review deployment/implementation runbook</li>
+          <li>Verify rollback procedures are adequate</li>
+          <li>Assess upstream and downstream system impacts</li>
+          <li>Approve the technical implementation plan (Section 9)</li>
+          <li>Ensure production stability is not compromised</li>
+          <li>May serve as CCB Voting Member for their platform</li>
+        </ul>
+      </div>
+      <div class="role-detail-item">
+        <h4>Process Stage Involvement</h4>
+        <ul>
+          <li><strong>Stage 2:</strong> Review technical specifications</li>
+          <li><strong>Stage 4:</strong> Provide approval during CCB meeting</li>
+          <li><strong>Stage 5:</strong> Oversee implementation execution</li>
+          <li><strong>Stage 6:</strong> Participate in PIR</li>
+        </ul>
+      </div>
+    </div>
+    <div class="person-box">
+      <strong>Recommended Personnel (by platform):</strong>
+      <table style="margin-top:6px; font-size:12px;">
+        <tr><th>Platform</th><th>Technical / System Product Owner</th></tr>
+        <tr><td>Oracle Fusion</td><td><strong>Navneet Kaur</strong> — confirmed as decision-maker; approves all changes going to production</td></tr>
+        <tr><td>Procore</td><td>Andrew (reviews and approves technical changes; delegates execution)</td></tr>
+        <tr><td>Workday</td><td>Amber Taylor (per Kickoff attendance &amp; Workday context)</td></tr>
+        <tr><td>Solution Engineering</td><td>Arun Gannarapu or Anand Sundar</td></tr>
+      </table>
+      <em>Important distinction:</em> Per Victor Velasco — "The technical product owner will approve <em>how</em> it's going to be changed in production… they need to understand the implementation runbook, the deployment runbook." This is separate from project-phase technical leadership.
+    </div>
+  </div>
+</div>
+
+<!-- Role 5: CCB Lead / Facilitator -->
+<div class="role-card">
+  <div class="role-card-header">
+    <span class="icon">🎯</span>
+    <h3>Role 5: CCB Lead / Facilitator</h3>
+    <span class="tag">CORE</span>
+  </div>
+  <div class="role-card-body">
+    <p class="desc">Coordinates the entire CCB process from intake to closure. Validates quality gates, facilitates CCB meetings, manages the approval workflow, and approves the Post-Implementation Review.</p>
+    <div class="role-detail">
+      <div class="role-detail-item">
+        <h4>Key Responsibilities</h4>
+        <ul>
+          <li>Validate Gate 1 (Sections 1–2 completeness)</li>
+          <li>Jointly review Sections 1–7 with Product Owner (Gate 2.5)</li>
+          <li>Schedule and facilitate CCB meetings</li>
+          <li>Manage approval workflow and notifications</li>
+          <li>Reclassify changes if needed (Standard → Normal → Major)</li>
+          <li>Approve PIR at Gate 5</li>
+          <li>Manage escalations (SLA breaches, deadlocks)</li>
+          <li>Maintain the Change Request Register</li>
+        </ul>
+      </div>
+      <div class="role-detail-item">
+        <h4>Process Stage Involvement</h4>
+        <ul>
+          <li><strong>Stage 1:</strong> Gate 1 validation</li>
+          <li><strong>Stage 3:</strong> Completeness Review (with Product Owner)</li>
+          <li><strong>Stage 4:</strong> Facilitate CCB meeting</li>
+          <li><strong>Stage 6:</strong> Gate 5 — Approve PIR</li>
+          <li><strong>Stage 7:</strong> Oversee closure and archival</li>
+          <li><strong>All Stages:</strong> SLA monitoring and escalation</li>
+        </ul>
+      </div>
+    </div>
+    <div class="person-box">
+      <strong>Confirmed Personnel:</strong> <strong>Alex Diamant</strong> — Self-identified as CCB Lead during the April 10 follow-up meeting: "The CCB lead, which is me. I basically am going to be coordinating the entire CCB process." Also serves as Note Taker for CCB meetings and co-presenter of the CCB UC-Demo.
+    </div>
+  </div>
+</div>
+
+<!-- Role 6: CCB Board / Voting Members -->
+<div class="role-card">
+  <div class="role-card-header">
+    <span class="icon">🗳️</span>
+    <h3>Role 6: CCB Board / Voting Members</h3>
+    <span class="tag">GOVERNANCE</span>
+  </div>
+  <div class="role-card-body">
+    <p class="desc">Cross-functional stakeholders including platform owners, technical leads, and business representatives who review change requests and vote on approval. Board composition may vary by change request based on subject matter relevance.</p>
+    <div class="role-detail">
+      <div class="role-detail-item">
+        <h4>Key Responsibilities</h4>
+        <ul>
+          <li>Review CR packages distributed before CCB meetings</li>
+          <li>Attend CCB meetings (biweekly cadence planned)</li>
+          <li>Assess risk, impact, and readiness of proposed changes</li>
+          <li>Vote: Approve / Approve with Conditions / Defer / Reject</li>
+          <li>Executive approval (Gate 2) for Critical risk changes</li>
+          <li>Gate 3 (CCB Verdict) and Gate 4 (Implementation authorization)</li>
+        </ul>
+      </div>
+      <div class="role-detail-item">
+        <h4>Process Stage Involvement</h4>
+        <ul>
+          <li><strong>Stage 2:</strong> Gate 2 — Executive approval if Critical</li>
+          <li><strong>Stage 4:</strong> CCB Decision &amp; Gate 3</li>
+          <li><strong>Stage 5:</strong> Gate 4 — Implementation authorization</li>
+        </ul>
+      </div>
+    </div>
+    <div class="person-box">
+      <strong>Recommended Board Composition</strong> (drawn from Kickoff attendees and discussion):
+      <ul style="margin-top:6px;">
+        <li><strong>Victor Velasco</strong> — CCB Chair / Executive Sponsor (called and facilitated the kickoff; provides strategic direction)</li>
+        <li><strong>Alex Diamant</strong> — CCB Lead / Facilitator (non-voting when facilitating)</li>
+        <li><strong>Navneet Kaur</strong> — Technical/System Product Owner, Oracle Fusion</li>
+        <li><strong>Arun Gannarapu</strong> — Solution Engineering / Technical Review</li>
+        <li><strong>Anand Sundar</strong> — Major Enhancements / Implementation Team</li>
+        <li><strong>Rashad Whyce</strong> — Technical Representative</li>
+        <li><strong>Monica Palacios</strong> — Process Advisory (former steering committee experience)</li>
+        <li><strong>Erika Fermaints-Perez</strong> — Project Management / Major Scope Enhancements</li>
+        <li><strong>Peter Jaric</strong> — Cross-functional Representative</li>
+        <li><strong>Zorin Wade</strong> — Tooling &amp; Clarity Administration (advisory/non-voting)</li>
+      </ul>
+      <em>Note:</em> Attendance is limited to relevant participants per meeting. Pre-read materials are distributed in advance. Board membership is not fixed — it varies based on the systems being impacted.
+    </div>
+  </div>
+</div>
+
+<!-- Role 7: Approval Groups -->
+<div class="role-card">
+  <div class="role-card-header">
+    <span class="icon">✅</span>
+    <h3>Role 7: Approval Groups</h3>
+    <span class="tag">GOVERNANCE</span>
+  </div>
+  <div class="role-card-body">
+    <p class="desc">Specialized review groups that provide domain-specific sign-off during the CCB meeting. These replace the former separate pre-CCB approval collection stage.</p>
+    <div class="role-detail">
+      <div class="role-detail-item">
+        <h4>Approval Group Domains</h4>
+        <ul>
+          <li><strong>IT Security:</strong> Security vulnerabilities, access control, data protection</li>
+          <li><strong>Infrastructure:</strong> Capacity, network, environment, deployment requirements</li>
+          <li><strong>Business Owner:</strong> Business justification, cost-benefit, stakeholder impact</li>
+          <li><strong>Compliance / Regulatory:</strong> Regulatory requirements, audit trail, documentation</li>
+        </ul>
+      </div>
+      <div class="role-detail-item">
+        <h4>Process Stage Involvement</h4>
+        <ul>
+          <li><strong>Stage 4:</strong> Review and sign off during CCB meeting</li>
+          <li>SLA: 3 business days for pre-review of CR package</li>
+        </ul>
+      </div>
+    </div>
+    <div class="person-box">
+      <strong>Recommended Personnel:</strong> To be designated by each functional area head. Approval group leads should be identified from existing IT Security, Infrastructure Operations, Business Leadership, and Compliance teams.
+    </div>
+  </div>
+</div>
+
+<!-- Role 8: Executive Sponsors -->
+<div class="role-card">
+  <div class="role-card-header">
+    <span class="icon">👔</span>
+    <h3>Role 8: Executive Sponsors (CTO / CIO)</h3>
+    <span class="tag">ESCALATION</span>
+  </div>
+  <div class="role-card-body">
+    <p class="desc">Senior executives required to approve Major changes (CTO + CIO) and Emergency changes (CTO). Also serve as escalation point for approval deadlocks and SLA breaches.</p>
+    <div class="role-detail">
+      <div class="role-detail-item">
+        <h4>Key Responsibilities</h4>
+        <ul>
+          <li>Approve Major changes (CTO + CIO sign-off required)</li>
+          <li>Authorize Emergency changes (expedited verbal/email approval)</li>
+          <li>Resolve approval deadlocks escalated by CCB Lead</li>
+          <li>Receive emergency change override notifications</li>
+          <li>Ensure post-facto CCB review for emergency changes within 5 business days</li>
+        </ul>
+      </div>
+      <div class="role-detail-item">
+        <h4>Process Stage Involvement</h4>
+        <ul>
+          <li><strong>Stage 4:</strong> Approval for Major/Emergency changes</li>
+          <li><strong>Escalation:</strong> Deadlock resolution, SLA breaches</li>
+        </ul>
+      </div>
+    </div>
+    <div class="person-box">
+      <strong>Recommended Personnel:</strong>
+      <ul style="margin-top:6px;">
+        <li><strong>Strategic Direction:</strong> Ravi (provides direction for the CCB initiative per Victor Velasco)</li>
+        <li><strong>Executive Visibility:</strong> JD (visibility and oversight per meeting discussions)</li>
+        <li><strong>Leadership Communications:</strong> Cheryl Willis (communicates CCB initiative to leadership)</li>
+      </ul>
+      <em>Note:</em> Specific CTO and CIO names were not explicitly named in the materials. These positions should be filled by the current Moss Energy CTO and CIO.
+    </div>
+  </div>
+</div>
+
+<!-- Role 9: Implementer -->
+<div class="role-card">
+  <div class="role-card-header">
+    <span class="icon">🛠️</span>
+    <h3>Role 9: Implementer / Assigned Analyst</h3>
+    <span class="tag">EXECUTION</span>
+  </div>
+  <div class="role-card-body">
+    <p class="desc">The person who performs the actual technical implementation in production. May be the Technical Lead or a delegate. Per principle, only personnel supporting production stability should touch the production environment.</p>
+    <div class="role-detail">
+      <div class="role-detail-item">
+        <h4>Key Responsibilities</h4>
+        <ul>
+          <li>Execute the implementation runbook step-by-step</li>
+          <li>Follow the rollback plan if issues arise</li>
+          <li>Coordinate with Technical Lead during deployment</li>
+          <li>Report implementation status and any deviations</li>
+          <li>Captured in a dedicated "Assigned To" field in the CR form</li>
+        </ul>
+      </div>
+      <div class="role-detail-item">
+        <h4>Process Stage Involvement</h4>
+        <ul>
+          <li><strong>Stage 5:</strong> Implementation Execution (Primary executor)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="person-box">
+      <strong>Recommended Personnel:</strong> Varies per change. For Oracle Fusion, this would be a Finance IS team member (e.g., Jeff or Sheena) working under Navneet's oversight. For Procore, lower-level analysts delegated by Andrew. For net-new applications, may be an SI consultant who then hands off the deployment runbook.
+    </div>
+  </div>
+</div>
+
+<!-- Role 10: Clarity Tool Admin -->
+<div class="role-card">
+  <div class="role-card-header">
+    <span class="icon">💻</span>
+    <h3>Role 10: Clarity Tool Administrator</h3>
+    <span class="tag">TOOLING</span>
+  </div>
+  <div class="role-card-body">
+    <p class="desc">Maintains the Clarity platform as the central system of record for all change requests. Manages form configurations, notification workflows, SharePoint integration, and user access.</p>
+    <div class="role-detail">
+      <div class="role-detail-item">
+        <h4>Key Responsibilities</h4>
+        <ul>
+          <li>Configure and maintain the Clarity intake form</li>
+          <li>Build notification workflows for stage transitions</li>
+          <li>Manage SharePoint integration for document uploads</li>
+          <li>Set up Business Product Owner registry as dropdown values</li>
+          <li>Grant user access (e.g., production access for Navneet)</li>
+          <li>Implement linked/dependent drop-down lists</li>
+        </ul>
+      </div>
+      <div class="role-detail-item">
+        <h4>Process Stage Involvement</h4>
+        <ul>
+          <li><strong>All Stages:</strong> System infrastructure &amp; automation</li>
+          <li>Automated email notifications (34 total across 7 stages)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="person-box">
+      <strong>Confirmed Personnel:</strong> <strong>Zorin Wade</strong> — Built the Clarity intake form, demonstrated the approval process, manages SharePoint integration. Described by Alex Diamant as "very effective in helping with the Clarity portion." Also co-presenter of the CCB UC-Demo.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ 4. RACI MATRIX ═══════════════════ -->
+<h2>4. Responsibility Matrix (RACI)</h2>
+<p>The following RACI matrix maps each role against the seven process stages and key quality gates. <strong>R</strong> = Responsible (does the work), <strong>A</strong> = Accountable (decision authority), <strong>C</strong> = Consulted, <strong>I</strong> = Informed.</p>
+
+<table>
+<thead>
+<tr>
+  <th style="width:22%">Process Stage / Gate</th>
+  <th>Change Owner</th>
+  <th>Tech Lead</th>
+  <th>Bus. Product Owner</th>
+  <th>Tech/Sys Product Owner</th>
+  <th>CCB Lead</th>
+  <th>Board Members</th>
+  <th>Exec (CTO/CIO)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Stage 1:</strong> Initial Submission (Sec 1–2)</td>
+  <td class="raci-r">R</td>
+  <td class="raci-c">C</td>
+  <td class="raci-i">I</td>
+  <td class="raci-i">I</td>
+  <td class="raci-a">A</td>
+  <td class="raci-na">—</td>
+  <td class="raci-na">—</td>
+</tr>
+<tr>
+  <td>↳ Gate 1: Validate Sec 1–2</td>
+  <td class="raci-i">I</td>
+  <td class="raci-na">—</td>
+  <td class="raci-na">—</td>
+  <td class="raci-na">—</td>
+  <td class="raci-r">R/A</td>
+  <td class="raci-na">—</td>
+  <td class="raci-na">—</td>
+</tr>
+<tr>
+  <td><strong>Stage 2:</strong> Technical Development (Sec 3–7)</td>
+  <td class="raci-c">C</td>
+  <td class="raci-r">R</td>
+  <td class="raci-c">C</td>
+  <td class="raci-c">C</td>
+  <td class="raci-i">I</td>
+  <td class="raci-na">—</td>
+  <td class="raci-na">—</td>
+</tr>
+<tr>
+  <td>↳ Gate 2: Exec Approval (if Critical)</td>
+  <td class="raci-i">I</td>
+  <td class="raci-i">I</td>
+  <td class="raci-i">I</td>
+  <td class="raci-i">I</td>
+  <td class="raci-r">R</td>
+  <td class="raci-c">C</td>
+  <td class="raci-a">A</td>
+</tr>
+<tr>
+  <td><strong>Stage 3:</strong> Completeness Review &amp; CCB Scheduling</td>
+  <td class="raci-i">I</td>
+  <td class="raci-c">C</td>
+  <td class="raci-r">R</td>
+  <td class="raci-na">—</td>
+  <td class="raci-r">R/A</td>
+  <td class="raci-na">—</td>
+  <td class="raci-na">—</td>
+</tr>
+<tr>
+  <td>↳ Gate 2.5: Completeness Verified</td>
+  <td class="raci-i">I</td>
+  <td class="raci-i">I</td>
+  <td class="raci-r">R</td>
+  <td class="raci-na">—</td>
+  <td class="raci-a">A</td>
+  <td class="raci-na">—</td>
+  <td class="raci-na">—</td>
+</tr>
+<tr>
+  <td><strong>Stage 4:</strong> CCB Meeting &amp; Decision</td>
+  <td class="raci-c">C</td>
+  <td class="raci-c">C</td>
+  <td class="raci-c">C</td>
+  <td class="raci-c">C</td>
+  <td class="raci-r">R</td>
+  <td class="raci-a">A</td>
+  <td class="raci-c">C*</td>
+</tr>
+<tr>
+  <td>↳ Gate 3: CCB Verdict</td>
+  <td class="raci-i">I</td>
+  <td class="raci-i">I</td>
+  <td class="raci-i">I</td>
+  <td class="raci-i">I</td>
+  <td class="raci-r">R</td>
+  <td class="raci-a">A</td>
+  <td class="raci-na">—</td>
+</tr>
+<tr>
+  <td><strong>Stage 5:</strong> Implementation Execution</td>
+  <td class="raci-c">C</td>
+  <td class="raci-r">R</td>
+  <td class="raci-i">I</td>
+  <td class="raci-a">A</td>
+  <td class="raci-i">I</td>
+  <td class="raci-na">—</td>
+  <td class="raci-na">—</td>
+</tr>
+<tr>
+  <td>↳ Gate 4: Implementation Authorization</td>
+  <td class="raci-i">I</td>
+  <td class="raci-r">R</td>
+  <td class="raci-i">I</td>
+  <td class="raci-a">A</td>
+  <td class="raci-i">I</td>
+  <td class="raci-c">C</td>
+  <td class="raci-na">—</td>
+</tr>
+<tr>
+  <td><strong>Stage 6:</strong> Post-Implementation Review</td>
+  <td class="raci-r">R</td>
+  <td class="raci-c">C</td>
+  <td class="raci-i">I</td>
+  <td class="raci-i">I</td>
+  <td class="raci-a">A</td>
+  <td class="raci-na">—</td>
+  <td class="raci-na">—</td>
+</tr>
+<tr>
+  <td>↳ Gate 5: Approve PIR</td>
+  <td class="raci-i">I</td>
+  <td class="raci-i">I</td>
+  <td class="raci-na">—</td>
+  <td class="raci-na">—</td>
+  <td class="raci-r">R/A</td>
+  <td class="raci-na">—</td>
+  <td class="raci-na">—</td>
+</tr>
+<tr>
+  <td><strong>Stage 7:</strong> Closure &amp; Archive</td>
+  <td class="raci-r">R</td>
+  <td class="raci-i">I</td>
+  <td class="raci-i">I</td>
+  <td class="raci-i">I</td>
+  <td class="raci-a">A</td>
+  <td class="raci-i">I</td>
+  <td class="raci-na">—</td>
+</tr>
+</tbody>
+</table>
+<p style="font-size:11px; color:var(--gray-600);"><strong>*</strong> CTO/CIO consulted only for Major and Emergency changes.</p>
+
+<!-- ═══════════════════ 5. CHANGE CATEGORIES & APPROVAL PATHS ═══════════════════ -->
+<h2>5. Change Categories &amp; Approval Paths</h2>
+
+<table>
+<thead>
+<tr><th>Category</th><th>Risk Level</th><th>Approval Path</th><th>CCB Meeting</th><th>PIR Required</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Standard</strong></td>
+  <td><span class="badge badge-green">Low</span></td>
+  <td>Pre-approved; logged for tracking only</td>
+  <td>No</td>
+  <td>Yes (post-completion)</td>
+</tr>
+<tr>
+  <td><strong>Normal</strong></td>
+  <td><span class="badge badge-orange">Medium</span></td>
+  <td>Full CCB Review &amp; Approval</td>
+  <td>Yes — biweekly</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td><strong>Major</strong></td>
+  <td><span class="badge badge-red">High</span></td>
+  <td>CCB Review + CTO + CIO Approval</td>
+  <td>Yes — dedicated session</td>
+  <td>Mandatory</td>
+</tr>
+<tr>
+  <td><strong>Emergency</strong></td>
+  <td><span class="badge badge-red">Critical</span></td>
+  <td>Expedited (verbal/email); post-facto CCB review within 5 days</td>
+  <td>Retrospective</td>
+  <td>Mandatory (within 48 hrs)</td>
+</tr>
+</tbody>
+</table>
+
+<!-- ═══════════════════ 6. RECOMMENDED PERSONNEL SUMMARY ═══════════════════ -->
+<h2>6. Recommended Personnel Summary</h2>
+
+<table>
+<thead>
+<tr><th>Role</th><th>Confirmed / Recommended Person(s)</th><th>Source</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>CCB Chair / Executive Sponsor</strong></td><td>Victor Velasco</td><td>Kickoff Minutes — called &amp; facilitated meeting; provides strategic direction</td></tr>
+<tr><td><strong>CCB Lead / Facilitator</strong></td><td>Alex Diamant</td><td>Self-identified in April 10 transcript; note taker; process architect</td></tr>
+<tr><td><strong>Clarity Tool Administrator</strong></td><td>Zorin Wade</td><td>Built Clarity forms; demo presenter; SharePoint integration</td></tr>
+<tr><td><strong>Tech/Sys Product Owner — Oracle Fusion</strong></td><td>Navneet Kaur</td><td>Confirmed as decision-maker for all Oracle production changes</td></tr>
+<tr><td><strong>Tech/Sys Product Owner — Solution Eng.</strong></td><td>Arun Gannarapu / Anand Sundar</td><td>Kickoff attendees; major enhancement oversight</td></tr>
+<tr><td><strong>Bus. Product Owner — Oracle Inventory</strong></td><td>Donna (or Ricardo)</td><td>April 3 &amp; April 10 transcripts</td></tr>
+<tr><td><strong>Bus. Product Owner — Oracle AP/GL</strong></td><td>Charlene</td><td>April 3 transcript — Victor Velasco</td></tr>
+<tr><td><strong>Bus. Product Owner — Oracle Procurement</strong></td><td>Ricardo / Jared</td><td>April 3 transcript — Navneet &amp; Victor</td></tr>
+<tr><td><strong>Bus. Product Owner — Procore</strong></td><td>Gary Friend</td><td>April 10 transcript — Victor Velasco</td></tr>
+<tr><td><strong>Technical Lead — Procore</strong></td><td>Andrew</td><td>April 10 transcript — reviews, approves, delegates</td></tr>
+<tr><td><strong>Technical Lead — Oracle Fusion</strong></td><td>Jeff or Sheena</td><td>April 10 transcript — Navneet Kaur</td></tr>
+<tr><td><strong>Strategic Direction</strong></td><td>Ravi</td><td>April 3 transcript — Victor: "direction will come from Ravi"</td></tr>
+<tr><td><strong>Executive Visibility</strong></td><td>JD</td><td>April 3 transcript — "visibility from JD"</td></tr>
+<tr><td><strong>Leadership Communications</strong></td><td>Cheryl Willis</td><td>April 3 transcript — communications to leadership</td></tr>
+<tr><td><strong>Process Advisory</strong></td><td>Monica Palacios</td><td>Kickoff attendee; former steering committee; suggested "implementation team" term</td></tr>
+<tr><td><strong>PM / Change Coordination</strong></td><td>Erika Fermaints-Perez / Andrea Carbone</td><td>Kickoff attendees; new PMs available if needed</td></tr>
+</tbody>
+</table>
+
+<!-- ═══════════════════ 7. RECOMMENDATIONS ═══════════════════ -->
+<h2>7. Recommendations for Role Assignments</h2>
+
+<h3>7.1 Immediate Actions (Pre-Launch)</h3>
+<ol>
+  <li><strong>Formalize the Business Product Owner Registry:</strong> Document Business Product Owners by module for Oracle Fusion (assigned to Navneet/Alex, per April 3 Action Item #5). Ravi's Procore mapping should serve as the template.</li>
+  <li><strong>Clarify "Technical Lead" Terminology:</strong> Per feedback from Arun Gannarapu, Monica Palacios, and Navneet Kaur (April 10), the term "Technical Lead" causes confusion between project-phase development leads and production support leads. Consider renaming to <strong>"Production Technical Lead"</strong> or <strong>"Implementation Coordinator"</strong> to distinguish from project-phase roles.</li>
+  <li><strong>Add "Assigned To / Implementer" Field:</strong> Capture the actual person performing the implementation, separate from the Technical Lead who reviews and approves (identified in April 10 discussion).</li>
+  <li><strong>Grant Clarity Access:</strong> Ensure all identified personnel have appropriate access levels in Clarity (Action Item #1 from April 3 — grant Navneet production access).</li>
+</ol>
+
+<h3>7.2 Process Refinements</h3>
+<ol>
+  <li><strong>Pilot with Oracle Fusion:</strong> Oracle Fusion is confirmed as the pilot use case. Navneet Kaur's team will validate the process, after which it rolls out to all other technology teams.</li>
+  <li><strong>Define Maintenance &amp; Release Windows:</strong> Currently not standardized. Establish frequency, timing, and duration for deployment windows across platforms.</li>
+  <li><strong>Communication Plan for Changes:</strong> Per Monica Palacios (April 10), include a field in the CR form to capture who in the business needs to be communicated about the change.</li>
+  <li><strong>Establish CMDB:</strong> Until a Configuration Management Database is established as the source of record, Business Product Owner assignments will be maintained manually. Plan for CMDB implementation as a medium-term goal.</li>
+</ol>
+
+<h3>7.3 Governance Cadence</h3>
+<ul>
+  <li><strong>CCB Meetings:</strong> Biweekly (with potential shift to monthly once stabilized)</li>
+  <li><strong>First CCB Review Session:</strong> Targeted for June 4, 2026</li>
+  <li><strong>Change Intake in Clarity:</strong> Begins May 1, 2026</li>
+  <li><strong>Pre-reads:</strong> Distributed 48 hours before each CCB meeting</li>
+  <li><strong>Quorum:</strong> Minimum number of voting members required (to be defined)</li>
+</ul>
+
+<!-- ═══════════════════ 8. SOURCE DOCUMENTS ═══════════════════ -->
+<h2>8. Source Document References</h2>
+
+<table>
+<thead>
+<tr><th>#</th><th>Document</th><th>Type</th><th>Key Information Extracted</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>01_Change_Request_Form_V4.html</td><td>Template</td><td>9-section CR form structure; approval signatures (Business PO, Tech PO, IT Security, CCB Facilitator, CTO, CIO); change categories; risk assessment</td></tr>
+<tr><td>2</td><td>07_Change_Request_Register.html</td><td>Tool</td><td>CR tracking fields; status workflow (Submitted → Under Review → Approved → Implemented → PIR Complete); categories and risk levels</td></tr>
+<tr><td>3</td><td>12_PIR_Template.html</td><td>Template</td><td>PIR sign-off roles (Change Requestor, Change Owner, Technical Lead); stakeholder satisfaction tracking; action items</td></tr>
+<tr><td>4</td><td>15_Change_Request_Workflow_Flowchart.html</td><td>Flowchart</td><td>7-stage workflow; 7 gates; 34+ email notifications; stage owners; SLA timelines; approval group domains</td></tr>
+<tr><td>5</td><td>17_Section_Responsibility_Swimlane_Flowchart.html</td><td>Swimlane</td><td>7 swimlane roles; section-to-role mapping; phase-by-phase responsibility; completeness review process</td></tr>
+<tr><td>6</td><td>2026.03.11 Clarity Request Form Transcript</td><td>Transcript</td><td>Approval consolidation discussions; notification workflow design; PIR process; rollback decision-making</td></tr>
+<tr><td>7</td><td>2026.03.26 Fusion Release Management Recap</td><td>Minutes</td><td>Current Oracle Fusion change process; Navneet as product owner; ServiceNow limitations; Huron vendor coordination</td></tr>
+<tr><td>8</td><td>2026.03.27 CCB Kickoff Minutes</td><td>Minutes</td><td>Full attendee list; CCB governance structure; change categories; ADKAR model; roles &amp; cadence; key milestones; action items</td></tr>
+<tr><td>9</td><td>2026.04.03 Change Request Intake Form Minutes</td><td>Minutes</td><td>Approval consolidation to 2 roles; Business PO registry need; Clarity demo; Oracle Fusion as pilot; rollout strategy</td></tr>
+<tr><td>10</td><td>2026.04.03 Change Request Intake Form Transcript</td><td>Transcript</td><td>Detailed role discussions; Business PO by module names; Technical PO responsibilities; CAB vs. individual approval clarification</td></tr>
+<tr><td>11</td><td>2026.04.10 CCB Follow-up Transcript</td><td>Transcript</td><td>5 key roles defined; real-name examples by platform; terminology concerns; separation of duties; implementation workflow</td></tr>
+<tr><td>12</td><td>CCB UC-Demo.pptx</td><td>Presentation</td><td>5 key roles overview; 4 change categories with use cases; Standard/Normal/Major/Emergency definitions</td></tr>
+<tr><td>13</td><td>ITIL4_FND_QRG_EN_v4.2.pdf</td><td>Reference</td><td>ITIL 4 Change Enablement definitions; change authority; RFC; standard/normal/emergency change types; PIR; continual improvement model</td></tr>
+</tbody>
+</table>
+
+</div><!-- end content -->
+
+<div class="doc-footer">
+  <span>Moss Energy — Change Control Board | Stakeholder Responsibility Mapping v1.0</span>
+  <span>Prepared by ALM Team | April 15, 2026 | Confidential — Internal Use Only</span>
+</div>
+
+</div><!-- end container -->
+</body>
+</html>

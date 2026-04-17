@@ -15,45 +15,135 @@ a { color: #1a5f2a; text-decoration: none; }
 a:hover { text-decoration: underline; }
 
 /* ============================================================
-   Back-to-Home Navigation Bar  (injected into doc pages)
+   Full Navigation Bar (injected into doc pages)
    ============================================================ */
 .moss-topnav {
   position: sticky;
   top: 0;
   z-index: 9000;
+  background: linear-gradient(135deg, #0d3b1e 0%, #1a5f2a 100%);
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.moss-nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: linear-gradient(135deg, #0d3b1e 0%, #1a5f2a 100%);
-  padding: 10px 24px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+  padding: 0 24px;
+  position: relative;
 }
-.moss-topnav a {
-  color: #fff;
-  font-size: .88rem;
-  font-weight: 600;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 14px;
-  border-radius: 6px;
-  transition: background .15s;
-}
-.moss-topnav a:hover {
-  background: rgba(255,255,255,.15);
-  text-decoration: none;
-}
-.moss-topnav .nav-brand {
+
+.moss-nav-brand {
   font-weight: 800;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  font-size: .82rem;
+  font-size: .9rem;
   color: #6fda7f;
-  margin-right: auto;
+  text-decoration: none;
+  padding: 14px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color .2s;
 }
-.moss-topnav .nav-sep {
-  color: rgba(255,255,255,.3);
-  font-weight: 300;
+
+.moss-nav-brand:hover {
+  color: #8ffa9f;
+  text-decoration: none;
+}
+
+.moss-nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 8px;
+  margin-left: auto;
+  transition: background .2s;
+  border-radius: 6px;
+}
+
+.moss-nav-toggle:hover {
+  background: rgba(255,255,255,.15);
+}
+
+.moss-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.moss-nav-links a {
+  color: #fff;
+  font-size: .82rem;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 14px 14px;
+  transition: background .2s, color .2s;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.moss-nav-links a:hover {
+  background: rgba(255,255,255,.15);
+  color: #6fda7f;
+  text-decoration: none;
+}
+
+.moss-nav-links a.active {
+  background: rgba(111,218,127,.2);
+  color: #6fda7f;
+  font-weight: 600;
+}
+
+/* Mobile Navigation */
+@media (max-width: 1024px) {
+  .moss-nav-toggle {
+    display: block;
+  }
+
+  .moss-nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #0d3b1e 0%, #1a5f2a 100%);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    margin-left: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .3s ease-out;
+    box-shadow: 0 4px 8px rgba(0,0,0,.2);
+  }
+
+  .moss-nav-links.open {
+    max-height: 500px;
+    border-top: 1px solid rgba(255,255,255,.1);
+  }
+
+  .moss-nav-links a {
+    padding: 14px 24px;
+    border-radius: 0;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+  }
+
+  .moss-nav-links a:last-child {
+    border-bottom: none;
+  }
+}
+
+/* Tablet responsiveness */
+@media (max-width: 1200px) and (min-width: 1025px) {
+  .moss-nav-links a {
+    font-size: .76rem;
+    padding: 14px 10px;
+  }
 }

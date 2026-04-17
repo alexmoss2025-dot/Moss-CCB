@@ -144,13 +144,23 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
 }
 </style>
 <link rel="stylesheet" href="site.css" />
+<link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body >
 <nav class="moss-topnav">
-  <span class="nav-brand">● Moss</span>
-  <a href="index.html">← Back to Home</a>
-  <span class="nav-sep">|</span>
-  <span style="color:rgba(255,255,255,.7);font-size:.84rem;">Swimlane Flowchart</span>
+  <div class="moss-nav-container">
+    <a href="index.html" class="moss-nav-brand">● Moss</a>
+    <button class="moss-nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('.moss-nav-links').classList.toggle('open')">☰</button>
+    <div class="moss-nav-links">
+      <a href="index.html">Home</a>
+      <a href="01_Change_Request_Form_V4.html">Change Request Form</a>
+      <a href="07_Change_Request_Register.html">Change Register</a>
+      <a href="08_CCB_Metrics_Dashboard.html">Metrics Dashboard</a>
+      <a href="12_PIR_Template.html">PIR Template</a>
+      <a href="17_Section_Responsibility_Swimlane_Flowchart.html" class="active">Swimlane Flowchart</a>
+      <a href="CCB_Stakeholder_Responsibility_Mapping.html">Stakeholder Mapping</a>
+    </div>
+  </div>
 </nav>
 <!-- Version Banner --><div class="version-banner">🆕 Version 2.1 — Pre-CCB approvals removed · Approvals now occur during CCB Meeting · 7 Phases · 7 Gates · 34 Notifications</div><!-- Header --><div class="header">
 <div class="header-left">

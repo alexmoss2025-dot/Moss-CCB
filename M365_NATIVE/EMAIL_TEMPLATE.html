@@ -1,0 +1,72 @@
+<!--
+  Copy this HTML into the "Send an email (V2)" step's Body box (switch to HTML mode first).
+  Replace the {{Dynamic.*}} placeholders with the matching dynamic-content tokens from
+  the Get response details step / Create item step of the Power Automate flow.
+-->
+<div style="font-family: Segoe UI, Arial, sans-serif; max-width:720px; margin:0 auto; color:#0f172a;">
+  <div style="background:#4F46E5; color:#ffffff; padding:24px; border-radius:8px 8px 0 0;">
+    <h2 style="margin:0; font-weight:600;">New Software Request Submitted</h2>
+    <p style="margin:8px 0 0; opacity:.85;">Reference: {{variables('RequestIdShort')}}</p>
+  </div>
+
+  <div style="background:#f8fafc; padding:24px; border-radius:0 0 8px 8px;">
+    <p style="margin-top:0;">A new software request has been submitted for ALM review.</p>
+
+    <h3 style="color:#0f172a; margin-top:24px; font-size:16px;">Requester</h3>
+    <table style="width:100%; border-collapse:collapse; background:#ffffff; border-radius:6px; overflow:hidden; font-size:14px;">
+      <tr><td style="padding:8px 12px; background:#f1f5f9; width:40%;"><strong>Name</strong></td><td style="padding:8px 12px;">{{Dynamic.RequesterName}}</td></tr>
+      <tr><td style="padding:8px 12px; background:#f1f5f9;"><strong>Email</strong></td><td style="padding:8px 12px;">{{Dynamic.RequesterEmail}}</td></tr>
+      <tr><td style="padding:8px 12px; background:#f1f5f9;"><strong>Department</strong></td><td style="padding:8px 12px;">{{Dynamic.Department}}</td></tr>
+      <tr><td style="padding:8px 12px; background:#f1f5f9;"><strong>Approving Manager</strong></td><td style="padding:8px 12px;">{{Dynamic.ApprovingManager}} &lt;{{Dynamic.ApprovingManagerEmail}}&gt;</td></tr>
+    </table>
+
+    <h3 style="color:#0f172a; margin-top:24px; font-size:16px;">Software</h3>
+    <table style="width:100%; border-collapse:collapse; background:#ffffff; border-radius:6px; overflow:hidden; font-size:14px;">
+      <tr><td style="padding:8px 12px; background:#f1f5f9; width:40%;"><strong>Name</strong></td><td style="padding:8px 12px;">{{Dynamic.SoftwareName}} {{Dynamic.SoftwareVersion}}</td></tr>
+      <tr><td style="padding:8px 12px; background:#f1f5f9;"><strong>Vendor</strong></td><td style="padding:8px 12px;">{{Dynamic.Vendor}}</td></tr>
+      <tr><td style="padding:8px 12px; background:#f1f5f9;"><strong>Vendor Contact</strong></td><td style="padding:8px 12px;">{{Dynamic.VendorContact}}</td></tr>
+      <tr><td style="padding:8px 12px; background:#f1f5f9;"><strong>Priority</strong></td><td style="padding:8px 12px;"><strong>{{Dynamic.Priority}}</strong></td></tr>
+    </table>
+
+    <h3 style="color:#0f172a; margin-top:24px; font-size:16px;">Users &amp; Cost</h3>
+    <table style="width:100%; border-collapse:collapse; background:#ffffff; border-radius:6px; overflow:hidden; font-size:14px;">
+      <tr><td style="padding:8px 12px; background:#f1f5f9; width:40%;"><strong>Initial Users</strong></td><td style="padding:8px 12px;">{{Dynamic.InitialUsers}}</td></tr>
+      <tr><td style="padding:8px 12px; background:#f1f5f9;"><strong>Target User Groups</strong></td><td style="padding:8px 12px;">{{Dynamic.TargetUserGroups}}</td></tr>
+      <tr><td style="padding:8px 12px; background:#f1f5f9;"><strong>License Cost</strong></td><td style="padding:8px 12px;">${{Dynamic.LicenseCost}}</td></tr>
+      <tr><td style="padding:8px 12px; background:#f1f5f9;"><strong>Implementation Cost</strong></td><td style="padding:8px 12px;">${{Dynamic.ImplementationCost}}</td></tr>
+      <tr><td style="padding:8px 12px; background:#f1f5f9;"><strong>Support Cost (annual)</strong></td><td style="padding:8px 12px;">${{Dynamic.SupportCost}}</td></tr>
+      <tr><td style="padding:8px 12px; background:#eef2ff;"><strong>Total Cost of Ownership</strong></td><td style="padding:8px 12px; font-weight:700; color:#4F46E5;">${{Dynamic.TotalCost}}</td></tr>
+    </table>
+
+    <h3 style="color:#0f172a; margin-top:24px; font-size:16px;">Business Justification</h3>
+    <div style="background:#ffffff; border-left:4px solid #4F46E5; padding:12px 16px; border-radius:4px; font-size:14px;">{{Dynamic.BusinessJustification}}</div>
+
+    <h3 style="color:#0f172a; margin-top:24px; font-size:16px;">Expected Outcomes</h3>
+    <div style="background:#ffffff; border-left:4px solid #10b981; padding:12px 16px; border-radius:4px; font-size:14px;">{{Dynamic.ExpectedOutcomes}}</div>
+
+    <h3 style="color:#0f172a; margin-top:24px; font-size:16px;">Integrations &amp; Data Sensitivity</h3>
+    <table style="width:100%; border-collapse:collapse; background:#ffffff; border-radius:6px; overflow:hidden; font-size:14px;">
+      <tr><td style="padding:8px 12px; background:#f1f5f9; width:40%;"><strong>Anticipated Integrations</strong></td><td style="padding:8px 12px;">{{Dynamic.Integrations}}</td></tr>
+      <tr><td style="padding:8px 12px; background:#f1f5f9;"><strong>Data Flows</strong></td><td style="padding:8px 12px;">{{Dynamic.DataFlows}}</td></tr>
+      <tr><td style="padding:8px 12px; background:#f1f5f9;"><strong>Handles Confidential Data</strong></td><td style="padding:8px 12px;">{{Dynamic.HandlesConfidentialData}}</td></tr>
+      <tr><td style="padding:8px 12px; background:#f1f5f9;"><strong>Handles Personal Data (PII)</strong></td><td style="padding:8px 12px;">{{Dynamic.HandlesPersonalData}}</td></tr>
+      <tr><td style="padding:8px 12px; background:#f1f5f9;"><strong>Handles Regulated Data</strong></td><td style="padding:8px 12px;">{{Dynamic.HandlesRegulatedData}}</td></tr>
+      <tr><td style="padding:8px 12px; background:#f1f5f9;"><strong>Sensitivity Notes</strong></td><td style="padding:8px 12px;">{{Dynamic.DataSensitivityNotes}}</td></tr>
+    </table>
+
+    <div style="margin-top:28px; padding:16px; background:#eef2ff; border-radius:8px; text-align:center;">
+      <a href="{{Dynamic.ListItemLink}}" style="display:inline-block; padding:10px 24px; background:#4F46E5; color:#ffffff; text-decoration:none; border-radius:6px; font-weight:600;">
+        Open request in SharePoint →
+      </a>
+      <br/><br/>
+      <a href="{{Dynamic.AttachmentsFolderLink}}" style="color:#4F46E5; text-decoration:underline; font-size:14px;">
+        View uploaded supporting documents
+      </a>
+    </div>
+
+    <p style="color:#64748b; font-size:12px; margin-top:24px;">
+      Submitted: {{Dynamic.SubmittedAt}}<br/>
+      Reference: {{variables('RequestIdShort')}} &middot; Microsoft Form response ID: {{Dynamic.ResponseId}}
+    </p>
+  </div>
+</div>

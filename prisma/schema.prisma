@@ -1,0 +1,91 @@
+generator client {
+    provider = "prisma-client-js"
+    binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+    output = "/home/ubuntu/software_request_form/nextjs_space/node_modules/.prisma/client"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  password      String
+  name          String?
+  role          String   @default("REQUESTER") // REQUESTER | ALM_ADMIN
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  requests      SoftwareRequest[]
+}
+
+model SoftwareRequest {
+  id                     String   @id @default(cuid())
+  // Requester
+  requesterName          String
+  requesterEmail         String
+  requesterDepartment    String
+  approvingManager       String
+  approvingManagerEmail  String?
+
+  // Business
+  businessJustification  String   @db.Text
+  expectedOutcomes       String   @db.Text
+
+  // Software details
+  softwareName           String
+  softwareVersion        String?
+  vendorName             String
+  vendorContact          String?
+
+  // Users
+  initialUserCount       Int
+  targetUserGroups       String   @db.Text
+
+  // Cost of ownership
+  licenseCost            Float    @default(0)
+  implementationCost     Float    @default(0)
+  supportCost            Float    @default(0)
+  totalCost              Float    @default(0)
+  costNotes              String?  @db.Text
+
+  // Integrations & data
+  anticipatedIntegrations String? @db.Text
+  dataFlows              String?  @db.Text
+  handlesConfidentialData Boolean @default(false)
+  handlesPersonalData     Boolean @default(false)
+  handlesRegulatedData    Boolean @default(false)
+  dataSensitivityNotes   String?  @db.Text
+
+  // Meta
+  status                 String   @default("SUBMITTED") // SUBMITTED | UNDER_REVIEW | APPROVED | REJECTED | ON_HOLD
+  priority               String   @default("MEDIUM")   // LOW | MEDIUM | HIGH | URGENT
+  reviewNotes            String?  @db.Text
+
+  // Relations
+  submittedById          String?
+  submittedBy            User?    @relation(fields: [submittedById], references: [id])
+  attachments            RequestAttachment[]
+
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([requesterDepartment])
+}
+
+model RequestAttachment {
+  id                 String   @id @default(cuid())
+  requestId          String
+  request            SoftwareRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  fileName           String
+  contentType        String
+  fileSize           Int
+  cloud_storage_path String
+  isPublic           Boolean  @default(false)
+  createdAt          DateTime @default(now())
+
+  @@index([requestId])
+}

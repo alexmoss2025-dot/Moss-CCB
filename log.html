@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow">
+  <title>Submission Log (Admin) — Moss ALM</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="site.css" />
+  <style>
+    body { background: #f4f7f4; }
+    .page-wrap {
+      max-width: 1300px;
+      margin: 72px auto 60px;
+      padding: 24px 20px 60px;
+    }
+    .page-header {
+      background: linear-gradient(135deg, #0d3b1e 0%, #1a5f2a 50%, #27723a 100%);
+      color: #fff;
+      padding: 28px 24px;
+      border-radius: 10px;
+      margin-bottom: 22px;
+    }
+    .page-header h1 {
+      margin: 0 0 4px;
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+    .page-header .sub {
+      font-size: .9rem; opacity: .85;
+    }
+    .admin-badge {
+      display: inline-block;
+      background: #c62828;
+      color: #fff;
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+
+    .info-box {
+      background: #fff8e1;
+      border-left: 4px solid #f9a825;
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-size: .9rem;
+      color: #5d4a0e;
+      line-height: 1.6;
+      margin-bottom: 22px;
+    }
+    .info-box strong { color: #8a6300; }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .toolbar .count {
+      font-size: .9rem;
+      color: #1b3a22;
+      font-weight: 600;
+      margin-right: auto;
+    }
+    .btn {
+      padding: 9px 18px;
+      border: none;
+      border-radius: 6px;
+      font-size: .88rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background .15s, transform .1s;
+    }
+    .btn-primary {
+      background: #1a5f2a; color: #fff;
+    }
+    .btn-primary:hover { background: #27723a; }
+    .btn-danger {
+      background: #fff; color: #c62828; border: 1px solid #c62828;
+    }
+    .btn-danger:hover { background: #fdecea; }
+    .btn-ghost {
+      background: #fff; color: #1a5f2a; border: 1px solid #1a5f2a;
+    }
+    .btn-ghost:hover { background: #f0f7f1; }
+
+    .table-wrap {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 14px rgba(0,0,0,.06);
+      overflow-x: auto;
+      border: 1px solid #e4ebe5;
+    }
+    table.log-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .85rem;
+      min-width: 1200px;
+    }
+    table.log-table th, table.log-table td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid #eef2ee;
+      vertical-align: top;
+    }
+    table.log-table thead th {
+      background: #1a5f2a;
+      color: #fff;
+      font-weight: 600;
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+    }
+    table.log-table thead th:hover { background: #27723a; }
+    table.log-table thead th .sort-ind {
+      margin-left: 4px;
+      opacity: .6;
+      font-size: .7rem;
+    }
+    table.log-table tbody tr:nth-child(even) { background: #fafdfb; }
+    table.log-table tbody tr:hover { background: #f0f7f1; }
+    table.log-table td {
+      max-width: 260px;
+      word-break: break-word;
+    }
+    table.log-table td.id-col {
+      font-family: monospace;
+      font-weight: 700;
+      color: #1a5f2a;
+      white-space: nowrap;
+    }
+
+    .empty-state {
+      padding: 60px 24px;
+      text-align: center;
+      color: #6e7d72;
+    }
+    .empty-state .em {
+      font-size: 2.4rem; margin-bottom: 10px;
+    }
+
+    @media (max-width: 680px) {
+      .page-header h1 { font-size: 1.25rem; }
+      .toolbar { flex-direction: column; align-items: stretch; }
+      .toolbar .count { margin-right: 0; }
+      .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar (note: log.html intentionally NOT linked here) -->
+  <nav class="moss-topnav">
+    <div class="moss-nav-container">
+      <a href="index.html" class="moss-nav-brand"><img src="Moss_logo.png" alt="Moss Energy"></a>
+      <button class="moss-nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('.moss-nav-links').classList.toggle('open')">☰</button>
+      <div class="moss-nav-links">
+        <a href="index.html">Home</a>
+        <a href="01_Change_Request_Form_V4.html">Change Request Form</a>
+        <a href="07_Change_Request_Register.html">Change Register</a>
+        <a href="08_CCB_Metrics_Dashboard.html">Metrics Dashboard</a>
+        <a href="12_PIR_Template.html">PIR Template</a>
+        <a href="17_Section_Responsibility_Swimlane_Flowchart.html">Swimlane Flowchart</a>
+        <a href="CCB_Stakeholder_Responsibility_Mapping.html">Stakeholder Mapping</a>
+        <a href="software_request_form.html">New Software Request</a>
+        <a href="https://mosscm.sharepoint.com/sites/CCB" target="_blank" rel="noopener noreferrer">SharePoint Site ↗</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-wrap">
+    <div class="page-header">
+      <span class="admin-badge">Admin · Private</span>
+      <h1>Software Request Submission Log</h1>
+      <div class="sub">Local browser cache of submissions made through software_request_form.html</div>
+    </div>
+
+    <div class="info-box">
+      <strong>Note:</strong> This log shows submissions captured on
+      <strong>this browser only</strong> via <code>localStorage</code>.
+      The authoritative master log of all submissions is available on the
+      <strong>Formspree dashboard</strong>, where emails are also routed to
+      <strong>adiamant@moss.com</strong>. Use this view for quick local review
+      and CSV exports — not as a system of record.
+    </div>
+
+    <div class="toolbar">
+      <div class="count" id="countLabel">Loading…</div>
+      <button class="btn btn-ghost" id="refreshBtn">↻ Refresh</button>
+      <button class="btn btn-primary" id="exportBtn">⬇ Export CSV</button>
+      <button class="btn btn-danger" id="clearBtn">✕ Clear Local Log</button>
+    </div>
+
+    <div class="table-wrap" id="tableWrap">
+      <!-- table rendered here -->
+    </div>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "moss_software_requests_log";
+
+    // Column definitions — order matters for the table & CSV
+    const COLUMNS = [
+      { key: "submissionId",          label: "Submission ID",         cls: "id-col" },
+      { key: "timestamp",             label: "Timestamp" },
+      { key: "title",                 label: "Title" },
+      { key: "requesterName",         label: "Requester" },
+      { key: "dateSubmitted",         label: "Date Submitted" },
+      { key: "requesterDept",         label: "Department" },
+      { key: "approvingManager",      label: "Approving Manager" },
+      { key: "businessJustification", label: "Business Justification" },
+      { key: "softwareNameVendor",    label: "Software / Vendor / Version" },
+      { key: "initialUsers",          label: "Initial # Users" },
+      { key: "targetUserGroups",      label: "Target User Groups" },
+      { key: "totalCost",             label: "Total Cost (USD)" },
+      { key: "billingFrequency",      label: "Billing Frequency" },
+      { key: "integrations",          label: "Integrations / Data Notes" },
+      { key: "dataClass",             label: "Data Classifications" },
+      { key: "requesterSig",          label: "Requester Signature" },
+      { key: "requesterSigDate",      label: "Req. Sig Date" },
+      { key: "managerSig",            label: "Manager Signature" },
+      { key: "managerSigDate",        label: "Mgr. Sig Date" },
+      { key: "almStatus",             label: "ALM Status" },
+      { key: "almPriority",           label: "ALM Priority" },
+      { key: "almReviewer",           label: "ALM Reviewer" },
+      { key: "almDecisionDate",       label: "ALM Decision Date" },
+      { key: "almTicket",             label: "ALM Ticket #" },
+      { key: "almNotes",              label: "ALM Notes" }
+    ];
+
+    let sortState = { col: "timestamp", dir: "desc" };
+
+    function loadLog(){
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return [];
+        const arr = JSON.parse(raw);
+        return Array.isArray(arr) ? arr : [];
+      } catch(e){ return []; }
+    }
+
+    function valueFor(rec, key){
+      let v = rec[key];
+      if (Array.isArray(v)) v = v.join("; ");
+      if (v === undefined || v === null) v = "";
+      return String(v);
+    }
+
+    function render(){
+      const data = loadLog();
+      document.getElementById('countLabel').textContent =
+        data.length + " submission" + (data.length===1 ? "" : "s") + " in this browser";
+
+      const wrap = document.getElementById('tableWrap');
+      if (data.length === 0){
+        wrap.innerHTML = '<div class="empty-state"><div class="em">📭</div><div>No submissions stored on this browser yet.</div></div>';
+        return;
+      }
+
+      // Sort
+      const sorted = data.slice().sort((a,b)=>{
+        const av = valueFor(a, sortState.col).toLowerCase();
+        const bv = valueFor(b, sortState.col).toLowerCase();
+        if (av < bv) return sortState.dir === "asc" ? -1 : 1;
+        if (av > bv) return sortState.dir === "asc" ?  1 : -1;
+        return 0;
+      });
+
+      let html = '<table class="log-table"><thead><tr>';
+      for (const c of COLUMNS){
+        const ind = sortState.col === c.key
+          ? (sortState.dir === "asc" ? "▲" : "▼")
+          : "↕";
+        html += '<th data-key="'+c.key+'">'+c.label+' <span class="sort-ind">'+ind+'</span></th>';
+      }
+      html += '</tr></thead><tbody>';
+
+      for (const rec of sorted){
+        html += '<tr>';
+        for (const c of COLUMNS){
+          const cls = c.cls ? ' class="'+c.cls+'"' : '';
+          const val = valueFor(rec, c.key)
+            .replace(/&/g,'&amp;')
+            .replace(/</g,'&lt;')
+            .replace(/>/g,'&gt;');
+          html += '<td'+cls+'>'+val+'</td>';
+        }
+        html += '</tr>';
+      }
+      html += '</tbody></table>';
+      wrap.innerHTML = html;
+
+      // Wire sort headers
+      wrap.querySelectorAll('th[data-key]').forEach(th=>{
+        th.addEventListener('click', ()=>{
+          const k = th.getAttribute('data-key');
+          if (sortState.col === k){
+            sortState.dir = sortState.dir === "asc" ? "desc" : "asc";
+          } else {
+            sortState.col = k; sortState.dir = "asc";
+          }
+          render();
+        });
+      });
+    }
+
+    function csvEscape(v){
+      if (v === undefined || v === null) v = "";
+      if (Array.isArray(v)) v = v.join("; ");
+      v = String(v);
+      if (/[",\n\r]/.test(v)) v = '"' + v.replace(/"/g,'""') + '"';
+      return v;
+    }
+
+    function exportCSV(){
+      const data = loadLog();
+      if (data.length === 0){
+        alert("No submissions to export.");
+        return;
+      }
+      const header = COLUMNS.map(c=>csvEscape(c.label)).join(",");
+      const rows = data.map(rec =>
+        COLUMNS.map(c => csvEscape(rec[c.key])).join(",")
+      );
+      const csv = [header, ...rows].join("\r\n");
+      const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const stamp = new Date().toISOString().slice(0,19).replace(/[:T]/g,"-");
+      a.href = url;
+      a.download = "moss_software_requests_" + stamp + ".csv";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function clearLog(){
+      const data = loadLog();
+      if (data.length === 0){
+        alert("Local log is already empty.");
+        return;
+      }
+      const ok = confirm(
+        "Are you sure you want to permanently delete " + data.length +
+        " submission(s) from this browser's local log?\n\n" +
+        "This cannot be undone. Submissions on the Formspree dashboard are NOT affected."
+      );
+      if (!ok) return;
+      localStorage.removeItem(STORAGE_KEY);
+      render();
+    }
+
+    document.getElementById('refreshBtn').addEventListener('click', render);
+    document.getElementById('exportBtn').addEventListener('click', exportCSV);
+    document.getElementById('clearBtn').addEventListener('click', clearLog);
+    render();
+  </script>
+</body>
+</html>

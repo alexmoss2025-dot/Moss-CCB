@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  FORMSPREE SETUP INSTRUCTIONS — READ BEFORE DEPLOYING
+  ============================================================================
+  This form uses Formspree (https://formspree.io) for email delivery, since
+  GitHub Pages does not support a server-side backend.
+
+  TO ACTIVATE EMAIL DELIVERY:
+    1. Sign up for a free account at https://formspree.io
+    2. Create a new form and set the recipient email to:
+         adiamant@moss.com
+    3. Copy your Formspree form ID (e.g. "xyzabcde")
+    4. In this file, find the constant FORMSPREE_ENDPOINT below and replace
+         https://formspree.io/f/YOUR_FORM_ID
+       with your real endpoint:
+         https://formspree.io/f/xyzabcde
+    5. Save and re-deploy to GitHub Pages.
+
+  Until step 4 is complete, submissions will NOT be emailed (the page will
+  show an error), but they WILL still be saved to browser localStorage
+  (key: moss_software_requests_log) and visible in log.html.
+  ============================================================================
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Software Request Form — Moss ALM Intake</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="site.css" />
+  <style>
+    body { background: #f4f7f4; }
+
+    /* Page header */
+    .form-header {
+      background: linear-gradient(135deg, #0d3b1e 0%, #1a5f2a 50%, #27723a 100%);
+      color: #fff;
+      padding: 48px 24px 36px;
+      margin-top: 52px;
+      text-align: center;
+    }
+    .form-header .eyebrow {
+      font-size: .75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: .85;
+      margin-bottom: 6px;
+    }
+    .form-header h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      margin: 0 0 8px;
+      letter-spacing: -.5px;
+    }
+    .form-header .rev {
+      font-size: .85rem;
+      opacity: .8;
+    }
+    .form-header .divider {
+      width: 60px; height: 3px; background:#6fda7f;
+      margin: 18px auto 0; border-radius: 2px;
+    }
+
+    /* Page wrapper */
+    .form-wrap {
+      max-width: 920px;
+      margin: 28px auto 60px;
+      padding: 0 20px;
+    }
+
+    /* Intro callout */
+    .intro-box {
+      background: #fff;
+      border-left: 4px solid #1a5f2a;
+      border-radius: 8px;
+      padding: 18px 22px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.05);
+      font-size: .92rem;
+      color: #3b4a40;
+      line-height: 1.55;
+      margin-bottom: 26px;
+    }
+    .intro-box strong { color: #1a5f2a; }
+    .intro-box .req-note { color: #c62828; font-weight: 600; }
+
+    /* Sections */
+    .form-section {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 14px rgba(0,0,0,.06);
+      padding: 24px 28px 26px;
+      margin-bottom: 22px;
+      border: 1px solid #e4ebe5;
+    }
+    .form-section h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #1b3a22;
+      margin: 0 0 18px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e8f1ea;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .form-section h2 .num {
+      background: #1a5f2a;
+      color: #fff;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: .82rem;
+      font-weight: 700;
+    }
+
+    /* Field grid */
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px 22px;
+    }
+    .field-full { grid-column: 1 / -1; }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+    }
+    .field label {
+      font-size: .82rem;
+      font-weight: 600;
+      color: #1b3a22;
+      margin-bottom: 4px;
+    }
+    .req {
+      color: #c62828;
+      font-weight: 700;
+      margin-left: 2px;
+    }
+    .field .hint {
+      font-size: .78rem;
+      color: #6e7d72;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+    .field input[type=text],
+    .field input[type=email],
+    .field input[type=number],
+    .field input[type=date],
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid #c8d4cc;
+      border-radius: 6px;
+      font-size: .92rem;
+      font-family: inherit;
+      background: #fafdfb;
+      color: #1b3a22;
+      transition: border-color .15s, box-shadow .15s;
+      box-sizing: border-box;
+    }
+    .field textarea {
+      resize: vertical;
+      min-height: 90px;
+      line-height: 1.5;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: #1a5f2a;
+      box-shadow: 0 0 0 3px rgba(26,95,42,.15);
+      background: #fff;
+    }
+
+    /* Checkbox group */
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 8px 16px;
+      margin-top: 6px;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      background: #f6faf6;
+      border: 1px solid #dde7e0;
+      border-radius: 6px;
+      font-size: .88rem;
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+    }
+    .checkbox-item:hover {
+      background: #eaf3ec;
+      border-color: #1a5f2a;
+    }
+    .checkbox-item input { accent-color: #1a5f2a; width: 16px; height: 16px; }
+
+    /* ALM use only — disabled section */
+    .alm-only {
+      background: #f1f4f1;
+      border: 1px dashed #9eb2a3;
+    }
+    .alm-only h2 { color: #4a5b50; }
+    .alm-only h2 .num { background: #6e7d72; }
+    .alm-only .alm-note {
+      font-size: .8rem;
+      color: #6e7d72;
+      font-style: italic;
+      margin-bottom: 14px;
+    }
+    .alm-only input,
+    .alm-only select,
+    .alm-only textarea {
+      background: #e9efea !important;
+      cursor: not-allowed;
+      color: #6e7d72;
+    }
+
+    /* Buttons */
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 11px 26px;
+      border: none;
+      border-radius: 6px;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .1s, background .15s, box-shadow .15s;
+      font-family: inherit;
+    }
+    .btn-submit {
+      background: linear-gradient(135deg, #1a5f2a 0%, #27723a 100%);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(26,95,42,.25);
+    }
+    .btn-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(26,95,42,.35);
+    }
+    .btn-submit:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-reset {
+      background: #fff;
+      color: #1a5f2a;
+      border: 1px solid #1a5f2a;
+    }
+    .btn-reset:hover { background: #f0f7f1; }
+
+    /* Status messages */
+    .status-msg {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin-bottom: 22px;
+      font-size: .95rem;
+      display: none;
+    }
+    .status-msg.show { display: block; }
+    .status-success {
+      background: #e8f5ea;
+      border-left: 4px solid #2e7d32;
+      color: #1b5e20;
+    }
+    .status-error {
+      background: #fdecea;
+      border-left: 4px solid #c62828;
+      color: #8b1a16;
+    }
+    .status-msg .submission-id {
+      display: inline-block;
+      background: #fff;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    /* Footer */
+    .form-footer-note {
+      text-align: center;
+      font-size: .78rem;
+      color: #6e7d72;
+      margin-top: 14px;
+      line-height: 1.55;
+    }
+    .site-footer {
+      background: #0d3b1e;
+      color: rgba(255,255,255,.65);
+      text-align: center;
+      padding: 24px 24px;
+      font-size: .82rem;
+      line-height: 1.6;
+    }
+    .site-footer strong { color: #6fda7f; font-weight: 600; }
+
+    /* Responsive */
+    @media (max-width: 680px) {
+      .form-header h1 { font-size: 1.45rem; }
+      .form-header { padding: 36px 18px 28px; }
+      .form-section { padding: 18px 18px 20px; }
+      .field-grid { grid-template-columns: 1fr; }
+      .form-actions { flex-direction: column-reverse; }
+      .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <nav class="moss-topnav">
+    <div class="moss-nav-container">
+      <a href="index.html" class="moss-nav-brand"><img src="Moss_logo.png" alt="Moss Energy"></a>
+      <button class="moss-nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('.moss-nav-links').classList.toggle('open')">☰</button>
+      <div class="moss-nav-links">
+        <a href="index.html">Home</a>
+        <a href="01_Change_Request_Form_V4.html">Change Request Form</a>
+        <a href="07_Change_Request_Register.html">Change Register</a>
+        <a href="08_CCB_Metrics_Dashboard.html">Metrics Dashboard</a>
+        <a href="12_PIR_Template.html">PIR Template</a>
+        <a href="17_Section_Responsibility_Swimlane_Flowchart.html">Swimlane Flowchart</a>
+        <a href="CCB_Stakeholder_Responsibility_Mapping.html">Stakeholder Mapping</a>
+        <a href="software_request_form.html" class="active">New Software Request</a>
+        <a href="https://mosscm.sharepoint.com/sites/CCB" target="_blank" rel="noopener noreferrer">SharePoint Site ↗</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page header -->
+  <header class="form-header">
+    <div class="eyebrow">Change Control Board • ALM Software Intake</div>
+    <h1>New Software Request Form</h1>
+    <div class="rev">Rev. 2026-04 — Application Lifecycle Management</div>
+    <div class="divider"></div>
+  </header>
+
+  <main class="form-wrap">
+
+    <!-- Intro -->
+    <div class="intro-box">
+      <strong>Before you fill out this form:</strong>
+      All fields marked with <span class="req-note">*</span> are required.
+      Attach vendor quotes, SOWs, or security docs separately when emailing the
+      completed form to <strong>alm-team@moss.com</strong>, or upload to the
+      SharePoint library.
+    </div>
+
+    <!-- Status message slots -->
+    <div id="statusSuccess" class="status-msg status-success" role="status" aria-live="polite">
+      <strong>✓ Request submitted successfully.</strong>
+      The ALM team has been notified at adiamant@moss.com.
+      <div>Your submission ID: <span class="submission-id" id="successId"></span></div>
+    </div>
+    <div id="statusError" class="status-msg status-error" role="alert" aria-live="assertive">
+      <strong>✗ Submission failed.</strong>
+      <span id="errorDetail">Please try again, or email the form directly to alm-team@moss.com.</span>
+      <div>Your submission was still saved locally with ID: <span class="submission-id" id="errorId"></span></div>
+    </div>
+
+    <!-- The Form -->
+    <form id="softwareRequestForm" novalidate>
+
+      <!-- Section 1: Request Summary -->
+      <section class="form-section">
+        <h2><span class="num">1</span>Request Summary</h2>
+        <div class="field-grid">
+
+          <div class="field field-full">
+            <label for="title">Title <span class="req">*</span></label>
+            <div class="hint">Short name for this request (e.g. "Procure AcmeTrack Project Tracker licenses")</div>
+            <input type="text" id="title" name="title" required maxlength="200" />
+          </div>
+
+          <div class="field">
+            <label for="requesterName">Requester Name <span class="req">*</span></label>
+            <div class="hint">Full name or @name (Moss email)</div>
+            <input type="text" id="requesterName" name="requesterName" required />
+          </div>
+
+          <div class="field">
+            <label for="dateSubmitted">Date Submitted <span class="req">*</span></label>
+            <div class="hint">MM / DD / YYYY</div>
+            <input type="date" id="dateSubmitted" name="dateSubmitted" required />
+          </div>
+
+          <div class="field">
+            <label for="requesterDept">Requester Department <span class="req">*</span></label>
+            <div class="hint">Select one</div>
+            <select id="requesterDept" name="requesterDept" required>
+              <option value="">Select department…</option>
+              <option>Operations</option>
+              <option>Project Management</option>
+              <option>Field Operations / Construction</option>
+              <option>Engineering</option>
+              <option>Estimating</option>
+              <option>Preconstruction</option>
+              <option>Finance / Accounting</option>
+              <option>Information Technology</option>
+              <option>Application Lifecycle Management (ALM)</option>
+              <option>Human Resources</option>
+              <option>Legal / Compliance</option>
+              <option>Safety / EHS</option>
+              <option>Marketing / Communications</option>
+              <option>Executive / Leadership</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="approvingManager">Approving Dept. Manager <span class="req">*</span></label>
+            <div class="hint">Manager who has endorsed this request</div>
+            <input type="text" id="approvingManager" name="approvingManager" required />
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Section 2: Business Justification -->
+      <section class="form-section">
+        <h2><span class="num">2</span>Business Justification</h2>
+        <div class="field field-full">
+          <label for="businessJustification">Business Justification and Expected Outcomes <span class="req">*</span></label>
+          <div class="hint">Why does Moss need this software? What measurable outcome will it produce?</div>
+          <textarea id="businessJustification" name="businessJustification" rows="5" required></textarea>
+        </div>
+      </section>
+
+      <!-- Section 3: Software Details -->
+      <section class="form-section">
+        <h2><span class="num">3</span>Software Details</h2>
+        <div class="field-grid">
+
+          <div class="field field-full">
+            <label for="softwareNameVendor">Software Name / Vendor / Version <span class="req">*</span></label>
+            <div class="hint">Include vendor name, product, version or edition, and deployment model (SaaS / on-prem / desktop)</div>
+            <textarea id="softwareNameVendor" name="softwareNameVendor" rows="3" required></textarea>
+          </div>
+
+          <div class="field">
+            <label for="initialUsers">Projected Initial # Users <span class="req">*</span></label>
+            <div class="hint">Approximate user count at launch</div>
+            <input type="number" id="initialUsers" name="initialUsers" min="1" required />
+          </div>
+
+          <div class="field">
+            <label for="targetUserGroups">Target User Groups <span class="req">*</span></label>
+            <div class="hint">Which teams, roles, or departments will use this?</div>
+            <input type="text" id="targetUserGroups" name="targetUserGroups" required />
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Section 4: Cost -->
+      <section class="form-section">
+        <h2><span class="num">4</span>Cost</h2>
+        <div class="field-grid">
+
+          <div class="field">
+            <label for="totalCost">Estimated Total Cost of Ownership (USD) <span class="req">*</span></label>
+            <div class="hint">Include licenses, implementation, and first-year support</div>
+            <input type="number" id="totalCost" name="totalCost" min="0" step="0.01" required />
+          </div>
+
+          <div class="field">
+            <label for="billingFrequency">Billing Frequency</label>
+            <div class="hint">How is the vendor billing?</div>
+            <select id="billingFrequency" name="billingFrequency">
+              <option value="">Select…</option>
+              <option>One-time / Perpetual</option>
+              <option>Monthly subscription</option>
+              <option>Quarterly subscription</option>
+              <option>Annual subscription</option>
+              <option>Multi-year subscription</option>
+              <option>Usage / Metered</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Section 5: Integrations & Data Sensitivity -->
+      <section class="form-section">
+        <h2><span class="num">5</span>Integrations &amp; Data Sensitivity</h2>
+
+        <div class="field field-full" style="margin-bottom:18px;">
+          <label for="integrations">Anticipated integrations, data flows, use of confidential / personal / regulated data</label>
+          <div class="hint">List any systems this will exchange data with (Sage, Procore, HCSS, M365, etc.) and flag any PII / financial / restricted data</div>
+          <textarea id="integrations" name="integrations" rows="4"></textarea>
+        </div>
+
+        <div class="field field-full">
+          <label>Data classifications (check all that apply)</label>
+          <div class="checkbox-group">
+            <label class="checkbox-item"><input type="checkbox" name="dataClass" value="Personal information (PII)"> Personal information (PII)</label>
+            <label class="checkbox-item"><input type="checkbox" name="dataClass" value="Financial / payment data"> Financial / payment data</label>
+            <label class="checkbox-item"><input type="checkbox" name="dataClass" value="Regulated (HIPAA, PCI, etc.)"> Regulated (HIPAA, PCI, etc.)</label>
+            <label class="checkbox-item"><input type="checkbox" name="dataClass" value="Moss proprietary / confidential"> Moss proprietary / confidential</label>
+            <label class="checkbox-item"><input type="checkbox" name="dataClass" value="Public data only"> Public data only</label>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 6: Signatures -->
+      <section class="form-section">
+        <h2><span class="num">6</span>Signatures</h2>
+        <div class="field-grid">
+
+          <div class="field">
+            <label for="requesterSig">Requester signature <span class="req">*</span></label>
+            <div class="hint">Type your full name to sign</div>
+            <input type="text" id="requesterSig" name="requesterSig" required />
+          </div>
+
+          <div class="field">
+            <label for="requesterSigDate">Date <span class="req">*</span></label>
+            <div class="hint">MM / DD / YYYY</div>
+            <input type="date" id="requesterSigDate" name="requesterSigDate" required />
+          </div>
+
+          <div class="field">
+            <label for="managerSig">Approving manager signature <span class="req">*</span></label>
+            <div class="hint">Type full name to sign</div>
+            <input type="text" id="managerSig" name="managerSig" required />
+          </div>
+
+          <div class="field">
+            <label for="managerSigDate">Date <span class="req">*</span></label>
+            <div class="hint">MM / DD / YYYY</div>
+            <input type="date" id="managerSigDate" name="managerSigDate" required />
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ALM Use Only -->
+      <section class="form-section alm-only">
+        <h2><span class="num">★</span>ALM Use Only</h2>
+        <div class="alm-note">Completed by the ALM team after triage. Submitter leaves this section blank.</div>
+        <div class="field-grid">
+
+          <div class="field">
+            <label for="almStatus">Status</label>
+            <select id="almStatus" name="almStatus" disabled>
+              <option value="">Select…</option>
+              <option>New</option>
+              <option>Under Review</option>
+              <option>Awaiting Information</option>
+              <option>Approved</option>
+              <option>Rejected</option>
+              <option>Deferred</option>
+              <option>Closed</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="almPriority">Priority</label>
+            <select id="almPriority" name="almPriority" disabled>
+              <option value="">Select…</option>
+              <option>Low</option>
+              <option>Medium</option>
+              <option>High</option>
+              <option>Critical</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="almReviewer">Assigned Reviewer</label>
+            <input type="text" id="almReviewer" name="almReviewer" disabled />
+          </div>
+
+          <div class="field">
+            <label for="almDecisionDate">Decision Date</label>
+            <input type="date" id="almDecisionDate" name="almDecisionDate" disabled />
+          </div>
+
+          <div class="field field-full">
+            <label for="almTicket">Ticket / Reference #</label>
+            <input type="text" id="almTicket" name="almTicket" disabled />
+          </div>
+
+          <div class="field field-full">
+            <label for="almNotes">Review notes / decision rationale</label>
+            <textarea id="almNotes" name="almNotes" rows="3" disabled></textarea>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button type="reset" class="btn btn-reset">Reset</button>
+        <button type="submit" class="btn btn-submit" id="submitBtn">Submit Request</button>
+      </div>
+
+      <p class="form-footer-note">
+        Moss Construction Management — Confidential Internal Document.
+        Route to the ALM / CCB intake queue.<br/>
+        Questions: <strong>alm-team@moss.com</strong>
+      </p>
+
+    </form>
+  </main>
+
+  <footer class="site-footer">
+    <strong>Moss Energy</strong> — Change Control Board Documentation<br/>
+    &copy; 2026 Moss Energy. All rights reserved.
+  </footer>
+
+  <script>
+    // ========================================================================
+    // FORMSPREE ENDPOINT — replace YOUR_FORM_ID after creating a form at
+    // https://formspree.io (recipient: adiamant@moss.com)
+    // ========================================================================
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID";
+    const STORAGE_KEY = "moss_software_requests_log";
+
+    // Default today's date into "Date Submitted"
+    (function setDefaults(){
+      const today = new Date().toISOString().slice(0,10);
+      const d = document.getElementById('dateSubmitted');
+      if (d && !d.value) d.value = today;
+    })();
+
+    function genSubmissionId(){
+      const ts = Date.now().toString(36).toUpperCase();
+      const rnd = Math.random().toString(36).slice(2,6).toUpperCase();
+      return "SR-" + ts + "-" + rnd;
+    }
+
+    function gatherFormData(form){
+      const data = {};
+      const fd = new FormData(form);
+      for (const [k,v] of fd.entries()){
+        if (k === "dataClass"){
+          if (!data.dataClass) data.dataClass = [];
+          data.dataClass.push(v);
+        } else {
+          data[k] = v;
+        }
+      }
+      // Ensure dataClass exists even if none checked
+      if (!data.dataClass) data.dataClass = [];
+      return data;
+    }
+
+    function saveToLocalStorage(record){
+      let log = [];
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) log = JSON.parse(raw);
+        if (!Array.isArray(log)) log = [];
+      } catch(e){ log = []; }
+      log.push(record);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
+    }
+
+    function showSuccess(id){
+      document.getElementById('successId').textContent = id;
+      document.getElementById('statusSuccess').classList.add('show');
+      document.getElementById('statusError').classList.remove('show');
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+    function showError(msg, id){
+      document.getElementById('errorDetail').textContent = msg;
+      document.getElementById('errorId').textContent = id || "(none)";
+      document.getElementById('statusError').classList.add('show');
+      document.getElementById('statusSuccess').classList.remove('show');
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    document.getElementById('softwareRequestForm').addEventListener('submit', async function(ev){
+      ev.preventDefault();
+      const form = ev.target;
+      if (!form.checkValidity()){
+        form.reportValidity();
+        return;
+      }
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting…";
+
+      const submissionId = genSubmissionId();
+      const timestamp = new Date().toISOString();
+      const data = gatherFormData(form);
+
+      const record = {
+        submissionId,
+        timestamp,
+        ...data
+      };
+
+      // Always save to localStorage first so it's never lost
+      saveToLocalStorage(record);
+
+      // Build payload for Formspree
+      const payload = {
+        ...record,
+        _subject: "New Software Request: " + (data.title || "(untitled)"),
+        dataClass: (data.dataClass || []).join(", ")
+      };
+
+      try {
+        if (FORMSPREE_ENDPOINT.includes("YOUR_FORM_ID")){
+          throw new Error("Formspree endpoint not configured. (Saved locally — visible in log.html)");
+        }
+        const resp = await fetch(FORMSPREE_ENDPOINT, {
+          method: "POST",
+          headers: { "Accept":"application/json", "Content-Type":"application/json" },
+          body: JSON.stringify(payload)
+        });
+        if (!resp.ok){
+          const err = await resp.json().catch(()=>({}));
+          throw new Error(err.error || ("HTTP " + resp.status));
+        }
+        showSuccess(submissionId);
+        form.reset();
+        // Restore today's date after reset
+        document.getElementById('dateSubmitted').value = new Date().toISOString().slice(0,10);
+      } catch (err){
+        showError(err.message || "Network error.", submissionId);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit Request";
+      }
+    });
+  </script>
+</body>
+</html>

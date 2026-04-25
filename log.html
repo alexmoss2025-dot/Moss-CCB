@@ -7,10 +7,11 @@
   <title>Submission Log (Admin) — Moss ALM</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="site.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     body { background: #f4f7f4; }
     .page-wrap {
-      max-width: 1300px;
+      max-width: 1400px;
       margin: 72px auto 60px;
       padding: 24px 20px 60px;
     }
@@ -26,20 +27,13 @@
       font-size: 1.6rem;
       font-weight: 700;
     }
-    .page-header .sub {
-      font-size: .9rem; opacity: .85;
-    }
+    .page-header .sub { font-size: .9rem; opacity: .85; }
     .admin-badge {
       display: inline-block;
-      background: #c62828;
-      color: #fff;
-      font-size: .68rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 3px 9px;
-      border-radius: 4px;
-      margin-bottom: 8px;
+      background: #c62828; color: #fff;
+      font-size: .68rem; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      padding: 3px 9px; border-radius: 4px; margin-bottom: 8px;
     }
 
     .info-box {
@@ -55,99 +49,190 @@
     .info-box strong { color: #8a6300; }
 
     .toolbar {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-bottom: 16px;
+      display: flex; gap: 10px; flex-wrap: wrap;
+      align-items: center; margin-bottom: 16px;
     }
     .toolbar .count {
-      font-size: .9rem;
-      color: #1b3a22;
-      font-weight: 600;
-      margin-right: auto;
+      font-size: .9rem; color: #1b3a22;
+      font-weight: 600; margin-right: auto;
     }
     .btn {
-      padding: 9px 18px;
-      border: none;
-      border-radius: 6px;
-      font-size: .88rem;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: inherit;
-      transition: background .15s, transform .1s;
+      padding: 9px 18px; border: none; border-radius: 6px;
+      font-size: .88rem; font-weight: 600; cursor: pointer;
+      font-family: inherit; transition: background .15s, transform .1s;
     }
-    .btn-primary {
-      background: #1a5f2a; color: #fff;
-    }
+    .btn-primary { background: #1a5f2a; color: #fff; }
     .btn-primary:hover { background: #27723a; }
-    .btn-danger {
-      background: #fff; color: #c62828; border: 1px solid #c62828;
-    }
+    .btn-danger { background: #fff; color: #c62828; border: 1px solid #c62828; }
     .btn-danger:hover { background: #fdecea; }
-    .btn-ghost {
-      background: #fff; color: #1a5f2a; border: 1px solid #1a5f2a;
-    }
+    .btn-ghost { background: #fff; color: #1a5f2a; border: 1px solid #1a5f2a; }
     .btn-ghost:hover { background: #f0f7f1; }
 
     .table-wrap {
-      background: #fff;
-      border-radius: 10px;
+      background: #fff; border-radius: 10px;
       box-shadow: 0 2px 14px rgba(0,0,0,.06);
-      overflow-x: auto;
-      border: 1px solid #e4ebe5;
+      overflow-x: auto; border: 1px solid #e4ebe5;
     }
     table.log-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: .85rem;
-      min-width: 1200px;
+      width: 100%; border-collapse: collapse;
+      font-size: .85rem; min-width: 1400px;
     }
     table.log-table th, table.log-table td {
-      padding: 10px 12px;
-      text-align: left;
-      border-bottom: 1px solid #eef2ee;
-      vertical-align: top;
+      padding: 10px 12px; text-align: left;
+      border-bottom: 1px solid #eef2ee; vertical-align: top;
     }
     table.log-table thead th {
-      background: #1a5f2a;
-      color: #fff;
-      font-weight: 600;
-      font-size: .78rem;
-      text-transform: uppercase;
-      letter-spacing: .8px;
-      cursor: pointer;
-      user-select: none;
-      white-space: nowrap;
-      position: sticky;
-      top: 0;
+      background: #1a5f2a; color: #fff;
+      font-weight: 600; font-size: .78rem;
+      text-transform: uppercase; letter-spacing: .8px;
+      cursor: pointer; user-select: none;
+      white-space: nowrap; position: sticky; top: 0;
     }
     table.log-table thead th:hover { background: #27723a; }
-    table.log-table thead th .sort-ind {
-      margin-left: 4px;
-      opacity: .6;
-      font-size: .7rem;
-    }
+    table.log-table thead th .sort-ind { margin-left: 4px; opacity: .6; font-size: .7rem; }
     table.log-table tbody tr:nth-child(even) { background: #fafdfb; }
     table.log-table tbody tr:hover { background: #f0f7f1; }
-    table.log-table td {
-      max-width: 260px;
-      word-break: break-word;
-    }
+    table.log-table td { max-width: 260px; word-break: break-word; }
     table.log-table td.id-col {
-      font-family: monospace;
-      font-weight: 700;
-      color: #1a5f2a;
-      white-space: nowrap;
+      font-family: monospace; font-weight: 700;
+      color: #1a5f2a; white-space: nowrap;
     }
 
-    .empty-state {
-      padding: 60px 24px;
-      text-align: center;
-      color: #6e7d72;
+    /* Editable inputs in cells */
+    .cell-edit {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #c8d4cc;
+      border-radius: 5px;
+      font-size: .82rem;
+      font-family: inherit;
+      background: #fafdfb;
+      color: #1b3a22;
+      box-sizing: border-box;
+      transition: border-color .15s, box-shadow .15s, background .15s;
     }
-    .empty-state .em {
-      font-size: 2.4rem; margin-bottom: 10px;
+    .cell-edit:focus {
+      outline: none;
+      border-color: #1a5f2a;
+      box-shadow: 0 0 0 3px rgba(26,95,42,.15);
+      background: #fff;
+    }
+    textarea.cell-edit {
+      resize: vertical; min-height: 50px; min-width: 180px; line-height: 1.4;
+    }
+    .cell-edit.saved-flash {
+      border-color: #2e7d32;
+      background: #e8f5ea;
+    }
+    .saved-tag {
+      display: inline-block;
+      font-size: .7rem;
+      color: #2e7d32;
+      font-weight: 700;
+      margin-left: 4px;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .saved-tag.show { opacity: 1; }
+
+    .btn-pdf {
+      background: #1a5f2a; color: #fff;
+      padding: 6px 10px; font-size: .78rem;
+      border: none; border-radius: 5px; cursor: pointer;
+      white-space: nowrap; font-weight: 600;
+    }
+    .btn-pdf:hover { background: #27723a; }
+
+    .empty-state {
+      padding: 60px 24px; text-align: center; color: #6e7d72;
+    }
+    .empty-state .em { font-size: 2.4rem; margin-bottom: 10px; }
+
+    /* Hidden PDF render container */
+    #pdfRender {
+      position: fixed; left: -10000px; top: 0;
+      width: 800px;
+      background: #fff;
+    }
+
+    /* PDF document styles */
+    .pdf-doc {
+      width: 760px;
+      padding: 24px 30px;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #1b3a22;
+      background: #fff;
+      box-sizing: border-box;
+    }
+    .pdf-header {
+      display: flex; align-items: center;
+      border-bottom: 3px solid #1a5f2a;
+      padding-bottom: 12px; margin-bottom: 18px;
+    }
+    .pdf-header img {
+      height: 48px; margin-right: 16px;
+    }
+    .pdf-header .titles h1 {
+      margin: 0; font-size: 18px; color: #0d3b1e;
+    }
+    .pdf-header .titles .sub {
+      font-size: 11px; color: #4a5b50; margin-top: 3px;
+    }
+    .pdf-meta {
+      display: flex; justify-content: space-between;
+      font-size: 10px; color: #4a5b50;
+      margin-bottom: 14px;
+    }
+    .pdf-meta .id {
+      font-family: monospace; font-weight: 700; color: #1a5f2a;
+    }
+    .pdf-section {
+      border: 1px solid #d4e0d6;
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      page-break-inside: avoid;
+    }
+    .pdf-section h2 {
+      margin: 0 0 10px;
+      font-size: 12px;
+      color: #fff;
+      background: #1a5f2a;
+      padding: 5px 10px;
+      border-radius: 4px;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+    .pdf-section.alm h2 { background: #6e7d72; }
+    .pdf-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+    }
+    .pdf-field { font-size: 11px; }
+    .pdf-field.full { grid-column: 1 / -1; }
+    .pdf-field .lbl {
+      font-weight: 700; color: #1b3a22;
+      display: block; margin-bottom: 2px;
+      font-size: 10px; text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+    .pdf-field .val {
+      background: #f6faf6;
+      border: 1px solid #e4ebe5;
+      border-radius: 3px;
+      padding: 5px 8px;
+      min-height: 14px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #1b3a22;
+    }
+    .pdf-footer {
+      text-align: center;
+      font-size: 9px;
+      color: #6e7d72;
+      margin-top: 14px;
+      border-top: 1px solid #e4ebe5;
+      padding-top: 8px;
     }
 
     @media (max-width: 680px) {
@@ -160,7 +245,6 @@
 </head>
 <body>
 
-  <!-- Top Navigation Bar (note: log.html intentionally NOT linked here) -->
   <nav class="moss-topnav">
     <div class="moss-nav-container">
       <a href="index.html" class="moss-nav-brand"><img src="Moss_logo.png" alt="Moss Energy"></a>
@@ -191,8 +275,13 @@
       <strong>this browser only</strong> via <code>localStorage</code>.
       The authoritative master log of all submissions is available on the
       <strong>Formspree dashboard</strong>, where emails are also routed to
-      <strong>adiamant@moss.com</strong>. Use this view for quick local review
-      and CSV exports — not as a system of record.
+      <strong>adiamant@moss.com</strong>.
+      <br><br>
+      <strong>ALM fields are editable inline</strong> — Status, Priority, Reviewer,
+      Decision Date, and Notes can be edited directly in the table below. Changes
+      auto-save to this browser's <code>localStorage</code> (per-browser, not synced).
+      Use the <strong>Export PDF</strong> button on each row to download a
+      form-styled PDF of that submission.
     </div>
 
     <div class="toolbar">
@@ -202,15 +291,21 @@
       <button class="btn btn-danger" id="clearBtn">✕ Clear Local Log</button>
     </div>
 
-    <div class="table-wrap" id="tableWrap">
-      <!-- table rendered here -->
-    </div>
+    <div class="table-wrap" id="tableWrap"></div>
   </main>
+
+  <!-- Hidden container for PDF rendering -->
+  <div id="pdfRender"></div>
 
   <script>
     const STORAGE_KEY = "moss_software_requests_log";
 
-    // Column definitions — order matters for the table & CSV
+    const ALM_STATUS_OPTIONS = ["", "Pending", "Under Review", "Approved", "Denied", "On Hold", "Completed"];
+    const ALM_PRIORITY_OPTIONS = ["", "Low", "Medium", "High", "Critical"];
+
+    // Editable ALM keys
+    const EDITABLE = new Set(["almStatus","almPriority","almReviewer","almDecisionDate","almNotes"]);
+
     const COLUMNS = [
       { key: "submissionId",          label: "Submission ID",         cls: "id-col" },
       { key: "timestamp",             label: "Timestamp" },
@@ -235,8 +330,8 @@
       { key: "almPriority",           label: "ALM Priority" },
       { key: "almReviewer",           label: "ALM Reviewer" },
       { key: "almDecisionDate",       label: "ALM Decision Date" },
-      { key: "almTicket",             label: "ALM Ticket #" },
-      { key: "almNotes",              label: "ALM Notes" }
+      { key: "almNotes",              label: "ALM Notes" },
+      { key: "_actions",              label: "Actions" }
     ];
 
     let sortState = { col: "timestamp", dir: "desc" };
@@ -250,11 +345,60 @@
       } catch(e){ return []; }
     }
 
+    function saveLog(arr){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+    }
+
     function valueFor(rec, key){
       let v = rec[key];
       if (Array.isArray(v)) v = v.join("; ");
       if (v === undefined || v === null) v = "";
       return String(v);
+    }
+
+    function fmtDateOnly(iso){
+      if (!iso) return "";
+      // If already YYYY-MM-DD, keep as-is
+      if (/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso;
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return String(iso).slice(0,10);
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,"0");
+      const day = String(d.getDate()).padStart(2,"0");
+      return y+"-"+m+"-"+day;
+    }
+
+    function escapeHTML(s){
+      return String(s)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function renderEditable(rec, key){
+      const sid = escapeHTML(rec.submissionId || "");
+      const v = valueFor(rec, key);
+      const ev = escapeHTML(v);
+      if (key === "almStatus" || key === "almPriority"){
+        const opts = (key === "almStatus" ? ALM_STATUS_OPTIONS : ALM_PRIORITY_OPTIONS);
+        let html = '<select class="cell-edit" data-sid="'+sid+'" data-key="'+key+'">';
+        for (const o of opts){
+          const sel = (o === v) ? ' selected' : '';
+          const lbl = o === "" ? "—" : o;
+          html += '<option value="'+escapeHTML(o)+'"'+sel+'>'+escapeHTML(lbl)+'</option>';
+        }
+        html += '</select><span class="saved-tag">✓ Saved</span>';
+        return html;
+      }
+      if (key === "almDecisionDate"){
+        return '<input type="date" class="cell-edit" data-sid="'+sid+'" data-key="'+key+'" value="'+ev+'"><span class="saved-tag">✓</span>';
+      }
+      if (key === "almNotes"){
+        return '<textarea class="cell-edit" data-sid="'+sid+'" data-key="'+key+'">'+ev+'</textarea><span class="saved-tag">✓</span>';
+      }
+      if (key === "almReviewer"){
+        return '<input type="text" class="cell-edit" data-sid="'+sid+'" data-key="'+key+'" value="'+ev+'"><span class="saved-tag">✓</span>';
+      }
+      return ev;
     }
 
     function render(){
@@ -268,7 +412,6 @@
         return;
       }
 
-      // Sort
       const sorted = data.slice().sort((a,b)=>{
         const av = valueFor(a, sortState.col).toLowerCase();
         const bv = valueFor(b, sortState.col).toLowerCase();
@@ -279,10 +422,13 @@
 
       let html = '<table class="log-table"><thead><tr>';
       for (const c of COLUMNS){
-        const ind = sortState.col === c.key
-          ? (sortState.dir === "asc" ? "▲" : "▼")
-          : "↕";
-        html += '<th data-key="'+c.key+'">'+c.label+' <span class="sort-ind">'+ind+'</span></th>';
+        if (c.key === "_actions"){
+          html += '<th>'+c.label+'</th>';
+        } else {
+          const ind = sortState.col === c.key
+            ? (sortState.dir === "asc" ? "▲" : "▼") : "↕";
+          html += '<th data-key="'+c.key+'">'+c.label+' <span class="sort-ind">'+ind+'</span></th>';
+        }
       }
       html += '</tr></thead><tbody>';
 
@@ -290,18 +436,24 @@
         html += '<tr>';
         for (const c of COLUMNS){
           const cls = c.cls ? ' class="'+c.cls+'"' : '';
-          const val = valueFor(rec, c.key)
-            .replace(/&/g,'&amp;')
-            .replace(/</g,'&lt;')
-            .replace(/>/g,'&gt;');
-          html += '<td'+cls+'>'+val+'</td>';
+          let cell;
+          if (c.key === "_actions"){
+            cell = '<button class="btn-pdf" data-sid="'+escapeHTML(rec.submissionId||"")+'">📄 Export PDF</button>';
+          } else if (EDITABLE.has(c.key)){
+            cell = renderEditable(rec, c.key);
+          } else if (c.key === "timestamp"){
+            cell = escapeHTML(fmtDateOnly(rec.timestamp));
+          } else {
+            cell = escapeHTML(valueFor(rec, c.key));
+          }
+          html += '<td'+cls+'>'+cell+'</td>';
         }
         html += '</tr>';
       }
       html += '</tbody></table>';
       wrap.innerHTML = html;
 
-      // Wire sort headers
+      // Sort header binding
       wrap.querySelectorAll('th[data-key]').forEach(th=>{
         th.addEventListener('click', ()=>{
           const k = th.getAttribute('data-key');
@@ -313,6 +465,46 @@
           render();
         });
       });
+
+      // Editable cell binding
+      wrap.querySelectorAll('.cell-edit').forEach(el=>{
+        const handler = (e)=>{
+          const sid = el.getAttribute('data-sid');
+          const key = el.getAttribute('data-key');
+          updateField(sid, key, el.value);
+          flashSaved(el);
+        };
+        el.addEventListener('change', handler);
+        if (el.tagName === "TEXTAREA" || el.type === "text"){
+          el.addEventListener('blur', handler);
+        }
+      });
+
+      // PDF buttons
+      wrap.querySelectorAll('.btn-pdf').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const sid = btn.getAttribute('data-sid');
+          exportPDF(sid);
+        });
+      });
+    }
+
+    function flashSaved(el){
+      el.classList.add('saved-flash');
+      const tag = el.parentElement.querySelector('.saved-tag');
+      if (tag) tag.classList.add('show');
+      setTimeout(()=>{
+        el.classList.remove('saved-flash');
+        if (tag) tag.classList.remove('show');
+      }, 1200);
+    }
+
+    function updateField(submissionId, key, value){
+      const arr = loadLog();
+      const idx = arr.findIndex(r => r.submissionId === submissionId);
+      if (idx === -1) return;
+      arr[idx][key] = value;
+      saveLog(arr);
     }
 
     function csvEscape(v){
@@ -325,33 +517,29 @@
 
     function exportCSV(){
       const data = loadLog();
-      if (data.length === 0){
-        alert("No submissions to export.");
-        return;
-      }
-      const header = COLUMNS.map(c=>csvEscape(c.label)).join(",");
+      if (data.length === 0){ alert("No submissions to export."); return; }
+      const csvCols = COLUMNS.filter(c => c.key !== "_actions");
+      const header = csvCols.map(c=>csvEscape(c.label)).join(",");
       const rows = data.map(rec =>
-        COLUMNS.map(c => csvEscape(rec[c.key])).join(",")
+        csvCols.map(c => {
+          if (c.key === "timestamp") return csvEscape(fmtDateOnly(rec.timestamp));
+          return csvEscape(rec[c.key]);
+        }).join(",")
       );
       const csv = [header, ...rows].join("\r\n");
       const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      const stamp = new Date().toISOString().slice(0,19).replace(/[:T]/g,"-");
+      const stamp = new Date().toISOString().slice(0,10);
       a.href = url;
       a.download = "moss_software_requests_" + stamp + ".csv";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a); URL.revokeObjectURL(url);
     }
 
     function clearLog(){
       const data = loadLog();
-      if (data.length === 0){
-        alert("Local log is already empty.");
-        return;
-      }
+      if (data.length === 0){ alert("Local log is already empty."); return; }
       const ok = confirm(
         "Are you sure you want to permanently delete " + data.length +
         " submission(s) from this browser's local log?\n\n" +
@@ -360,6 +548,108 @@
       if (!ok) return;
       localStorage.removeItem(STORAGE_KEY);
       render();
+    }
+
+    // ---------- PDF Export ----------
+    function pdfField(label, value, full){
+      const v = (value === undefined || value === null || value === "")
+        ? "—" : (Array.isArray(value) ? value.join("; ") : String(value));
+      return '<div class="pdf-field'+(full?' full':'')+'">'
+        + '<span class="lbl">'+escapeHTML(label)+'</span>'
+        + '<span class="val">'+escapeHTML(v)+'</span></div>';
+    }
+
+    function buildPdfHTML(rec){
+      const ts = fmtDateOnly(rec.timestamp);
+      let html = '<div class="pdf-doc">';
+      html += '<div class="pdf-header">'
+        + '<img src="Moss_logo.png" alt="Moss">'
+        + '<div class="titles"><h1>New Software Request Form</h1>'
+        + '<div class="sub">Change Control Board • ALM Software Intake — Rev. 2026-04</div></div></div>';
+      html += '<div class="pdf-meta">'
+        + '<div>Submission ID: <span class="id">'+escapeHTML(rec.submissionId||"")+'</span></div>'
+        + '<div>Submitted: '+escapeHTML(ts)+'</div></div>';
+
+      // Section 1
+      html += '<div class="pdf-section"><h2>1 · Request Summary</h2><div class="pdf-grid">';
+      html += pdfField("Title", rec.title, true);
+      html += pdfField("Requester Name", rec.requesterName);
+      html += pdfField("Date Submitted", rec.dateSubmitted);
+      html += pdfField("Department", rec.requesterDept);
+      html += pdfField("Approving Manager", rec.approvingManager);
+      html += '</div></div>';
+
+      // Section 2
+      html += '<div class="pdf-section"><h2>2 · Business Justification</h2><div class="pdf-grid">';
+      html += pdfField("Business Justification & Expected Outcomes", rec.businessJustification, true);
+      html += '</div></div>';
+
+      // Section 3
+      html += '<div class="pdf-section"><h2>3 · Software Details</h2><div class="pdf-grid">';
+      html += pdfField("Software Name / Vendor / Version", rec.softwareNameVendor, true);
+      html += pdfField("Projected Initial # Users", rec.initialUsers);
+      html += pdfField("Target User Groups", rec.targetUserGroups);
+      html += '</div></div>';
+
+      // Section 4
+      html += '<div class="pdf-section"><h2>4 · Cost</h2><div class="pdf-grid">';
+      html += pdfField("Estimated Total Cost (USD)", rec.totalCost);
+      html += pdfField("Billing Frequency", rec.billingFrequency);
+      html += '</div></div>';
+
+      // Section 5
+      html += '<div class="pdf-section"><h2>5 · Integrations &amp; Data Sensitivity</h2><div class="pdf-grid">';
+      html += pdfField("Integrations / Data Flows", rec.integrations, true);
+      html += pdfField("Data Classifications", rec.dataClass, true);
+      html += '</div></div>';
+
+      // Section 6
+      html += '<div class="pdf-section"><h2>6 · Signatures</h2><div class="pdf-grid">';
+      html += pdfField("Requester Signature", rec.requesterSig);
+      html += pdfField("Requester Sig. Date", rec.requesterSigDate);
+      html += pdfField("Manager Signature", rec.managerSig);
+      html += pdfField("Manager Sig. Date", rec.managerSigDate);
+      html += '</div></div>';
+
+      // ALM Use Only
+      html += '<div class="pdf-section alm"><h2>★ ALM Use Only</h2><div class="pdf-grid">';
+      html += pdfField("Status", rec.almStatus);
+      html += pdfField("Priority", rec.almPriority);
+      html += pdfField("Assigned Reviewer", rec.almReviewer);
+      html += pdfField("Decision Date", rec.almDecisionDate);
+      html += pdfField("Review Notes / Decision Rationale", rec.almNotes, true);
+      html += '</div></div>';
+
+      html += '<div class="pdf-footer">Moss Construction Management — Confidential Internal Document · '
+        + 'Generated ' + escapeHTML(new Date().toISOString().slice(0,10)) + '</div>';
+      html += '</div>';
+      return html;
+    }
+
+    function exportPDF(submissionId){
+      const arr = loadLog();
+      const rec = arr.find(r => r.submissionId === submissionId);
+      if (!rec){ alert("Submission not found."); return; }
+      const container = document.getElementById('pdfRender');
+      container.innerHTML = buildPdfHTML(rec);
+      const target = container.querySelector('.pdf-doc');
+
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: 'Software_Request_' + (rec.submissionId || 'submission') + '.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'] }
+      };
+
+      html2pdf().set(opt).from(target).save().then(()=>{
+        container.innerHTML = "";
+      }).catch(err=>{
+        console.error(err);
+        alert("PDF export failed: " + err.message);
+        container.innerHTML = "";
+      });
     }
 
     document.getElementById('refreshBtn').addEventListener('click', render);

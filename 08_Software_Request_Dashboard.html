@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CCB Metrics Dashboard — Moss ALM</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green-dark:  #0d3b1e;
+      --green-mid:   #1a5f2a;
+      --green-light: #27723a;
+      --green-pale:  #f0f7f1;
+      --gold:        #866D4B;
+      --gold-light:  #f5efe6;
+      --red:         #c62828;
+      --red-light:   #fdecea;
+      --amber:       #f9a825;
+      --amber-light: #fff8e1;
+      --blue:        #1565c0;
+      --blue-light:  #e3f2fd;
+      --gray:        #6e7d72;
+      --gray-light:  #f4f7f4;
+      --border:      #e4ebe5;
+      --text:        #1b3a22;
+      --text-muted:  #4a5b50;
+    }
+
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--gray-light); color: var(--text); min-height: 100vh; }
+
+    /* ── NAV ── */
+    .topnav {
+      background: var(--green-dark);
+      padding: 0 28px;
+      display: flex; align-items: center; gap: 24px;
+      height: 56px; position: sticky; top: 0; z-index: 200;
+      box-shadow: 0 2px 8px rgba(0,0,0,.28);
+    }
+    .topnav-brand { font-size: 1.05rem; font-weight: 700; color: #fff; white-space: nowrap; }
+    .topnav-brand span { color: #a8d5b5; }
+    .topnav-links { display: flex; gap: 4px; flex: 1; overflow-x: auto; }
+    .topnav-links a {
+      color: rgba(255,255,255,.75); text-decoration: none;
+      font-size: .8rem; padding: 6px 11px; border-radius: 5px;
+      transition: background .15s, color .15s; white-space: nowrap;
+    }
+    .topnav-links a:hover, .topnav-links a.active { background: rgba(255,255,255,.14); color: #fff; }
+    .topnav-right { display: flex; align-items: center; gap: 10px; margin-left: auto; flex-shrink: 0; }
+    .nav-btn {
+      background: rgba(255,255,255,.13); border: 1px solid rgba(255,255,255,.22);
+      color: #fff; border-radius: 6px; padding: 6px 13px;
+      cursor: pointer; font-size: .8rem; font-weight: 600;
+      transition: background .15s; white-space: nowrap;
+    }
+    .nav-btn:hover { background: rgba(255,255,255,.24); }
+    .nav-btn.import { background: rgba(134,109,75,.45); border-color: rgba(134,109,75,.6); }
+    .nav-btn.import:hover { background: rgba(134,109,75,.65); }
+    .last-upd { font-size: .72rem; color: rgba(255,255,255,.5); white-space: nowrap; }
+
+    /* ── PAGE ── */
+    .page { max-width: 1440px; margin: 0 auto; padding: 26px 26px 60px; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 55%, var(--green-light) 100%);
+      color: #fff; border-radius: 12px; padding: 26px 30px; margin-bottom: 22px;
+      display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 14px;
+    }
+    .page-header h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; }
+    .page-header .sub { font-size: .86rem; opacity: .8; }
+    .header-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .hbadge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 12px; border-radius: 20px;
+      font-size: .71rem; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+    }
+    .hbadge-green  { background: rgba(255,255,255,.17); color: #fff; }
+    .hbadge-amber  { background: #f9a825; color: #3d2a00; }
+    .hbadge-red    { background: #ef5350; color: #fff; }
+    .header-stat { text-align: right; }
+    .header-stat .big { font-size: 2.6rem; font-weight: 800; line-height: 1; }
+    .header-stat .lbl { font-size: .78rem; opacity: .72; margin-top: 2px; }
+
+    /* ── DATA SOURCE BANNER ── */
+    .data-banner {
+      border-radius: 8px; padding: 12px 16px; font-size: .85rem;
+      margin-bottom: 20px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .data-banner.live  { background: #e8f5ea; border-left: 4px solid var(--green-mid); color: #1b4d22; }
+    .data-banner.sample{ background: var(--amber-light); border-left: 4px solid var(--amber); color: #5d4a0e; }
+    .data-banner.empty { background: var(--blue-light); border-left: 4px solid var(--blue); color: #0d2d6b; }
+    .data-banner strong { font-weight: 700; }
+    .data-banner .banner-actions { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+    .banner-btn {
+      padding: 5px 13px; border-radius: 5px; font-size: .78rem; font-weight: 700;
+      cursor: pointer; border: none; transition: opacity .15s;
+    }
+    .banner-btn:hover { opacity: .82; }
+    .banner-btn.green  { background: var(--green-mid); color: #fff; }
+    .banner-btn.amber  { background: var(--amber); color: #3d2a00; }
+    .banner-btn.dismiss { background: none; border: 1px solid currentColor; opacity: .5; font-size: 1rem; padding: 2px 8px; }
+    .banner-btn.dismiss:hover { opacity: 1; }
+
+    /* ── IMPORT MODAL ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.52); z-index: 500;
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff; border-radius: 12px; width: 600px; max-width: 95vw;
+      max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 8px 40px rgba(0,0,0,.22);
+      padding: 30px;
+    }
+    .modal h2 { font-size: 1.1rem; color: var(--green-dark); margin-bottom: 6px; }
+    .modal .modal-sub { font-size: .82rem; color: var(--gray); margin-bottom: 20px; }
+    .modal-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 20px; }
+    .modal-tab {
+      padding: 8px 18px; font-size: .82rem; font-weight: 600; cursor: pointer;
+      border: none; background: none; color: var(--gray); border-bottom: 2px solid transparent;
+      margin-bottom: -2px; transition: color .15s, border-color .15s;
+    }
+    .modal-tab.active { color: var(--green-mid); border-bottom-color: var(--green-mid); }
+    .modal-panel { display: none; }
+    .modal-panel.active { display: block; }
+    .modal-label { font-size: .8rem; font-weight: 700; color: var(--text); margin-bottom: 6px; display: block; }
+    .modal textarea {
+      width: 100%; height: 160px; border: 1px solid var(--border); border-radius: 6px;
+      font-family: monospace; font-size: .78rem; padding: 10px; resize: vertical;
+      background: #fafdfb; color: var(--text);
+    }
+    .modal textarea:focus { outline: none; border-color: var(--green-mid); }
+    .modal input[type=file] { display: none; }
+    .file-drop {
+      border: 2px dashed var(--border); border-radius: 8px; padding: 30px;
+      text-align: center; cursor: pointer; color: var(--gray); font-size: .85rem;
+      transition: border-color .15s, background .15s;
+    }
+    .file-drop:hover, .file-drop.dragover { border-color: var(--green-mid); background: var(--green-pale); color: var(--green-mid); }
+    .file-drop .drop-icon { font-size: 2rem; margin-bottom: 8px; }
+    .file-drop .drop-note { font-size: .75rem; margin-top: 6px; opacity: .7; }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+    .modal-btn {
+      padding: 9px 22px; border-radius: 7px; font-size: .85rem; font-weight: 700;
+      cursor: pointer; border: none; transition: background .15s;
+    }
+    .modal-btn.primary { background: var(--green-mid); color: #fff; }
+    .modal-btn.primary:hover { background: var(--green-light); }
+    .modal-btn.ghost { background: #fff; color: var(--green-mid); border: 1px solid var(--green-mid); }
+    .modal-btn.ghost:hover { background: var(--green-pale); }
+    .modal-msg { font-size: .8rem; margin-top: 10px; padding: 8px 12px; border-radius: 5px; }
+    .modal-msg.ok  { background: #e8f5ea; color: #1b4d22; }
+    .modal-msg.err { background: var(--red-light); color: var(--red); }
+
+    /* ── KPI CARDS ── */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 14px; margin-bottom: 26px; }
+    .kpi-card {
+      background: #fff; border-radius: 10px; padding: 18px 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.05); border: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 5px; position: relative; overflow: hidden;
+    }
+    .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .kpi-card.green::before  { background: var(--green-mid); }
+    .kpi-card.amber::before  { background: var(--amber); }
+    .kpi-card.red::before    { background: var(--red); }
+    .kpi-card.blue::before   { background: var(--blue); }
+    .kpi-card.gold::before   { background: var(--gold); }
+    .kpi-card.gray::before   { background: var(--gray); }
+    .kpi-icon  { font-size: 1.35rem; margin-bottom: 2px; }
+    .kpi-value { font-size: 1.9rem; font-weight: 800; color: var(--text); line-height: 1; }
+    .kpi-label { font-size: .75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+    .kpi-sub   { font-size: .72rem; color: var(--gray); margin-top: 3px; }
+
+    /* ── SECTION TITLES ── */
+    .sec-title {
+      font-size: 1rem; font-weight: 700; color: var(--green-dark);
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 14px;
+    }
+    .sec-title::before { content: ''; display: inline-block; width: 4px; height: 18px; background: var(--green-mid); border-radius: 2px; }
+
+    /* ── CHART GRIDS ── */
+    .chart-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 22px; }
+    .chart-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin-bottom: 22px; }
+    .chart-card {
+      background: #fff; border-radius: 10px; padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.05); border: 1px solid var(--border);
+    }
+    .chart-card.wide { grid-column: 1 / -1; }
+    .chart-title {
+      font-size: .82rem; font-weight: 700; color: var(--text);
+      margin-bottom: 16px; text-transform: uppercase; letter-spacing: .5px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .chart-title .ct-sub { font-size: .7rem; color: var(--gray); text-transform: none; font-weight: 400; letter-spacing: 0; }
+    canvas { max-height: 270px; }
+
+    /* ── DONUT LAYOUT ── */
+    .donut-row { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; }
+    .donut-legend { display: flex; flex-direction: column; gap: 6px; }
+    .legend-item { display: flex; align-items: center; gap: 7px; font-size: .76rem; color: var(--text); }
+    .legend-dot  { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── PROGRESS BARS ── */
+    .prog-label   { display: flex; justify-content: space-between; font-size: .76rem; margin-bottom: 4px; }
+    .prog-track   { background: #e9f0ea; border-radius: 20px; height: 9px; margin-bottom: 11px; }
+    .prog-fill    { border-radius: 20px; height: 9px; transition: width .5s ease; }
+    .fill-green   { background: var(--green-mid); }
+    .fill-amber   { background: var(--amber); }
+    .fill-red     { background: var(--red); }
+    .fill-blue    { background: var(--blue); }
+    .fill-gold    { background: var(--gold); }
+    .fill-gray    { background: var(--gray); }
+    .fill-purple  { background: #7b1fa2; }
+    .fill-teal    { background: #00695c; }
+
+    /* ── RECENT TABLE ── */
+    .table-card {
+      background: #fff; border-radius: 10px; padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.05); border: 1px solid var(--border);
+      margin-bottom: 22px; overflow-x: auto;
+    }
+    table.dash-table { width: 100%; border-collapse: collapse; font-size: .81rem; min-width: 820px; }
+    table.dash-table th {
+      background: var(--green-mid); color: #fff; padding: 10px 13px;
+      text-align: left; font-size: .72rem; text-transform: uppercase;
+      letter-spacing: .7px; font-weight: 700;
+    }
+    table.dash-table td { padding: 10px 13px; border-bottom: 1px solid #eef2ee; vertical-align: middle; }
+    table.dash-table tbody tr:nth-child(even) { background: #fafdfb; }
+    table.dash-table tbody tr:hover { background: var(--green-pale); }
+    .id-pill { font-family: monospace; font-weight: 700; font-size: .76rem; color: var(--green-mid); background: var(--green-pale); padding: 2px 7px; border-radius: 4px; }
+
+    /* ── STATUS / PRIORITY PILLS ── */
+    .pill { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: .71rem; font-weight: 700; white-space: nowrap; }
+    .pill-approved  { background: #e8f5ea; color: #2e7d32; }
+    .pill-pending   { background: #fff8e1; color: #8a6300; }
+    .pill-review    { background: #e3f2fd; color: #1565c0; }
+    .pill-denied    { background: #fdecea; color: #c62828; }
+    .pill-hold      { background: #f3e5f5; color: #6a1b9a; }
+    .pill-completed { background: #e0f2f1; color: #00695c; }
+    .pill-unknown   { background: #f5f5f5; color: #555; }
+    .pill-low       { background: #f5f5f5; color: #555; }
+    .pill-medium    { background: #fff8e1; color: #8a6300; }
+    .pill-high      { background: #fdecea; color: #c62828; }
+    .pill-critical  { background: #c62828; color: #fff; }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center; padding: 60px 30px; color: var(--gray);
+    }
+    .empty-state .es-icon { font-size: 3rem; margin-bottom: 14px; }
+    .empty-state h3 { font-size: 1.1rem; color: var(--text); margin-bottom: 8px; }
+    .empty-state p { font-size: .85rem; max-width: 420px; margin: 0 auto 20px; line-height: 1.6; }
+    .es-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--green-mid); color: #fff;
+      padding: 10px 22px; border-radius: 7px; font-size: .85rem;
+      font-weight: 700; cursor: pointer; border: none; transition: background .15s;
+    }
+    .es-btn:hover { background: var(--green-light); }
+
+    /* ── FOOTER ── */
+    .dash-footer { text-align: center; font-size: .73rem; color: var(--gray); margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--border); }
+
+    @media (max-width: 960px) { .chart-grid-2, .chart-grid-3 { grid-template-columns: 1fr; } }
+    @media (max-width: 560px) { .kpi-grid { grid-template-columns: 1fr 1fr; } .page { padding: 14px 12px 40px; } }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="topnav">
+  <div class="topnav-brand">Moss <span>ALM</span></div>
+  <div class="topnav-links">
+    <a href="index.html">Home</a>
+    <a href="01_Change_Request_Form_V4.html">Change Request Form</a>
+    <a href="07_Change_Request_Register.html">Change Register</a>
+    <a href="08_CCB_Metrics_Dashboard.html" class="active">Metrics Dashboard</a>
+    <a href="log.html">Submission Log</a>
+    <a href="12_PIR_Template.html">PIR Template</a>
+    <a href="CCB_Stakeholder_Responsibility_Mapping.html">Stakeholder Mapping</a>
+    <a href="software_request_form.html">New Software Request</a>
+  </div>
+  <div class="topnav-right">
+    <span class="last-upd" id="lastUpd">—</span>
+    <button class="nav-btn import" onclick="openModal()">⬆ Import Log Data</button>
+    <button class="nav-btn" onclick="init()">↻ Refresh</button>
+  </div>
+</nav>
+
+<!-- ── IMPORT MODAL ── -->
+<div class="modal-overlay" id="modalOverlay" onclick="e => { if(e.target===this) closeModal(); }">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h2>Import Log Data</h2>
+    <p class="modal-sub">
+      Paste JSON from the Submission Log's localStorage, or upload the CSV exported via the
+      <strong>⬇ Export CSV</strong> button on the log page. Data is saved locally in this browser.
+    </p>
+    <div class="modal-tabs">
+      <button class="modal-tab active" onclick="switchTab('json')">JSON (localStorage)</button>
+      <button class="modal-tab" onclick="switchTab('csv')">CSV (exported file)</button>
+      <button class="modal-tab" onclick="switchTab('how')">How to Export</button>
+    </div>
+
+    <!-- JSON tab -->
+    <div class="modal-panel active" id="panel-json">
+      <label class="modal-label">Paste JSON array from localStorage:</label>
+      <textarea id="jsonInput" placeholder='[{"submissionId":"SWR-2026-001","timestamp":"2026-01-10","almStatus":"Approved",...}]'></textarea>
+      <div id="jsonMsg"></div>
+    </div>
+
+    <!-- CSV tab -->
+    <div class="modal-panel" id="panel-csv">
+      <input type="file" id="csvFile" accept=".csv" onchange="handleCSVFile(this)">
+      <div class="file-drop" id="fileDrop"
+           onclick="document.getElementById('csvFile').click()"
+           ondragover="event.preventDefault();this.classList.add('dragover')"
+           ondragleave="this.classList.remove('dragover')"
+           ondrop="handleDrop(event)">
+        <div class="drop-icon">📄</div>
+        <div>Click to select or drag a CSV file here</div>
+        <div class="drop-note">Export CSV from the Submission Log page, then upload it here</div>
+      </div>
+      <div id="csvMsg"></div>
+    </div>
+
+    <!-- How tab -->
+    <div class="modal-panel" id="panel-how">
+      <div style="font-size:.83rem;line-height:1.8;color:var(--text);">
+        <p style="margin-bottom:12px;"><strong>Option A — Same browser (auto-sync):</strong><br>
+        If you open both <code>log.html</code> and this dashboard in the <em>same browser</em>, they share
+        the same <code>localStorage</code> key (<code>moss_software_requests_log</code>) and data
+        syncs automatically. No import needed — just click <strong>↻ Refresh</strong>.</p>
+
+        <p style="margin-bottom:12px;"><strong>Option B — Export CSV from the Log:</strong><br>
+        1. Open <a href="log.html" style="color:var(--green-mid);">log.html</a> in your browser.<br>
+        2. Click <strong>⬇ Export CSV</strong>.<br>
+        3. Return here, click <strong>⬆ Import Log Data</strong>, switch to the <em>CSV</em> tab, and upload the file.</p>
+
+        <p><strong>Option C — Copy JSON from localStorage:</strong><br>
+        1. Open <a href="log.html" style="color:var(--green-mid);">log.html</a>.<br>
+        2. Open DevTools → Application → Local Storage → this site's origin.<br>
+        3. Copy the value of <code>moss_software_requests_log</code>.<br>
+        4. Paste it in the <em>JSON</em> tab here and click Import.</p>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="modal-btn ghost" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn primary" id="importBtn" onclick="doImport()">Import</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MAIN ── -->
+<main class="page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <div class="hbadge hbadge-green" style="margin-bottom:10px;">CCB · Software Request Metrics</div>
+      <h1>ALM Metrics Dashboard</h1>
+      <div class="sub">Software request intake analytics — Change Control Board</div>
+      <div class="header-badges" id="headerBadges"></div>
+    </div>
+    <div class="header-stat">
+      <div class="big" id="headerTotal">—</div>
+      <div class="lbl">Total Requests</div>
+    </div>
+  </div>
+
+  <!-- DATA SOURCE BANNER -->
+  <div class="data-banner" id="dataBanner" style="display:none;"></div>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <!-- CHARTS SECTION — hidden when no data -->
+  <div id="chartsSection">
+
+    <!-- Row 1: Status + Priority -->
+    <div class="sec-title">Request Status &amp; Priority Breakdown</div>
+    <div class="chart-grid-2" style="margin-bottom:22px;">
+      <div class="chart-card">
+        <div class="chart-title">Status Distribution <span class="ct-sub">by count</span></div>
+        <div class="donut-row">
+          <div style="width:170px;height:170px;flex-shrink:0;"><canvas id="statusChart"></canvas></div>
+          <div class="donut-legend" id="statusLegend"></div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Priority Breakdown <span class="ct-sub">by count</span></div>
+        <canvas id="priorityChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Row 2: Dept + Trend -->
+    <div class="sec-title">Volume &amp; Departmental Analysis</div>
+    <div class="chart-grid-2" style="margin-bottom:22px;">
+      <div class="chart-card">
+        <div class="chart-title">Requests by Department <span class="ct-sub">count</span></div>
+        <canvas id="deptChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Submission Trend <span class="ct-sub">monthly volume</span></div>
+        <canvas id="trendChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Row 3: Cost + Billing -->
+    <div class="sec-title">Cost &amp; Budget Analysis</div>
+    <div class="chart-grid-2" style="margin-bottom:22px;">
+      <div class="chart-card">
+        <div class="chart-title">Estimated Cost by Request <span class="ct-sub">USD</span></div>
+        <canvas id="costChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Billing Frequency <span class="ct-sub">distribution</span></div>
+        <div class="donut-row">
+          <div style="width:170px;height:170px;flex-shrink:0;"><canvas id="billingChart"></canvas></div>
+          <div class="donut-legend" id="billingLegend"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 4: Approval + Data Class + Dept Cost -->
+    <div class="sec-title">Approval Rate &amp; Classification Breakdown</div>
+    <div class="chart-grid-3" style="margin-bottom:22px;">
+      <div class="chart-card">
+        <div class="chart-title">Approval Rate</div>
+        <div id="approvalBars"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Data Classifications <span class="ct-sub">tag frequency</span></div>
+        <canvas id="dataClassChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Dept. Cost Exposure <span class="ct-sub">total est. USD</span></div>
+        <div id="deptCostBars"></div>
+      </div>
+    </div>
+
+    <!-- Row 5: Reviewer + Avg Users -->
+    <div class="sec-title">Reviewer &amp; User Impact</div>
+    <div class="chart-grid-2" style="margin-bottom:22px;">
+      <div class="chart-card">
+        <div class="chart-title">Requests by Reviewer <span class="ct-sub">assigned count</span></div>
+        <canvas id="reviewerChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">User Count per Request <span class="ct-sub">initial # users</span></div>
+        <canvas id="usersChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Recent table -->
+    <div class="sec-title">Recent Submissions</div>
+    <div class="table-card">
+      <table class="dash-table">
+        <thead>
+          <tr>
+            <th>ID</th><th>Submitted</th><th>Title / Software</th>
+            <th>Department</th><th>Requester</th><th>Cost (USD)</th>
+            <th>Users</th><th>Status</th><th>Priority</th>
+          </tr>
+        </thead>
+        <tbody id="recentBody"></tbody>
+      </table>
+    </div>
+
+  </div><!-- /chartsSection -->
+
+  <div class="dash-footer">
+    Moss Construction Management — CCB ALM Dashboard · Source: <code>localStorage</code> key <code>moss_software_requests_log</code> ·
+    Generated <span id="genDate"></span>
+  </div>
+</main>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  DATA LAYER — identical key to log.html / log (1).html
+// ═══════════════════════════════════════════════════════════════
+const STORAGE_KEY = "moss_software_requests_log";
+
+// Column map matches log.html COLUMNS array exactly
+const CSV_COLS = [
+  "submissionId","timestamp","title","requesterName","dateSubmitted",
+  "requesterDept","approvingManager","businessJustification","softwareNameVendor",
+  "initialUsers","targetUserGroups","totalCost","billingFrequency","integrations",
+  "dataClass","requesterSig","requesterSigDate","managerSig","managerSigDate",
+  "almStatus","almPriority","almReviewer","almDecisionDate","almNotes"
+];
+const CSV_HEADERS = [
+  "Submission ID","Timestamp","Title","Requester","Date Submitted",
+  "Department","Approving Manager","Business Justification","Software / Vendor / Version",
+  "Initial # Users","Target User Groups","Total Cost (USD)","Billing Frequency",
+  "Integrations / Data Notes","Data Classifications","Requester Signature","Req. Sig Date",
+  "Manager Signature","Mgr. Sig Date","ALM Status","ALM Priority","ALM Reviewer",
+  "ALM Decision Date","ALM Notes"
+];
+
+function lsLoad() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) { const a = JSON.parse(raw); if (Array.isArray(a) && a.length) return a; }
+  } catch(e) {}
+  return null;
+}
+function lsSave(arr) { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+
+// ═══════════════════════════════════════════════════════════════
+//  MODAL
+// ═══════════════════════════════════════════════════════════════
+let activeTab = 'json';
+let csvParsed = null;
+
+function openModal() { document.getElementById('modalOverlay').classList.add('open'); }
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.getElementById('jsonMsg').innerHTML = '';
+  document.getElementById('csvMsg').innerHTML = '';
+  csvParsed = null;
+  document.getElementById('fileDrop').textContent = '';
+  // reset file drop
+  document.getElementById('fileDrop').innerHTML = '<div class="drop-icon">📄</div><div>Click to select or drag a CSV file here</div><div class="drop-note">Export CSV from the Submission Log page, then upload it here</div>';
+  document.getElementById('jsonInput').value = '';
+}
+document.getElementById('modalOverlay').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+
+function switchTab(name) {
+  activeTab = name;
+  document.querySelectorAll('.modal-tab').forEach((t,i) => {
+    t.classList.toggle('active', ['json','csv','how'][i] === name);
+  });
+  document.querySelectorAll('.modal-panel').forEach((p,i) => {
+    p.classList.toggle('active', ['panel-json','panel-csv','panel-how'][i] === 'panel-'+name);
+  });
+  // show/hide import button on how tab
+  document.getElementById('importBtn').style.display = name === 'how' ? 'none' : '';
+}
+
+function showMsg(id, msg, ok) {
+  document.getElementById(id).innerHTML =
+    `<div class="modal-msg ${ok?'ok':'err'}">${msg}</div>`;
+}
+
+// ── JSON import ──
+function doImport() {
+  if (activeTab === 'json') {
+    const raw = document.getElementById('jsonInput').value.trim();
+    if (!raw) { showMsg('jsonMsg','Paste JSON first.',false); return; }
+    let arr;
+    try { arr = JSON.parse(raw); } catch(e) { showMsg('jsonMsg','Invalid JSON: '+e.message,false); return; }
+    if (!Array.isArray(arr)) { showMsg('jsonMsg','JSON must be an array.',false); return; }
+    lsSave(arr);
+    showMsg('jsonMsg', `✓ Imported ${arr.length} record(s) successfully.`, true);
+    setTimeout(() => { closeModal(); init(); }, 900);
+  } else if (activeTab === 'csv') {
+    if (!csvParsed) { showMsg('csvMsg','No CSV loaded yet.',false); return; }
+    lsSave(csvParsed);
+    showMsg('csvMsg', `✓ Imported ${csvParsed.length} record(s) from CSV.`, true);
+    setTimeout(() => { closeModal(); init(); }, 900);
+  }
+}
+
+// ── CSV parsing ──
+function parseCSV(text) {
+  const lines = text.split(/\r?\n/).filter(l => l.trim());
+  if (lines.length < 2) throw new Error('CSV has no data rows.');
+
+  // Parse header row, handle quoted fields
+  function parseLine(line) {
+    const fields = []; let cur = ''; let inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (inQ) {
+        if (ch === '"' && line[i+1] === '"') { cur += '"'; i++; }
+        else if (ch === '"') { inQ = false; }
+        else { cur += ch; }
+      } else {
+        if (ch === '"') { inQ = true; }
+        else if (ch === ',') { fields.push(cur); cur = ''; }
+        else { cur += ch; }
+      }
+    }
+    fields.push(cur);
+    return fields;
+  }
+
+  const headers = parseLine(lines[0]);
+  // Map header labels → field keys
+  const keyMap = {};
+  headers.forEach((h, i) => {
+    const idx = CSV_HEADERS.indexOf(h.trim());
+    if (idx !== -1) keyMap[i] = CSV_COLS[idx];
+  });
+
+  return lines.slice(1).map(line => {
+    const fields = parseLine(line);
+    const rec = {};
+    Object.entries(keyMap).forEach(([i, key]) => { rec[key] = fields[i] || ''; });
+    return rec;
+  }).filter(r => r.submissionId);
+}
+
+function handleCSVFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => processCSVText(e.target.result, file.name);
+  reader.readAsText(file);
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('fileDrop').classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => processCSVText(ev.target.result, file.name);
+  reader.readAsText(file);
+}
+function processCSVText(text, fname) {
+  try {
+    csvParsed = parseCSV(text);
+    document.getElementById('fileDrop').innerHTML =
+      `<div class="drop-icon">✅</div><div><strong>${fname}</strong></div><div class="drop-note">${csvParsed.length} records ready to import</div>`;
+    showMsg('csvMsg', `Parsed ${csvParsed.length} record(s). Click Import to save.`, true);
+  } catch(e) {
+    showMsg('csvMsg', 'CSV parse error: ' + e.message, false);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════════════
+function num(v) { const n = parseFloat(String(v||'').replace(/[^0-9.]/g,'')); return isNaN(n)?0:n; }
+function fmtC(n) {
+  if (n >= 1000000) return '$' + (n/1000000).toFixed(1) + 'M';
+  if (n >= 1000)    return '$' + (n/1000).toFixed(1) + 'K';
+  return '$' + n.toLocaleString();
+}
+function countBy(arr, key) {
+  const m = {};
+  arr.forEach(r => { const v = (String(r[key]||'').trim()||'—'); m[v]=(m[v]||0)+1; });
+  return m;
+}
+function sumGroupBy(arr, gk, vk) {
+  const m = {};
+  arr.forEach(r => { const k = String(r[gk]||'').trim()||'—'; m[k]=(m[k]||0)+num(r[vk]); });
+  return m;
+}
+
+const PALETTE = {
+  status: {"Approved":"#2e7d32","Under Review":"#1565c0","Pending":"#f9a825","Denied":"#c62828","On Hold":"#7b1fa2","Completed":"#00695c","—":"#9e9e9e"},
+  priority: {"Critical":"#c62828","High":"#ef6c00","Medium":"#f9a825","Low":"#9e9e9e","—":"#bdbdbd"},
+  greens: ["#1a5f2a","#27723a","#2e7d32","#388e3c","#43a047","#66bb6a","#a5d6a7"],
+  multi:  ["#1a5f2a","#866d4b","#1565c0","#c62828","#7b1fa2","#f9a825","#00695c","#6e7d72"]
+};
+
+function statusPill(s) {
+  const map = {"Approved":"approved","Under Review":"review","Pending":"pending","Denied":"denied","On Hold":"hold","Completed":"completed"};
+  return `<span class="pill pill-${map[s]||'unknown'}">${s||'—'}</span>`;
+}
+function priPill(p) {
+  return `<span class="pill pill-${(p||'').toLowerCase()||'unknown'}">${p||'—'}</span>`;
+}
+
+// ── Charts ──
+const CI = {};
+function destroyChart(id) { if(CI[id]){CI[id].destroy();delete CI[id];} }
+
+function donut(id, labels, data, colors) {
+  destroyChart(id);
+  CI[id] = new Chart(document.getElementById(id).getContext('2d'), {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data, backgroundColor: colors, borderWidth: 2, borderColor: '#fff', hoverOffset: 6 }] },
+    options: {
+      cutout: '68%',
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => ` ${c.label}: ${c.raw} (${Math.round(c.raw/c.dataset.data.reduce((a,b)=>a+b,0)*100)}%)` }}
+      },
+      animation: { duration: 700 }
+    }
+  });
+}
+
+function bar(id, labels, datasets, horiz, currency) {
+  destroyChart(id);
+  CI[id] = new Chart(document.getElementById(id).getContext('2d'), {
+    type: 'bar',
+    data: { labels, datasets },
+    options: {
+      indexAxis: horiz ? 'y' : 'x',
+      responsive: true,
+      plugins: {
+        legend: { display: datasets.length > 1, position: 'top', labels: { boxWidth: 11, font: { size: 10 } } },
+        tooltip: { callbacks: { label: c => currency ? ` $${c.raw.toLocaleString()}` : ` ${c.raw}` }}
+      },
+      scales: {
+        x: { grid: { color: '#eef2ee' }, ticks: { font: { size: 10 } } },
+        y: { grid: { color: '#eef2ee' }, ticks: { font: { size: 10 } }, beginAtZero: true }
+      },
+      animation: { duration: 600 }
+    }
+  });
+}
+
+function line(id, labels, datasets) {
+  destroyChart(id);
+  CI[id] = new Chart(document.getElementById(id).getContext('2d'), {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: '#eef2ee' }, ticks: { font: { size: 10 } } },
+        y: { grid: { color: '#eef2ee' }, ticks: { font: { size: 10 } }, beginAtZero: true }
+      },
+      elements: { line: { tension: 0.36 }, point: { radius: 4, hoverRadius: 6 } },
+      animation: { duration: 600 }
+    }
+  });
+}
+
+function progressBars(containerId, items, maxVal) {
+  document.getElementById(containerId).innerHTML = items.map(([label, val, cls]) => {
+    const pct = maxVal > 0 ? Math.round(val / maxVal * 100) : 0;
+    return `<div class="prog-label"><span>${label}</span><span><strong>${val}</strong></span></div>
+            <div class="prog-track"><div class="prog-fill fill-${cls||'green'}" style="width:${pct}%"></div></div>`;
+  }).join('');
+}
+
+function donutLegend(id, labels, data, colors) {
+  const total = data.reduce((a,b) => a+b, 0);
+  document.getElementById(id).innerHTML = labels.map((l, i) => {
+    const pct = total > 0 ? Math.round(data[i]/total*100) : 0;
+    return `<div class="legend-item"><div class="legend-dot" style="background:${colors[i]}"></div>
+            <span><strong>${l}</strong>: ${data[i]} <span style="color:var(--gray);font-size:.68rem;">(${pct}%)</span></span></div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  INIT — reads live localStorage or shows empty state
+// ═══════════════════════════════════════════════════════════════
+function init() {
+  document.getElementById('genDate').textContent = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('lastUpd').textContent = 'Updated ' + new Date().toLocaleTimeString();
+
+  const live = lsLoad();
+  const data = live;
+  const source = live ? 'live' : 'empty';
+
+  // ── BANNER ──
+  const banner = document.getElementById('dataBanner');
+  if (source === 'live') {
+    banner.className = 'data-banner live';
+    banner.style.display = 'flex';
+    banner.innerHTML = `<span>✅</span><span><strong>Live Data:</strong> Showing ${data.length} record(s) from <code>localStorage</code> — the same source as the Submission Log.</span>
+      <div class="banner-actions">
+        <button class="banner-btn green" onclick="openModal()">⬆ Import / Merge</button>
+        <button class="banner-btn dismiss" onclick="this.closest('.data-banner').style.display='none'">✕</button>
+      </div>`;
+  } else {
+    banner.className = 'data-banner empty';
+    banner.style.display = 'flex';
+    banner.innerHTML = `<span>📭</span><span><strong>No log data found</strong> in this browser's localStorage. Import from your Submission Log to see live metrics.</span>
+      <div class="banner-actions">
+        <button class="banner-btn green" onclick="openModal()">⬆ Import Log Data</button>
+      </div>`;
+  }
+
+  const chartsSection = document.getElementById('chartsSection');
+
+  if (!data || data.length === 0) {
+    // Empty state
+    document.getElementById('headerTotal').textContent = '0';
+    document.getElementById('headerBadges').innerHTML = '';
+    document.getElementById('kpiGrid').innerHTML = '';
+    chartsSection.innerHTML = `
+      <div class="empty-state">
+        <div class="es-icon">📊</div>
+        <h3>No submission data yet</h3>
+        <p>Import your log data to populate the dashboard with real metrics. Both this page and <code>log.html</code> share the same localStorage key, so if you open them in the <strong>same browser</strong>, data syncs automatically.</p>
+        <button class="es-btn" onclick="openModal()">⬆ Import Log Data</button>
+      </div>`;
+    return;
+  }
+
+  // Restore charts section if it was replaced
+  if (!document.getElementById('statusChart')) {
+    renderChartsMarkup();
+  }
+
+  const total = data.length;
+  document.getElementById('headerTotal').textContent = total;
+
+  // ── STATUS COUNTS ──
+  const sMap   = countBy(data, 'almStatus');
+  const approved  = sMap['Approved']     || 0;
+  const pending   = sMap['Pending']      || 0;
+  const review    = sMap['Under Review'] || 0;
+  const denied    = sMap['Denied']       || 0;
+  const onHold    = sMap['On Hold']      || 0;
+  const completed = sMap['Completed']    || 0;
+
+  // ── COSTS & USERS ──
+  const totalCost    = data.reduce((s,r) => s+num(r.totalCost), 0);
+  const approvedCost = data.filter(r => r.almStatus==='Approved').reduce((s,r) => s+num(r.totalCost), 0);
+  const totalUsers   = data.reduce((s,r) => s+num(r.initialUsers), 0);
+  const avgCostPerUser = totalUsers > 0 ? Math.round(totalCost / totalUsers) : 0;
+
+  // ── HEADER BADGES ──
+  document.getElementById('headerBadges').innerHTML = `
+    <span class="hbadge hbadge-green">${approved} Approved</span>
+    <span class="hbadge hbadge-amber">${pending + review} In Progress</span>
+    <span class="hbadge hbadge-red">${denied} Denied</span>`;
+
+  // ── KPI ──
+  const kpis = [
+    { icon:'📋', value: total,              label:'Total Requests',   sub:'All submissions',             color:'green' },
+    { icon:'✅', value: approved,           label:'Approved',         sub: fmtC(approvedCost)+' approved cost', color:'green' },
+    { icon:'🔍', value: review,             label:'Under Review',     sub:'Awaiting decision',            color:'blue'  },
+    { icon:'⏳', value: pending,            label:'Pending',          sub:'Not yet assigned',             color:'amber' },
+    { icon:'🚫', value: denied,             label:'Denied',           sub:`${onHold} on hold`,            color:'red'   },
+    { icon:'🏁', value: completed,          label:'Completed',        sub:'Fully deployed',               color:'gray'  },
+    { icon:'💰', value: fmtC(totalCost),    label:'Total Est. Cost',  sub:'All requests combined',        color:'gold'  },
+    { icon:'👥', value: totalUsers,         label:'Total Users',      sub:`~${fmtC(avgCostPerUser)}/user avg`, color:'blue' },
+  ];
+  document.getElementById('kpiGrid').innerHTML = kpis.map(k => `
+    <div class="kpi-card ${k.color}">
+      <div class="kpi-icon">${k.icon}</div>
+      <div class="kpi-value">${k.value}</div>
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-sub">${k.sub}</div>
+    </div>`).join('');
+
+  // ── STATUS DONUT ──
+  const sLabels = Object.keys(sMap);
+  const sCounts = sLabels.map(l => sMap[l]);
+  const sColors = sLabels.map(l => PALETTE.status[l] || '#9e9e9e');
+  donut('statusChart', sLabels, sCounts, sColors);
+  donutLegend('statusLegend', sLabels, sCounts, sColors);
+
+  // ── PRIORITY BAR ──
+  const prioOrder = ['Critical','High','Medium','Low','—'];
+  const prioMap   = countBy(data, 'almPriority');
+  const prioLabels = prioOrder.filter(p => prioMap[p]);
+  bar('priorityChart', prioLabels.map(l => l==='—'?'Unset':l), [{
+    label:'Requests', data: prioLabels.map(p => prioMap[p]),
+    backgroundColor: prioLabels.map(p => PALETTE.priority[p]||'#9e9e9e'), borderRadius: 6
+  }], false, false);
+
+  // ── DEPT BAR ──
+  const deptMap  = countBy(data, 'requesterDept');
+  const deptList = Object.entries(deptMap).sort((a,b)=>b[1]-a[1]);
+  bar('deptChart', deptList.map(e=>e[0]), [{
+    label:'Requests', data: deptList.map(e=>e[1]),
+    backgroundColor: '#1a5f2a', borderRadius: 5, hoverBackgroundColor: '#27723a'
+  }], true, false);
+
+  // ── TREND ──
+  const tMap = {};
+  data.forEach(r => {
+    const ts = (r.timestamp||r.dateSubmitted||'').slice(0,7);
+    if(ts) tMap[ts] = (tMap[ts]||0)+1;
+  });
+  const tKeys = Object.keys(tMap).sort();
+  line('trendChart', tKeys.map(k => {
+    const [y,m] = k.split('-');
+    return new Date(+y,+m-1).toLocaleDateString('en-US',{month:'short',year:'2-digit'});
+  }), [{
+    label:'Submissions', data: tKeys.map(k=>tMap[k]),
+    borderColor:'#1a5f2a', backgroundColor:'rgba(26,95,42,.12)',
+    fill: true, pointBackgroundColor:'#1a5f2a'
+  }]);
+
+  // ── COST BAR ──
+  const costList = data
+    .map(r => ({ label: r.title || r.softwareNameVendor || r.submissionId, cost: num(r.totalCost) }))
+    .filter(e => e.cost > 0).sort((a,b) => b.cost-a.cost).slice(0,10);
+  bar('costChart',
+    costList.map(e => e.label.length>24 ? e.label.slice(0,24)+'…':e.label),
+    [{ label:'USD', data: costList.map(e=>e.cost),
+       backgroundColor: costList.map((_,i)=>PALETTE.multi[i%PALETTE.multi.length]),
+       borderRadius: 5 }],
+    true, true);
+
+  // ── BILLING DONUT ──
+  const billMap = countBy(data, 'billingFrequency');
+  const billL = Object.keys(billMap), billD = billL.map(l=>billMap[l]);
+  const billC = billL.map((_,i) => PALETTE.greens[i%PALETTE.greens.length]);
+  donut('billingChart', billL, billD, billC);
+  donutLegend('billingLegend', billL, billD, billC);
+
+  // ── APPROVAL BARS ──
+  const approvalItems = [
+    ['Approved',     approved,  'green' ],
+    ['Under Review', review,    'blue'  ],
+    ['Pending',      pending,   'amber' ],
+    ['Denied',       denied,    'red'   ],
+    ['On Hold',      onHold,    'purple'],
+    ['Completed',    completed, 'teal'  ],
+  ].filter(([,v])=>v>0);
+  progressBars('approvalBars', approvalItems, total);
+
+  // ── DATA CLASSIFICATION ──
+  const classMap = {};
+  data.forEach(r => {
+    (r.dataClass||'Unknown').split(/[;,]/).map(s=>s.trim()).filter(Boolean)
+      .forEach(c => { classMap[c]=(classMap[c]||0)+1; });
+  });
+  const classEntries = Object.entries(classMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  bar('dataClassChart', classEntries.map(e=>e[0]), [{
+    label:'Mentions', data: classEntries.map(e=>e[1]),
+    backgroundColor: PALETTE.greens, borderRadius: 5
+  }], true, false);
+
+  // ── DEPT COST BARS ──
+  const dcMap = sumGroupBy(data,'requesterDept','totalCost');
+  const dcList = Object.entries(dcMap).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const maxDC = dcList[0]?.[1]||1;
+  const dcColors = ['green','blue','amber','red','gold','purple'];
+  document.getElementById('deptCostBars').innerHTML = dcList.map(([k,v],i) => {
+    const pct = Math.round(v/maxDC*100);
+    return `<div class="prog-label"><span>${k}</span><span><strong>${fmtC(v)}</strong></span></div>
+            <div class="prog-track"><div class="prog-fill fill-${dcColors[i]||'green'}" style="width:${pct}%"></div></div>`;
+  }).join('');
+
+  // ── REVIEWER BAR ──
+  const revMap = countBy(data.filter(r=>r.almReviewer && r.almReviewer.trim()), 'almReviewer');
+  const revList = Object.entries(revMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  if (revList.length) {
+    bar('reviewerChart', revList.map(e=>e[0]), [{
+      label:'Assigned', data: revList.map(e=>e[1]),
+      backgroundColor: '#1a5f2a', borderRadius: 5, hoverBackgroundColor: '#27723a'
+    }], true, false);
+  } else {
+    const ctx = document.getElementById('reviewerChart');
+    if (ctx) ctx.parentElement.innerHTML = '<div style="text-align:center;padding:40px;color:var(--gray);font-size:.82rem;">No reviewer assignments yet</div>';
+  }
+
+  // ── USERS PER REQUEST BAR ──
+  const userList = data
+    .map(r => ({ label: r.title || r.softwareNameVendor || r.submissionId, users: num(r.initialUsers) }))
+    .filter(e => e.users > 0).sort((a,b) => b.users-a.users).slice(0,10);
+  bar('usersChart',
+    userList.map(e => e.label.length>22 ? e.label.slice(0,22)+'…':e.label),
+    [{ label:'Users', data: userList.map(e=>e.users),
+       backgroundColor: PALETTE.multi, borderRadius: 5 }],
+    true, false);
+
+  // ── RECENT TABLE ──
+  const recent = data.slice().sort((a,b)=>(b.timestamp||'').localeCompare(a.timestamp||'')).slice(0,12);
+  document.getElementById('recentBody').innerHTML = recent.map(r => `
+    <tr>
+      <td><span class="id-pill">${r.submissionId||'—'}</span></td>
+      <td>${(r.timestamp||r.dateSubmitted||'—').slice(0,10)}</td>
+      <td style="max-width:210px;">
+        <div style="font-weight:600;">${r.title||r.softwareNameVendor||'—'}</div>
+        <div style="font-size:.7rem;color:var(--gray);margin-top:1px;">${(r.softwareNameVendor||'').slice(0,38)}</div>
+      </td>
+      <td>${r.requesterDept||'—'}</td>
+      <td>${r.requesterName||'—'}</td>
+      <td>${r.totalCost ? '$'+num(r.totalCost).toLocaleString() : '—'}</td>
+      <td>${r.initialUsers||'—'}</td>
+      <td>${statusPill(r.almStatus)}</td>
+      <td>${priPill(r.almPriority)}</td>
+    </tr>`).join('');
+}
+
+// Re-inject chart canvas markup if empty state replaced it
+function renderChartsMarkup() {
+  document.getElementById('chartsSection').innerHTML = `
+    <div class="sec-title">Request Status &amp; Priority Breakdown</div>
+    <div class="chart-grid-2" style="margin-bottom:22px;">
+      <div class="chart-card">
+        <div class="chart-title">Status Distribution <span class="ct-sub">by count</span></div>
+        <div class="donut-row">
+          <div style="width:170px;height:170px;flex-shrink:0;"><canvas id="statusChart"></canvas></div>
+          <div class="donut-legend" id="statusLegend"></div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Priority Breakdown <span class="ct-sub">by count</span></div>
+        <canvas id="priorityChart"></canvas>
+      </div>
+    </div>
+    <div class="sec-title">Volume &amp; Departmental Analysis</div>
+    <div class="chart-grid-2" style="margin-bottom:22px;">
+      <div class="chart-card"><div class="chart-title">Requests by Department <span class="ct-sub">count</span></div><canvas id="deptChart"></canvas></div>
+      <div class="chart-card"><div class="chart-title">Submission Trend <span class="ct-sub">monthly volume</span></div><canvas id="trendChart"></canvas></div>
+    </div>
+    <div class="sec-title">Cost &amp; Budget Analysis</div>
+    <div class="chart-grid-2" style="margin-bottom:22px;">
+      <div class="chart-card"><div class="chart-title">Estimated Cost by Request <span class="ct-sub">USD</span></div><canvas id="costChart"></canvas></div>
+      <div class="chart-card">
+        <div class="chart-title">Billing Frequency <span class="ct-sub">distribution</span></div>
+        <div class="donut-row">
+          <div style="width:170px;height:170px;flex-shrink:0;"><canvas id="billingChart"></canvas></div>
+          <div class="donut-legend" id="billingLegend"></div>
+        </div>
+      </div>
+    </div>
+    <div class="sec-title">Approval Rate &amp; Classification Breakdown</div>
+    <div class="chart-grid-3" style="margin-bottom:22px;">
+      <div class="chart-card"><div class="chart-title">Approval Rate</div><div id="approvalBars"></div></div>
+      <div class="chart-card"><div class="chart-title">Data Classifications <span class="ct-sub">tag frequency</span></div><canvas id="dataClassChart"></canvas></div>
+      <div class="chart-card"><div class="chart-title">Dept. Cost Exposure <span class="ct-sub">total est. USD</span></div><div id="deptCostBars"></div></div>
+    </div>
+    <div class="sec-title">Reviewer &amp; User Impact</div>
+    <div class="chart-grid-2" style="margin-bottom:22px;">
+      <div class="chart-card"><div class="chart-title">Requests by Reviewer <span class="ct-sub">assigned count</span></div><canvas id="reviewerChart"></canvas></div>
+      <div class="chart-card"><div class="chart-title">User Count per Request <span class="ct-sub">initial # users</span></div><canvas id="usersChart"></canvas></div>
+    </div>
+    <div class="sec-title">Recent Submissions</div>
+    <div class="table-card">
+      <table class="dash-table">
+        <thead><tr><th>ID</th><th>Submitted</th><th>Title / Software</th><th>Department</th><th>Requester</th><th>Cost (USD)</th><th>Users</th><th>Status</th><th>Priority</th></tr></thead>
+        <tbody id="recentBody"></tbody>
+      </table>
+    </div>`;
+}
+
+init();
+</script>
+</body>
+</html>

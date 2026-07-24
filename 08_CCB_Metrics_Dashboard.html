@@ -6,18 +6,20 @@
     <title>CCB Metrics Dashboard | Moss Energy</title>
     <!-- Chart.js Library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="site.css" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
-        /* ============================================
+        /* ====
            Moss Energy CCB - Metrics Dashboard
            Version 1.0 | March 2026
-           ============================================ */
+           ==== */
         
         :root {
-            --moss-primary: #003366;
-            --moss-secondary: #004d99;
-            --moss-accent: #0066cc;
-            --moss-light: #e6f0fa;
-            --moss-dark: #001a33;
+            --moss-primary: #1a5f2a;
+            --moss-secondary: #2d8a3e;
+            --moss-accent: #3aa34f;
+            --moss-light: #f0f7f1;
+            --moss-dark: #0d3016;
             --success: #28a745;
             --success-light: #d4edda;
             --warning: #ffc107;
@@ -49,7 +51,7 @@
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, var(--moss-primary) 0%, var(--moss-secondary) 100%);
+            background: linear-gradient(135deg, #1a5f2a 0%, #2d8a3e 100%);
             color: white;
             padding: 20px 30px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -319,8 +321,8 @@
         .summary-table th {
             text-align: left;
             padding: 10px 12px;
-            background: var(--moss-light);
-            color: var(--moss-primary);
+            background: #f0f7f1;
+            color: #1a5f2a;
             font-weight: 600;
             font-size: 11px;
             text-transform: uppercase;
@@ -497,6 +499,23 @@
     </style>
 </head>
 <body>
+<nav class="moss-topnav">
+  <div class="moss-nav-container">
+    <a href="index.html" class="moss-nav-brand"><img src="Moss_logo.png" alt="Moss Energy"></a>
+    <button class="moss-nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('.moss-nav-links').classList.toggle('open')">☰</button>
+    <div class="moss-nav-links">
+      <a href="index.html">Home</a>
+      <a href="01_Change_Request_Form_V4.html">Change Request Form</a>
+      <a href="07_Change_Request_Register.html">Change Register</a>
+      <a href="08_CCB_Metrics_Dashboard.html" class="active">Metrics Dashboard</a>
+      <a href="12_PIR_Template.html">PIR Template</a>
+      <a href="17_Section_Responsibility_Swimlane_Flowchart.html">Swimlane Flowchart</a>
+      <a href="CCB_Stakeholder_Responsibility_Mapping.html">Stakeholder Mapping</a>
+      <a href="https://mosscm.sharepoint.com/sites/CCB" target="_blank" rel="noopener noreferrer">SharePoint Site ↗</a>
+    </div>
+  </div>
+</nav>
+
     <!-- Header -->
     <header class="header">
         <div class="header-content">
@@ -603,8 +622,8 @@
             <div class="chart-card">
                 <div class="chart-header">
                     <div>
-                        <div class="chart-title">Changes by Category</div>
-                        <div class="chart-subtitle">Distribution of change types</div>
+                    <div class="chart-title">Changes by Category</div>
+                    <div class="chart-subtitle">Distribution of change types</div>
                     </div>
                 </div>
                 <div class="chart-container">
@@ -614,8 +633,8 @@
             <div class="chart-card">
                 <div class="chart-header">
                     <div>
-                        <div class="chart-title">Changes by Environment</div>
-                        <div class="chart-subtitle">Target environment breakdown</div>
+                    <div class="chart-title">Changes by Environment</div>
+                    <div class="chart-subtitle">Target environment breakdown</div>
                     </div>
                 </div>
                 <div class="chart-container">
@@ -625,8 +644,8 @@
             <div class="chart-card">
                 <div class="chart-header">
                     <div>
-                        <div class="chart-title">Monthly Change Volume Trend</div>
-                        <div class="chart-subtitle">6-month rolling view</div>
+                    <div class="chart-title">Monthly Change Volume Trend</div>
+                    <div class="chart-subtitle">6-month rolling view</div>
                     </div>
                 </div>
                 <div class="chart-container">
@@ -636,8 +655,8 @@
             <div class="chart-card">
                 <div class="chart-header">
                     <div>
-                        <div class="chart-title">Risk Level Distribution</div>
-                        <div class="chart-subtitle">Current risk profile</div>
+                    <div class="chart-title">Risk Level Distribution</div>
+                    <div class="chart-subtitle">Current risk profile</div>
                     </div>
                 </div>
                 <div class="chart-container">
@@ -652,15 +671,15 @@
                 <h3>📊 Performance Metrics</h3>
                 <table class="summary-table">
                     <thead>
-                        <tr>
-                            <th>Metric</th>
-                            <th>Current</th>
-                            <th>Target</th>
-                            <th>Status</th>
-                        </tr>
+                    <tr>
+                    <th>Metric</th>
+                    <th>Current</th>
+                    <th>Target</th>
+                    <th>Status</th>
+                    </tr>
                     </thead>
                     <tbody id="metrics-table-body">
-                        <!-- Populated by JavaScript -->
+                    <!-- Populated by JavaScript -->
                     </tbody>
                 </table>
             </div>
@@ -668,15 +687,15 @@
                 <h3>📈 Category Performance</h3>
                 <table class="summary-table">
                     <thead>
-                        <tr>
-                            <th>Category</th>
-                            <th>Count</th>
-                            <th>% of Total</th>
-                            <th>Distribution</th>
-                        </tr>
+                    <tr>
+                    <th>Category</th>
+                    <th>Count</th>
+                    <th>% of Total</th>
+                    <th>Distribution</th>
+                    </tr>
                     </thead>
                     <tbody id="category-table-body">
-                        <!-- Populated by JavaScript -->
+                    <!-- Populated by JavaScript -->
                     </tbody>
                 </table>
             </div>
@@ -688,15 +707,15 @@
                 <h3>🎯 Status Summary</h3>
                 <table class="summary-table">
                     <thead>
-                        <tr>
-                            <th>Status</th>
-                            <th>Count</th>
-                            <th>% of Total</th>
-                            <th>Progress</th>
-                        </tr>
+                    <tr>
+                    <th>Status</th>
+                    <th>Count</th>
+                    <th>% of Total</th>
+                    <th>Progress</th>
+                    </tr>
                     </thead>
                     <tbody id="status-table-body">
-                        <!-- Populated by JavaScript -->
+                    <!-- Populated by JavaScript -->
                     </tbody>
                 </table>
             </div>
@@ -704,15 +723,15 @@
                 <h3>⚠️ Risk Analysis</h3>
                 <table class="summary-table">
                     <thead>
-                        <tr>
-                            <th>Risk Level</th>
-                            <th>Count</th>
-                            <th>Avg Days to Approve</th>
-                            <th>Status</th>
-                        </tr>
+                    <tr>
+                    <th>Risk Level</th>
+                    <th>Count</th>
+                    <th>Avg Days to Approve</th>
+                    <th>Status</th>
+                    </tr>
                     </thead>
                     <tbody id="risk-table-body">
-                        <!-- Populated by JavaScript -->
+                    <!-- Populated by JavaScript -->
                     </tbody>
                 </table>
             </div>
@@ -725,42 +744,42 @@
                 <div class="help-item">
                     <h4>KPI Indicators</h4>
                     <p><strong>🟢 Green:</strong> Meeting or exceeding target<br>
-                       <strong>🟡 Yellow:</strong> Approaching threshold<br>
-                       <strong>🔴 Red:</strong> Below target, action required</p>
+                    <strong>🟡 Yellow:</strong> Approaching threshold<br>
+                    <strong>🔴 Red:</strong> Below target, action required</p>
                 </div>
                 <div class="help-item">
                     <h4>Performance Targets</h4>
                     <p><strong>Success Rate:</strong> ≥95%<br>
-                       <strong>Time-to-Approval:</strong> ≤3 business days<br>
-                       <strong>PIR Completion:</strong> Within 5 days post-implementation</p>
+                    <strong>Time-to-Approval:</strong> ≤3 business days<br>
+                    <strong>PIR Completion:</strong> Within 5 days post-implementation</p>
                 </div>
                 <div class="help-item">
                     <h4>Using Filters</h4>
                     <p>• Select date range to focus on specific periods<br>
-                       • Filter by environment for targeted analysis<br>
-                       • Custom date range for detailed reporting</p>
+                    • Filter by environment for targeted analysis<br>
+                    • Custom date range for detailed reporting</p>
                 </div>
                 <div class="help-item">
                     <h4>Data Refresh</h4>
                     <p>• Dashboard auto-refreshes every 5 minutes<br>
-                       • Click "Refresh" for immediate update<br>
-                       • Print-friendly layout for reports</p>
+                    • Click "Refresh" for immediate update<br>
+                    • Print-friendly layout for reports</p>
                 </div>
             </div>
         </section>
     </main>
 
     <!-- Footer -->
-    <footer class="footer">
-        <p>Moss Energy Change Control Board | Metrics Dashboard v1.0 | March 2026</p>
-        <p>For questions, contact the CCB Administrator | Document Reference: CCB-08</p>
+    <footer class="footer" style="background:#f5f5f5;padding:15px 30px;border-top:1px solid #ddd;font-size:9pt;color:#666;display:flex;justify-content:space-between;">
+        <div>Moss Energy | Application Lifecycle Management | CCB Governance</div>
+        <div>Metrics Dashboard v1.0 | Effective March 27, 2026</div>
     </footer>
 
     <script>
-        /* ============================================
+        /* ====
            CCB Metrics Dashboard - JavaScript
            Version 1.0 | March 2026
-           ============================================ */
+           ==== */
 
         // Sample data for demonstration
         const dashboardData = {
@@ -798,7 +817,7 @@
             updateLastUpdated();
             
             // Auto-refresh every 5 minutes
-            setInterval(refreshDashboard, 300000);
+            setInterval(refreshDashboard, 30000);
         });
 
         // Initialize date inputs
@@ -906,23 +925,23 @@
                 data: {
                     labels: Object.keys(categories),
                     datasets: [{
-                        data: Object.values(categories),
-                        backgroundColor: ['#28a745', '#0066cc', '#ffc107', '#dc3545'],
-                        borderWidth: 2,
-                        borderColor: '#fff'
+                    data: Object.values(categories),
+                    backgroundColor: ['#28a745', '#0066cc', '#ffc107', '#dc3545'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                padding: 15,
-                                usePointStyle: true
-                            }
-                        }
+                    legend: {
+                    position: 'right',
+                    labels: {
+                    padding: 15,
+                    usePointStyle: true
+                    }
+                    }
                     }
                 }
             });
@@ -949,28 +968,28 @@
                 data: {
                     labels: Object.keys(environments),
                     datasets: [{
-                        label: 'Number of Changes',
-                        data: Object.values(environments),
-                        backgroundColor: ['#003366', '#004d99', '#0066cc', '#3399ff'],
-                        borderRadius: 6,
-                        borderSkipped: false
+                    label: 'Number of Changes',
+                    data: Object.values(environments),
+                    backgroundColor: ['#1a5f2a', '#2d8a3e', '#3aa34f', '#6dc47e'],
+                    borderRadius: 6,
+                    borderSkipped: false
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            display: false
-                        }
+                    legend: {
+                    display: false
+                    }
                     },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
-                            }
-                        }
+                    y: {
+                    beginAtZero: true,
+                    ticks: {
+                    stepSize: 1
+                    }
+                    }
                     }
                 }
             });
@@ -986,43 +1005,43 @@
                 data: {
                     labels: trend.map(t => t.month),
                     datasets: [
-                        {
-                            label: 'Total Changes',
-                            data: trend.map(t => t.total),
-                            borderColor: '#003366',
-                            backgroundColor: 'rgba(0, 51, 102, 0.1)',
-                            fill: true,
-                            tension: 0.3,
-                            pointRadius: 5,
-                            pointBackgroundColor: '#003366'
-                        },
-                        {
-                            label: 'Successful',
-                            data: trend.map(t => t.success),
-                            borderColor: '#28a745',
-                            backgroundColor: 'transparent',
-                            borderDash: [5, 5],
-                            tension: 0.3,
-                            pointRadius: 4,
-                            pointBackgroundColor: '#28a745'
-                        }
+                    {
+                    label: 'Total Changes',
+                    data: trend.map(t => t.total),
+                    borderColor: '#1a5f2a',
+                    backgroundColor: 'rgba(26, 95, 42, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#1a5f2a'
+                    },
+                    {
+                    label: 'Successful',
+                    data: trend.map(t => t.success),
+                    borderColor: '#28a745',
+                    backgroundColor: 'transparent',
+                    borderDash: [5, 5],
+                    tension: 0.3,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#28a745'
+                    }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            position: 'top'
-                        }
+                    legend: {
+                    position: 'top'
+                    }
                     },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 5
-                            }
-                        }
+                    y: {
+                    beginAtZero: true,
+                    ticks: {
+                    stepSize: 5
+                    }
+                    }
                     }
                 }
             });
@@ -1043,24 +1062,24 @@
                 data: {
                     labels: Object.keys(risks),
                     datasets: [{
-                        data: Object.values(risks),
-                        backgroundColor: ['#28a745', '#ffc107', '#fd7e14', '#dc3545'],
-                        borderWidth: 2,
-                        borderColor: '#fff',
-                        cutout: '60%'
+                    data: Object.values(risks),
+                    backgroundColor: ['#28a745', '#ffc107', '#fd7e14', '#dc3545'],
+                    borderWidth: 2,
+                    borderColor: '#fff',
+                    cutout: '60%'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                padding: 15,
-                                usePointStyle: true
-                            }
-                        }
+                    legend: {
+                    position: 'right',
+                    labels: {
+                    padding: 15,
+                    usePointStyle: true
+                    }
+                    }
                     }
                 }
             });
@@ -1130,14 +1149,14 @@
                 const pct = Math.round((count / total) * 100);
                 return `
                     <tr>
-                        <td><strong>${cat}</strong></td>
-                        <td>${count}</td>
-                        <td>${pct}%</td>
-                        <td>
-                            <div class="metric-bar">
-                                <div class="metric-bar-fill ${colors[cat]}" style="width: ${pct}%"></div>
-                            </div>
-                        </td>
+                    <td><strong>${cat}</strong></td>
+                    <td>${count}</td>
+                    <td>${pct}%</td>
+                    <td>
+                    <div class="metric-bar">
+                    <div class="metric-bar-fill ${colors[cat]}" style="width: ${pct}%"></div>
+                    </div>
+                    </td>
                     </tr>
                 `;
             }).join('');
@@ -1169,14 +1188,14 @@
                 const pct = Math.round((count / total) * 100);
                 return `
                     <tr>
-                        <td><strong>${status}</strong></td>
-                        <td>${count}</td>
-                        <td>${pct}%</td>
-                        <td>
-                            <div class="metric-bar">
-                                <div class="metric-bar-fill ${colors[status]}" style="width: ${pct}%"></div>
-                            </div>
-                        </td>
+                    <td><strong>${status}</strong></td>
+                    <td>${count}</td>
+                    <td>${pct}%</td>
+                    <td>
+                    <div class="metric-bar">
+                    <div class="metric-bar-fill ${colors[status]}" style="width: ${pct}%"></div>
+                    </div>
+                    </td>
                     </tr>
                 `;
             }).join('');
@@ -1209,10 +1228,10 @@
                 const avgDays = stats.approvedCount > 0 ? (stats.totalDays / stats.approvedCount).toFixed(1) : 'N/A';
                 return `
                     <tr>
-                        <td><strong>${risk}</strong></td>
-                        <td>${stats.count}</td>
-                        <td>${avgDays} ${avgDays !== 'N/A' ? 'days' : ''}</td>
-                        <td><span class="badge badge-${statusMapping[risk]}">${risk}</span></td>
+                    <td><strong>${risk}</strong></td>
+                    <td>${stats.count}</td>
+                    <td>${avgDays} ${avgDays !== 'N/A' ? 'days' : ''}</td>
+                    <td><span class="badge badge-${statusMapping[risk]}">${risk}</span></td>
                     </tr>
                 `;
             }).join('');

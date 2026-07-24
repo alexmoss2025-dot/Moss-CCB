@@ -620,7 +620,7 @@
     // FORMSPREE ENDPOINT — replace YOUR_FORM_ID after creating a form at
     // https://formspree.io (recipient: adiamant@moss.com)
     // ========================================================================
-    const FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID";
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/xnjeglve";
     const STORAGE_KEY = "moss_software_requests_log";
 
     // Default today's date into "Date Submitted"
@@ -709,7 +709,7 @@
       };
 
       try {
-        if (FORMSPREE_ENDPOINT.includes("YOUR_FORM_ID")){
+        if (FORMSPREE_ENDPOINT.includes("xnjeglve")){
           throw new Error("Formspree endpoint not configured. (Saved locally — visible in log.html)");
         }
         const resp = await fetch(FORMSPREE_ENDPOINT, {

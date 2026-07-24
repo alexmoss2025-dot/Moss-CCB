@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <!--
-  ============================================================================
+  ====
   FORMSPREE SETUP INSTRUCTIONS — READ BEFORE DEPLOYING
-  ============================================================================
+  ====
   This form uses Formspree (https://formspree.io) for email delivery, since
   GitHub Pages does not support a server-side backend.
 
@@ -20,7 +20,7 @@
   Until step 4 is complete, submissions will NOT be emailed (the page will
   show an error), but they WILL still be saved to browser localStorage
   (key: moss_software_requests_log) and visible in log.html.
-  ============================================================================
+  ====
 -->
 <html lang="en">
 <head>
@@ -31,6 +31,22 @@
   <link rel="stylesheet" href="site.css" />
   <style>
     body { background: #f4f7f4; }
+
+    /* Submission Log navigation dropdown */
+    .nav-dropdown { position: relative; display: inline-flex; align-items: stretch; }
+    .nav-dropdown > a { display: inline-flex; align-items: center; }
+    .nav-dropdown-toggle {
+      background: transparent; border: 0; color: inherit; cursor: pointer;
+      font: inherit; padding: 0 8px; line-height: inherit;
+    }
+    .nav-dropdown-menu {
+      display: none; position: absolute; z-index: 20; top: 100%; right: 0;
+      min-width: 160px; padding: 6px 0; background: #fff;
+      border: 1px solid #d7e2d9; border-radius: 6px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.16);
+    }
+    .nav-dropdown.open .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu a { display: block; padding: 9px 14px; white-space: nowrap; }
 
     /* Page header */
     .form-header {
@@ -332,7 +348,13 @@
         <a href="12_PIR_Template.html">PIR Template</a>
         <a href="17_Section_Responsibility_Swimlane_Flowchart.html">Swimlane Flowchart</a>
         <a href="CCB_Stakeholder_Responsibility_Mapping.html">Stakeholder Mapping</a>
-        <a href="software_request_form.html" class="active">New Software Request</a>
+        <div class="nav-dropdown">
+          <a href="software_request_form.html" class="active">New Software Request</a>
+          <button class="nav-dropdown-toggle" type="button" aria-label="Open New Software Request menu" aria-expanded="false">▾</button>
+          <div class="nav-dropdown-menu">
+            <a href="log.html">Submission Log</a>
+          </div>
+        </div>
         <a href="https://mosscm.sharepoint.com/sites/CCB" target="_blank" rel="noopener noreferrer">SharePoint Site ↗</a>
       </div>
     </div>
@@ -616,12 +638,29 @@
   </footer>
 
   <script>
-    // ========================================================================
+    // ====
     // FORMSPREE ENDPOINT — replace YOUR_FORM_ID after creating a form at
     // https://formspree.io (recipient: adiamant@moss.com)
-    // ========================================================================
+    // ====
     const FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID";
     const STORAGE_KEY = "moss_software_requests_log";
+
+    // Submission Log dropdown
+    document.querySelectorAll('.nav-dropdown-toggle').forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        const dropdown = toggle.closest('.nav-dropdown');
+        const isOpen = dropdown.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', String(isOpen));
+      });
+    });
+    document.addEventListener('click', event => {
+      if (!event.target.closest('.nav-dropdown')) {
+        document.querySelectorAll('.nav-dropdown.open').forEach(dropdown => {
+          dropdown.classList.remove('open');
+          dropdown.querySelector('.nav-dropdown-toggle').setAttribute('aria-expanded', 'false');
+        });
+      }
+    });
 
     // Default today's date into "Date Submitted"
     (function setDefaults(){

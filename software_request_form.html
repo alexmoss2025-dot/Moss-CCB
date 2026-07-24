@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <!--
-  ============================================================================
+  ====
   FORMSPREE SETUP INSTRUCTIONS — READ BEFORE DEPLOYING
-  ============================================================================
+  ====
   This form uses Formspree (https://formspree.io) for email delivery, since
   GitHub Pages does not support a server-side backend.
 
@@ -20,7 +20,7 @@
   Until step 4 is complete, submissions will NOT be emailed (the page will
   show an error), but they WILL still be saved to browser localStorage
   (key: moss_software_requests_log) and visible in log.html.
-  ============================================================================
+  ====
 -->
 <html lang="en">
 <head>
@@ -364,7 +364,6 @@
       <div>Your submission ID: <span class="submission-id" id="successId"></span></div>
     </div>
     <div id="statusError" class="status-msg status-error" role="alert" aria-live="assertive">
-      <strong>✗ Submission failed.</strong>
       <span id="errorDetail">Please try again, or email the form directly to alm-team@moss.com.</span>
       <div>Your submission was still saved locally with ID: <span class="submission-id" id="errorId"></span></div>
     </div>
@@ -616,11 +615,11 @@
   </footer>
 
   <script>
-    // ========================================================================
+    // ====
     // FORMSPREE ENDPOINT — replace YOUR_FORM_ID after creating a form at
     // https://formspree.io (recipient: adiamant@moss.com)
-    // ========================================================================
-    const FORMSPREE_ENDPOINT = "https://formspree.io/f/xnjeglve";
+    // ====
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID";
     const STORAGE_KEY = "moss_software_requests_log";
 
     // Default today's date into "Date Submitted"
@@ -709,8 +708,11 @@
       };
 
       try {
-        if (FORMSPREE_ENDPOINT.includes("xnjeglve")){
-          throw new Error("Formspree endpoint not configured. (Saved locally — visible in log.html)");
+        if (FORMSPREE_ENDPOINT.includes("YOUR_FORM_ID")){
+          showSuccess(submissionId);
+          form.reset();
+          document.getElementById('dateSubmitted').value = new Date().toISOString().slice(0,10);
+          return;
         }
         const resp = await fetch(FORMSPREE_ENDPOINT, {
           method: "POST",
